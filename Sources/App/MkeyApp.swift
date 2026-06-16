@@ -50,6 +50,7 @@ struct MenuBarLabel: View {
 
 struct MenuContent: View {
     @EnvironmentObject private var state: AppState
+    @ObservedObject private var clipboard = ClipboardManager.shared
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -77,6 +78,12 @@ struct MenuContent: View {
 
         Button("Công cụ chuyển mã…") { open(.convert) }
         Button("Gõ tắt…") { open(.macro) }
+
+        if clipboard.enabled {
+            Button("Lịch sử Clipboard  \(AppState.hotkeyDescription(clipboard.hotKey))") {
+                ClipboardManager.shared.togglePicker()
+            }
+        }
 
         Divider()
 

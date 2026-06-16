@@ -35,11 +35,23 @@ struct ClipboardPage: View {
                             Text("\(manager.maxItems)")
                                 .foregroundStyle(Color.accentColor)
                                 .font(.body.weight(.semibold))
+                                .monospacedDigit()
                         }
-                        Slider(value: Binding(
-                            get: { Double(manager.maxItems) },
-                            set: { manager.maxItems = Int($0.rounded()) }
-                        ), in: 10...100, step: 1)
+                        // plain full-width slider (no value labels → no render glitch)
+                        Slider(
+                            value: Binding(
+                                get: { Double(manager.maxItems) },
+                                set: { manager.maxItems = Int($0.rounded()) }
+                            ),
+                            in: 10...100
+                        )
+                        HStack {
+                            Text("10")
+                            Spacer()
+                            Text("100")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     }
                 } footer: {
                     Text("Clipboard từ trình quản lý mật khẩu và ứng dụng nhạy cảm sẽ không được lưu vào lịch sử.")
