@@ -37,6 +37,7 @@ struct SettingsRootView: View {
                     case .typing: TypingPage()
                     case .macro: MacroPage()
                     case .convert: ConvertPage()
+                    case .clipboard: ClipboardPage()
                     case .system: SystemPage()
                     case .about: AboutPage()
                     }

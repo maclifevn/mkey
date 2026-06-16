@@ -113,6 +113,9 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
         registerWorkspaceNotifications()
         observeQuickConvert()
 
+        // clipboard history runs independently from the engine
+        ClipboardManager.shared.startIfEnabled()
+
         // banner "Mở Cài đặt hệ thống" button asks us to (re-)register for AX
         NotificationCenter.default.addObserver(forName: .mkRequestAccessibility,
                                                object: nil, queue: .main) { [weak self] _ in

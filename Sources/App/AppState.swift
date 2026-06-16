@@ -13,7 +13,7 @@ import ServiceManagement
 import SwiftUI
 
 enum SettingsPage: String, CaseIterable, Identifiable {
-    case typing, macro, convert, system, about
+    case typing, macro, convert, clipboard, system, about
     var id: String { rawValue }
 
     var title: String {
@@ -21,6 +21,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .typing: return "Bộ gõ"
         case .macro: return "Gõ tắt"
         case .convert: return "Chuyển mã"
+        case .clipboard: return "Lịch sử Clipboard"
         case .system: return "Hệ thống"
         case .about: return "Giới thiệu"
         }
@@ -31,6 +32,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .typing: return "keyboard"
         case .macro: return "text.badge.plus"
         case .convert: return "arrow.left.arrow.right"
+        case .clipboard: return "doc.on.clipboard"
         case .system: return "gearshape"
         case .about: return "info.circle"
         }
