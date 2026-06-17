@@ -74,6 +74,27 @@ extern "C" {
     bool _axCachedIsSlow = false;
     CFAbsoluteTime _axCacheTime = 0;
     pid_t _axLoggedPid = 0;
+    CFAbsoluteTime _lastKeystrokeTime = 0;
+    bool _cachedIsEnglishLayout = true;
+
+    void MKUpdateInputSourceCache() {
+        TISInputSourceRef isource = TISCopyCurrentKeyboardInputSource();
+        if (isource != NULL) {
+            CFArrayRef languages = (CFArrayRef)TISGetInputSourceProperty(isource, kTISPropertyInputSourceLanguages);
+            if (languages != NULL && CFArrayGetCount(languages) > 0) {
+                CFStringRef langRef = (CFStringRef)CFArrayGetValueAtIndex(languages, 0);
+                if (langRef != NULL) {
+                    NSString *currentLanguage = (__bridge NSString *)langRef;
+                    _cachedIsEnglishLayout = [currentLanguage isLike:@"en"];
+                }
+            }
+            CFRelease(isource);
+        }
+    }
+
+    void MKInputSourceChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+        MKUpdateInputSourceCache();
+    }
 
     void AXInvalidateFocusCache() {
         if (_axCachedFocused) { CFRelease(_axCachedFocused); _axCachedFocused = NULL; }
@@ -82,10 +103,12 @@ extern "C" {
     }
 
     //look up the AX-focused element and whether it belongs to a slow-path app;
-    //cached for 0.5s so fast typing costs one IPC lookup per burst
+    //cached so fast typing costs only one IPC lookup per burst.
+    //We skip updating the cache if the user is currently typing continuously
+    //(keystrokes less than 0.5s apart) or if the cache is less than 2.0s old.
     void AXRefreshFocusCache() {
         CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
-        if (_axCacheTime != 0 && (now - _axCacheTime) < 0.5)
+        if (_axCacheTime != 0 && ((now - _axCacheTime) < 2.0 || (now - _lastKeystrokeTime) < 0.5))
             return;
         AXInvalidateFocusCache();
         _axCacheTime = now;
@@ -336,6 +359,17 @@ extern "C" {
         if (convertToolHotKey == 0) {
             convertToolHotKey = EMPTY_HOTKEY;
         }
+
+        MKUpdateInputSourceCache();
+
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            NULL,
+            MKInputSourceChangedCallback,
+            kTISNotifySelectedKeyboardInputSourceChanged,
+            NULL,
+            CFNotificationSuspensionBehaviorDeliverImmediately
+        );
     }
 
     void RequestNewSession() {
@@ -377,6 +411,7 @@ extern "C" {
     }
 
     void OnActiveAppChanged() { //use for smart switch key
+        MKUpdateInputSourceCache();
         queryFrontMostApp();
         _languageTemp = getAppInputMethodStatus(string(_frontMostApp.UTF8String), vLanguage | (vCodeTable << 1));
         if ((_languageTemp & 0x01) != vLanguage) { //for input method
@@ -857,25 +892,14 @@ extern "C" {
 
         //if "turn off Vietnamese when in other language" mode on
         if(vOtherLanguage){
-            TISInputSourceRef isource = TISCopyCurrentKeyboardInputSource();
-            if ( isource != NULL )
-            {
-                CFArrayRef languages = (CFArrayRef) TISGetInputSourceProperty(isource, kTISPropertyInputSourceLanguages);
-
-                if (CFArrayGetCount(languages) > 0) {
-                    CFStringRef langRef = (CFStringRef)CFArrayGetValueAtIndex(languages, 0);
-                    NSString *currentLanguage = (__bridge NSString *)langRef;
-                    if(![currentLanguage isLike:@"en"]){
-                        return event;
-                    }
-                    CFRelease(langRef);
-                    CFRelease(isource);
-                }
+            if (!_cachedIsEnglishLayout) {
+                return event;
             }
         }
 
         //handle keyboard
         if (type == kCGEventKeyDown) {
+            _lastKeystrokeTime = CFAbsoluteTimeGetCurrent();
             //send event signal to Engine
             vKeyHandleEvent(vKeyEvent::Keyboard,
                             vKeyEventState::KeyDown,
