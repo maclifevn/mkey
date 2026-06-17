@@ -9,7 +9,6 @@
 #include <codecvt>
 #include "ConvertTool.h"
 #include "Engine.h"
-#include <iostream>
 #include <memory.h>
 
 //option
@@ -195,4 +194,3 @@ string convertUtil(const string& sourceString) {
     wstring str(_temp.begin(), _temp.end());
     return wideStringToUtf8(str);
 }
-

@@ -53,6 +53,7 @@ extern "C" {
 
     AXUIElementRef _axSystemWide = NULL;
     AXUIElementRef _axCachedFocused = NULL;
+    NSArray* _axIncludedApps = @[];
     bool _axCachedIsSlow = false;
     bool _axCachedIsIncluded = false;
     CFAbsoluteTime _axCacheTime = 0;
@@ -61,6 +62,9 @@ extern "C" {
     bool _cachedIsEnglishLayout = true;
     bool _inputSourceObserverInstalled = false;
     pid_t _frontMostPid = 0;
+    bool _frontMostIsNiceSpace = false;
+    bool _frontMostIsUnicodeCompound = false;
+    bool _frontMostNeedsChromiumFix = false;
 
     void MKUpdateInputSourceCache() {
         TISInputSourceRef isource = TISCopyCurrentKeyboardInputSource();
@@ -81,6 +85,11 @@ extern "C" {
         MKUpdateInputSourceCache();
     }
 
+    void AXReloadIncludedApps() {
+        NSArray* apps = [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"axIncludeApps"];
+        _axIncludedApps = apps != nil ? [apps copy] : @[];
+    }
+
     void AXInvalidateFocusCache() {
         if (_axCachedFocused) { CFRelease(_axCachedFocused); _axCachedFocused = NULL; }
         _axCachedIsSlow = false;
@@ -91,8 +100,7 @@ extern "C" {
     bool AXAppIsIncluded(NSString* bid) {
         if (bid == nil)
             return false;
-        NSArray* includedApps = [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"axIncludeApps"];
-        for (NSString* included in includedApps) {
+        for (NSString* included in _axIncludedApps) {
             if ([bid isEqualToString:included] || [bid hasPrefix:included]) {
                 return true;
             }
@@ -332,6 +340,7 @@ extern "C" {
         LOAD_DATA(vPerformLayoutCompat, vPerformLayoutCompat);
         LOAD_DATA(vFixSpotlight, vFixSpotlight);
         LOAD_DATA(vUseAXReplacement, vUseAXReplacement);
+        AXReloadIncludedApps();
 
         LOAD_DATA(vSwitchKeyStatus, SwitchKeyStatus);
         if (vSwitchKeyStatus == 0)
@@ -392,6 +401,21 @@ extern "C" {
         }
     }
 
+    BOOL containUnicodeCompoundApp(NSString* topApp) {
+        if (topApp == nil) return false;
+        for (_j = 0; _j < [_unicodeCompoundApp count]; _j++) {
+            if ([topApp hasPrefix:[_unicodeCompoundApp objectAtIndex:_j]] || [[_unicodeCompoundApp objectAtIndex:_j] isEqualToString:topApp])
+                return true;
+        }
+        return false;
+    }
+
+    void updateFrontMostAppFlags() {
+        _frontMostIsNiceSpace = [_niceSpaceApp containsObject:_frontMostApp];
+        _frontMostIsUnicodeCompound = containUnicodeCompoundApp(_frontMostApp);
+        _frontMostNeedsChromiumFix = [_unicodeCompoundApp containsObject:_frontMostApp];
+    }
+
     void queryFrontMostApp() {
         NSRunningApplication* app = [[NSWorkspace sharedWorkspace] frontmostApplication];
         NSString* bundleIdentifier = app.bundleIdentifier;
@@ -400,6 +424,7 @@ extern "C" {
             if (_frontMostApp == nil)
                 _frontMostApp = app.localizedName != nil ? app.localizedName : @"UnknownApp";
             _frontMostPid = app.processIdentifier;
+            updateFrontMostAppFlags();
         }
     }
 
@@ -414,20 +439,12 @@ extern "C" {
             if (_frontMostApp == nil)
                 _frontMostApp = app.localizedName != nil ? app.localizedName : @"UnknownApp";
             _frontMostPid = pid;
+            updateFrontMostAppFlags();
         }
     }
 
     NSString* ConvertUtil(NSString* str) {
         return [NSString stringWithUTF8String:convertUtil([str UTF8String]).c_str()];
-    }
-
-    BOOL containUnicodeCompoundApp(NSString* topApp) {
-        if (topApp == nil) return false;
-        for (_j = 0; _j < [_unicodeCompoundApp count]; _j++) {
-            if ([topApp hasPrefix:[_unicodeCompoundApp objectAtIndex:_j]] || [[_unicodeCompoundApp objectAtIndex:_j] isEqualToString:topApp])
-                return true;
-        }
-        return false;
     }
 
     void saveSmartSwitchKeyData() {
@@ -439,6 +456,7 @@ extern "C" {
 
     void OnActiveAppChanged() { //use for smart switch key
         AXInvalidateFocusCache();
+        AXReloadIncludedApps();
         MKUpdateInputSourceCache();
         queryFrontMostApp();
         _languageTemp = getAppInputMethodStatus(string(_frontMostApp.UTF8String), vLanguage | (vCodeTable << 1));
@@ -576,7 +594,7 @@ extern "C" {
             InsertKeyLength(1);
 
         _newChar = 0x202F; //empty char
-        if ([_niceSpaceApp containsObject:_frontMostApp]) {
+        if (_frontMostIsNiceSpace) {
             _newChar = 0x200C; //Unicode character with empty space
         }
 
@@ -596,7 +614,7 @@ extern "C" {
 
         if (IS_DOUBLE_CODE(vCodeTable)) { //VNI or Unicode Compound
             if (_syncKey.back() > 1) {
-                if (!(vCodeTable == 3 && containUnicodeCompoundApp(_frontMostApp))) {
+                if (!(vCodeTable == 3 && _frontMostIsUnicodeCompound)) {
                     CGEventTapPostEvent(_proxy, eventBackSpaceDown);
                     CGEventTapPostEvent(_proxy, eventBackSpaceUp);
                 }
@@ -618,7 +636,7 @@ extern "C" {
 
         if (IS_DOUBLE_CODE(vCodeTable)) { //VNI or Unicode Compound
             if (_syncKey.back() > 1) {
-                if (!(vCodeTable == 3 && containUnicodeCompoundApp(_frontMostApp))) {
+                if (!(vCodeTable == 3 && _frontMostIsUnicodeCompound)) {
                     CGEventTapPostEvent(_proxy, eventVkeyDown);
                     CGEventTapPostEvent(_proxy, eventVkeyUp);
                 }
@@ -889,7 +907,7 @@ extern "C" {
 
         if (type == kCGEventKeyDown && vPerformLayoutCompat) {
             // If conversion fail, use current keycode
-           _keycode = ConvertEventToKeyboadLayoutCompatKeyCode(event, _keycode);
+            _keycode = ConvertEventToKeyboadLayoutCompatKeyCode(event, _keycode);
         }
 
         //switch language shortcut; convert hotkey
@@ -998,7 +1016,7 @@ extern "C" {
                         _syncKey.clear();
                     } else if (pData->extCode == 2) { //delete key
                         if (_syncKey.size() > 0) {
-                            if (_syncKey.back() > 1 && (vCodeTable == 2 || !containUnicodeCompoundApp(_frontMostApp))) {
+                            if (_syncKey.back() > 1 && (vCodeTable == 2 || !_frontMostIsUnicodeCompound)) {
                                 //send one more backspace
                                 CGEventTapPostEvent(_proxy, eventBackSpaceDown);
                                 CGEventTapPostEvent(_proxy, eventBackSpaceUp);
@@ -1017,14 +1035,15 @@ extern "C" {
                 //Spotlight-like fields: atomic replacement via Accessibility
                 //beats any event-timing game (no backspace can be swallowed
                 //by the async inline completion). Falls through on failure.
-                if (AXSlowPathActive() && TryAXProcessKey()) {
+                bool axSucceeded = AXSlowPathActive() && TryAXProcessKey();
+                if (axSucceeded) {
                     _lastKeystrokeTime = currentKeystrokeTime;
                     return NULL;
                 }
 
                 //fix autocomplete
                 if (vFixRecommendBrowser && pData->extCode != 4) {
-                    if (vFixChromiumBrowser && [_unicodeCompoundApp containsObject:_frontMostApp]) {
+                    if (vFixChromiumBrowser && _frontMostNeedsChromiumFix) {
                         if (pData->backspaceCount > 0) {
                             SendShiftAndLeftArrow();
                             if (pData->backspaceCount == 1)

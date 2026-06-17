@@ -18,8 +18,6 @@
 #include "SmartSwitchKey.h"
 #include "ConvertTool.h"
 
-#define IS_DEBUG 1
-
 #ifndef LOBYTE
 #define LOBYTE(data) (data & 0xFF)
 #endif // !LOBYTE

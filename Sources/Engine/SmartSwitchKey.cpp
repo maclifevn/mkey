@@ -8,7 +8,6 @@
 
 #include "SmartSwitchKey.h"
 #include <map>
-#include <iostream>
 #include <memory.h>
 
 //main data, i use `map` because it has O(Log(n))
@@ -55,9 +54,10 @@ int getAppInputMethodStatus(const string& bundleId, const int& currentInputMetho
     if (_cacheKey.compare(bundleId) == 0) {
         return _cacheData;
     }
-    if (_smartSwitchKeyData.find(bundleId) != _smartSwitchKeyData.end()) {
+    map<string, Int8>::iterator it = _smartSwitchKeyData.find(bundleId);
+    if (it != _smartSwitchKeyData.end()) {
         _cacheKey = bundleId;
-        _cacheData = _smartSwitchKeyData[bundleId];
+        _cacheData = it->second;
         return _cacheData;
     }
     _cacheKey = bundleId;

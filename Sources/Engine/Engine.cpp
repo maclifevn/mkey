@@ -5,18 +5,11 @@
 //  Created by Tuyen on 1/18/19.
 //  Copyright © 2019 Tuyen Mai. All rights reserved.
 //
-#include <iostream>
 #include <algorithm>
 #include "Engine.h"
 #include <string.h>
 #include <list>
 #include "Macro.h"
-
-static vector<Uint8> _charKeyCode = {
-    KEY_BACKQUOTE, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS, KEY_EQUALS,
-    KEY_LEFT_BRACKET, KEY_RIGHT_BRACKET, KEY_BACK_SLASH,
-    KEY_SEMICOLON, KEY_QUOTE, KEY_COMMA, KEY_DOT, KEY_SLASH
-};
 
 static Uint16 ProcessingChar[][11] = {
     {KEY_S, KEY_F, KEY_R, KEY_X, KEY_J, KEY_A, KEY_O, KEY_E, KEY_W, KEY_D, KEY_Z}, //Telex
@@ -183,6 +176,35 @@ bool isMacroBreakCode(const int& data) {
         case KEY_BACK_SLASH:
         case KEY_MINUS:
         case KEY_EQUALS:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static inline bool isCharKeyCode(const Uint16& data) {
+    switch (data) {
+        case KEY_BACKQUOTE:
+        case KEY_1:
+        case KEY_2:
+        case KEY_3:
+        case KEY_4:
+        case KEY_5:
+        case KEY_6:
+        case KEY_7:
+        case KEY_8:
+        case KEY_9:
+        case KEY_0:
+        case KEY_MINUS:
+        case KEY_EQUALS:
+        case KEY_LEFT_BRACKET:
+        case KEY_RIGHT_BRACKET:
+        case KEY_BACK_SLASH:
+        case KEY_SEMICOLON:
+        case KEY_QUOTE:
+        case KEY_COMMA:
+        case KEY_DOT:
+        case KEY_SLASH:
             return true;
         default:
             return false;
@@ -467,7 +489,7 @@ void restoreLastTypingState() {
             if (_typingStatesData[0] == KEY_SPACE) {
                 _spaceCount = (int)_typingStatesData.size();
                 _index = 0;
-            } else if (std::find(_charKeyCode.begin(), _charKeyCode.end(), (Uint16)_typingStatesData[0]) != _charKeyCode.end()) {
+            } else if (isCharKeyCode((Uint16)_typingStatesData[0])) {
                 _index = 0;
                 _specialChar = _typingStatesData;
                 checkSpelling();
@@ -1327,8 +1349,7 @@ void vEnglishMode(const vKeyEventState& state, const Uint16& data, const bool& i
             _willTempOffEngine = false;
         }
     } else {
-        if (isWordBreak(vKeyEvent::Keyboard, state, data) &&
-            std::find(_charKeyCode.begin(), _charKeyCode.end(), data) == _charKeyCode.end()) {
+        if (isWordBreak(vKeyEvent::Keyboard, state, data) && !isCharKeyCode(data)) {
             hMacroKey.clear();
             _willTempOffEngine = false;
         } else {
@@ -1368,7 +1389,7 @@ void vKeyHandleEvent(const vKeyEvent& event,
             }
         }
         
-        _isCharKeyCode = state == KeyDown && std::find(_charKeyCode.begin(), _charKeyCode.end(), data) != _charKeyCode.end();
+        _isCharKeyCode = state == KeyDown && isCharKeyCode(data);
         if (!_isCharKeyCode) { //clear all line cache
             _specialChar.clear();
             _typingStates.clear();
