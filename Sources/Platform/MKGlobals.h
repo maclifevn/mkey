@@ -48,5 +48,6 @@ extern int vPerformLayoutCompat;
 // Spotlight-like overlay search fields (they process input asynchronously,
 // which scrambles fast typing).
 extern int vFixSpotlight;
+extern int vUseAXReplacement;
 
 #endif /* MKGlobals_h */

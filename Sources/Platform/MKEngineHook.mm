@@ -55,6 +55,7 @@ extern "C" {
     AXUIElementRef _axSystemWide = NULL;
     AXUIElementRef _axCachedFocused = NULL;
     bool _axCachedIsSlow = false;
+    bool _axCachedIsIncluded = false;
     CFAbsoluteTime _axCacheTime = 0;
     pid_t _axLoggedPid = 0;
     CFAbsoluteTime _lastKeystrokeTime = 0;
@@ -82,7 +83,20 @@ extern "C" {
     void AXInvalidateFocusCache() {
         if (_axCachedFocused) { CFRelease(_axCachedFocused); _axCachedFocused = NULL; }
         _axCachedIsSlow = false;
+        _axCachedIsIncluded = false;
         _axCacheTime = 0;
+    }
+
+    bool AXAppIsIncluded(NSString* bid) {
+        if (bid == nil)
+            return false;
+        NSArray* includedApps = [[NSUserDefaults standardUserDefaults] stringArrayForKey:@"axIncludeApps"];
+        for (NSString* included in includedApps) {
+            if ([bid isEqualToString:included] || [bid hasPrefix:included]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //look up the AX-focused element and whether it belongs to a slow-path app;
@@ -105,6 +119,8 @@ extern "C" {
         if (AXUIElementGetPid(focused, &pid) == kAXErrorSuccess) {
             NSString* bid = [NSRunningApplication runningApplicationWithProcessIdentifier:pid].bundleIdentifier;
             _axCachedIsSlow = (bid != nil) && [_slowPathApp containsObject:bid];
+            _axCachedIsIncluded = AXAppIsIncluded(bid);
+            
             if (_axCachedIsSlow && _axLoggedPid != pid) {
                 NSLog(@"mkey: AX direct-edit path active for %@ (pid %d)", bid, pid);
                 _axLoggedPid = pid;
@@ -113,9 +129,15 @@ extern "C" {
     }
 
     bool AXSlowPathActive() {
-        if (!vFixSpotlight || vCodeTable != 0)
+        if (vCodeTable != 0)
             return false;
         AXRefreshFocusCache();
+        if (!vUseAXReplacement)
+            return false;
+        if (_axCachedIsIncluded)
+            return _axCachedFocused != NULL;
+        if (!vFixSpotlight)
+            return false;
         return _axCachedIsSlow;
     }
 
@@ -308,6 +330,7 @@ extern "C" {
         LOAD_DATA(vFixChromiumBrowser, vFixChromiumBrowser);
         LOAD_DATA(vPerformLayoutCompat, vPerformLayoutCompat);
         LOAD_DATA(vFixSpotlight, vFixSpotlight);
+        LOAD_DATA(vUseAXReplacement, vUseAXReplacement);
 
         LOAD_DATA(vSwitchKeyStatus, SwitchKeyStatus);
         if (vSwitchKeyStatus == 0)
@@ -356,6 +379,7 @@ extern "C" {
     }
 
     void RequestNewSession() {
+        AXInvalidateFocusCache();
         //send event signal to Engine
         vKeyHandleEvent(vKeyEvent::Mouse, vKeyEventState::MouseDown, 0);
 
@@ -837,6 +861,9 @@ extern "C" {
         CFAbsoluteTime currentKeystrokeTime = 0;
         if (type == kCGEventKeyDown) {
             currentKeystrokeTime = CFAbsoluteTimeGetCurrent();
+            if (OTHER_CONTROL_KEY) {
+                AXInvalidateFocusCache();
+            }
         }
 
         if (type == kCGEventKeyDown && vPerformLayoutCompat) {

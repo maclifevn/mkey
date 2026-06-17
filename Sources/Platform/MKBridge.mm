@@ -39,6 +39,7 @@ int vTempOffOpenKey = 0;
 int vFixChromiumBrowser = 0;
 int vPerformLayoutCompat = 0;
 int vFixSpotlight = 1;
+int vUseAXReplacement = 1;
 
 //implemented in MKEngineHook.mm
 extern "C" {

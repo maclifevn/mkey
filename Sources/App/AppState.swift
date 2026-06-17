@@ -102,6 +102,13 @@ final class AppState: ObservableObject {
     @Published var tempOffByCommand: Bool { didSet { set("vTempOffOpenKey", &vTempOffOpenKey, tempOffByCommand) } }
     @Published var otherLanguage: Bool { didSet { set("vOtherLanguage", &vOtherLanguage, otherLanguage) } }
     @Published var fixSpotlight: Bool { didSet { set("vFixSpotlight", &vFixSpotlight, fixSpotlight) } }
+    @Published var useAXReplacement: Bool { didSet { set("vUseAXReplacement", &vUseAXReplacement, useAXReplacement) } }
+    @Published var axIncludeApps: [String] {
+        didSet {
+            defaults.set(axIncludeApps, forKey: "axIncludeApps")
+            MKBridge.activeAppChanged()
+        }
+    }
 
     // MARK: Macro options
 
@@ -194,6 +201,8 @@ final class AppState: ObservableObject {
         tempOffByCommand = defaults.integer(forKey: "vTempOffOpenKey") != 0
         otherLanguage = defaults.integer(forKey: "vOtherLanguage") != 0
         fixSpotlight = defaults.integer(forKey: "vFixSpotlight") != 0
+        useAXReplacement = defaults.integer(forKey: "vUseAXReplacement") != 0
+        axIncludeApps = defaults.stringArray(forKey: "axIncludeApps") ?? []
 
         useMacro = defaults.integer(forKey: "UseMacro") != 0
         useMacroInEnglishMode = defaults.integer(forKey: "UseMacroInEnglishMode") != 0
@@ -260,6 +269,8 @@ final class AppState: ObservableObject {
             "GrayIcon": 1,
             "SwitchKeyStatus": Int(MKEY_DEFAULT_SWITCH_STATUS),
             "vFixSpotlight": 1,
+            "vUseAXReplacement": 1,
+            "axIncludeApps": [],
             "convertToolAlertWhenCompleted": true,
         ])
     }
@@ -285,7 +296,7 @@ final class AppState: ObservableObject {
                     "FreeMark", "QuickTelex", "RestoreIfInvalidWord", "FixRecommendBrowser",
                     "vFixChromiumBrowser", "UpperCaseFirstChar", "vTempOffSpelling",
                     "vAllowConsonantZFWJ", "vQuickStartConsonant", "vQuickEndConsonant",
-                    "vTempOffOpenKey", "vOtherLanguage", "vFixSpotlight", "UseMacro", "UseMacroInEnglishMode",
+                    "vTempOffOpenKey", "vOtherLanguage", "vFixSpotlight", "vUseAXReplacement", "axIncludeApps", "axExcludeApps", "UseMacro", "UseMacroInEnglishMode",
                     "vAutoCapsMacro", "UseSmartSwitchKey", "vRememberCode", "SendKeyStepByStep",
                     "vPerformLayoutCompat", "GrayIcon", "vShowIconOnDock", "ShowUIOnStartup",
                     "SwitchKeyStatus"]
@@ -311,6 +322,8 @@ final class AppState: ObservableObject {
         tempOffByCommand = false
         otherLanguage = true
         fixSpotlight = true
+        useAXReplacement = true
+        axIncludeApps = []
         useMacro = true
         useMacroInEnglishMode = false
         autoCapsMacro = false
@@ -330,7 +343,7 @@ final class AppState: ObservableObject {
         vRestoreIfWrongSpelling = 0; vFixRecommendBrowser = 1; vFixChromiumBrowser = 0
         vUpperCaseFirstChar = 0; vTempOffSpelling = 0; vAllowConsonantZFWJ = 0
         vQuickStartConsonant = 0; vQuickEndConsonant = 0; vTempOffOpenKey = 0
-        vOtherLanguage = 1; vFixSpotlight = 1; vUseMacro = 1; vUseMacroInEnglishMode = 0; vAutoCapsMacro = 0
+        vOtherLanguage = 1; vFixSpotlight = 1; vUseAXReplacement = 1; vUseMacro = 1; vUseMacroInEnglishMode = 0; vAutoCapsMacro = 0
         vUseSmartSwitchKey = 1; vRememberCode = 1; vSendKeyStepByStep = 0; vPerformLayoutCompat = 0
         MKBridge.spellCheckingChanged()
         NSApp.setActivationPolicy(.accessory)
