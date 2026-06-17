@@ -50,6 +50,7 @@ extern "C" {
     void OnInputMethodChanged(void);
     void OnSpellCheckingChanged(void);
     NSString* ConvertUtil(NSString* str);
+    void MKSetEngineSuspended(bool suspended);
 }
 
 static CFMachPortRef      _eventTap = NULL;
@@ -171,6 +172,10 @@ static void postStateChanged(void) {
 
 + (void)persistSwitchKeyStatus {
     [prefs() setInteger:vSwitchKeyStatus forKey:@"SwitchKeyStatus"];
+}
+
++ (void)setEngineSuspended:(BOOL)suspended {
+    MKSetEngineSuspended(suspended);
 }
 
 #pragma mark - State changes driven by the engine

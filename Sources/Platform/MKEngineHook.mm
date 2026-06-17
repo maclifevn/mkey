@@ -41,6 +41,10 @@ NSDictionary *keyStringToKeyCodeMap = @{
 
 extern "C" void MKReEnableEventTap(void); //implemented in MKBridge.mm
 
+//set by MKBridge while MKey's own text UI (clipboard search) needs raw keys
+bool _mkEngineSuspended = false;
+extern "C" void MKSetEngineSuspended(bool suspended) { _mkEngineSuspended = suspended; }
+
 extern "C" {
     //app which must sent special empty character
     NSArray* _niceSpaceApp = @[@"com.sublimetext.3",
@@ -755,6 +759,13 @@ extern "C" {
 
         //dont handle my event
         if (CGEventGetIntegerValueField(event, kCGEventSourceStateID) == CGEventSourceGetSourceStateID(myEventSource)) {
+            return event;
+        }
+
+        //engine suspended (e.g. while the clipboard picker's search field is up)
+        //-> let every keystroke through raw so Vietnamese processing doesn't
+        //mangle what is typed into MKey's own UI.
+        if (_mkEngineSuspended) {
             return event;
         }
 

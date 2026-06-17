@@ -65,9 +65,13 @@ final class ClipboardPickerModel: ObservableObject {
     @Published var selection: Int = 0
 
     /// Items after applying the search query (selection indexes into this).
+    /// Case- and diacritic-insensitive so "khong" finds "không".
     var filtered: [ClipItem] {
-        guard !query.isEmpty else { return items }
-        return items.filter { $0.text.localizedCaseInsensitiveContains(query) }
+        let q = query.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return items }
+        return items.filter {
+            $0.text.range(of: q, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        }
     }
 }
 
@@ -113,13 +117,14 @@ final class ClipboardPicker {
             onClose: { [weak self] in self?.close() })
         let hosting = NSHostingController(rootView: root)
 
-        // Borderless (no empty title strip), Spotlight-style. The rounded
-        // material lives in the SwiftUI content, so the window is transparent.
-        // NOT a non-activating panel: the app must become active so SwiftUI
-        // renders controls in their active (coloured) state, not greyed out.
+        // Spotlight-style: a non-activating panel that still becomes key (see
+        // KeyablePanel.canBecomeKey) so the search field receives keystrokes
+        // WITHOUT activating the app — on macOS 26 NSApp.activate() no longer
+        // brings an accessory app forward, so a plain borderless window never
+        // became key and typing leaked to the previously-focused app.
         let panel = KeyablePanel(
             contentRect: NSRect(x: 0, y: 0, width: 460, height: 420),
-            styleMask: [.borderless],
+            styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered, defer: false)
         panel.isOpaque = false
         panel.backgroundColor = .clear
@@ -134,13 +139,15 @@ final class ClipboardPicker {
         }
 
         self.panel = panel
-        NSApp.activate(ignoringOtherApps: true)
+        MKBridge.setEngineSuspended(true) // raw keys into the search field
         panel.makeKeyAndOrderFront(nil)
+        panel.makeFirstResponder(panel.contentView)
 
         installKeyMonitor()
     }
 
     func close() {
+        MKBridge.setEngineSuspended(false)
         if let keyMonitor { NSEvent.removeMonitor(keyMonitor); self.keyMonitor = nil }
         let wasOpen = panel != nil
         panel?.orderOut(nil)
@@ -301,13 +308,14 @@ private struct ClipboardPickerView: View {
                                       imageURL: imageURL,
                                       onPick: { onPick(item) },
                                       onRemove: { onRemove(item) })
-                                .id(index)
+                                .id(item.id) // stable identity so filtering shows correct rows
                         }
                     }
                     .padding(8)
                 }
                 .onChange(of: model.selection) { _, newValue in
-                    withAnimation(.easeOut(duration: 0.1)) { proxy.scrollTo(newValue, anchor: .center) }
+                    guard items.indices.contains(newValue) else { return }
+                    withAnimation(.easeOut(duration: 0.1)) { proxy.scrollTo(items[newValue].id, anchor: .center) }
                 }
             }
         }

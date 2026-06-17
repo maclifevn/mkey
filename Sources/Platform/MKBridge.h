@@ -51,6 +51,10 @@ extern NSNotificationName const MKQuickConvertDidRunNotification;
 /// Reload vSwitchKeyStatus & friends after the UI edited them.
 + (void)persistSwitchKeyStatus;
 
+/// Suspend/resume Vietnamese processing — used while MKey's own text UI (the
+/// clipboard search field) is up so typed keys arrive raw.
++ (void)setEngineSuspended:(BOOL)suspended;
+
 #pragma mark - State changes driven by the engine (do not call from UI)
 
 + (void)engineDidSwitchLanguage;
