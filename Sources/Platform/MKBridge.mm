@@ -140,6 +140,9 @@ static void postStateChanged(void) {
 + (void)setLanguage:(int)language {
     vLanguage = language;
     [prefs() setInteger:language forKey:@"InputMethod"];
+    if (HAS_BEEP(vSwitchKeyStatus)) {
+        NSBeep();
+    }
     startNewSession();
     OnInputMethodChanged(); //persist for smart switch
     postStateChanged();
