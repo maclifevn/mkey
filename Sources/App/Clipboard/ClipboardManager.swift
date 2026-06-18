@@ -433,14 +433,25 @@ final class ClipboardManager: ObservableObject {
         var hasData = false
         var activeFilePath: String? = nil
         
+        let isTargetFinder = previousApp?.bundleIdentifier == "com.apple.finder"
+        
         if let filePath = item.filePath, FileManager.default.fileExists(atPath: filePath) {
             activeFilePath = filePath
-        } else if item.isImage, let url = imageURL(for: item) {
-            let tempDir = FileManager.default.temporaryDirectory
-            let timestamp = Int(Date().timeIntervalSince1970)
-            let tempFileURL = tempDir.appendingPathComponent("Anh_Clipboard_\(timestamp).png")
-            if let data = try? Data(contentsOf: url), (try? data.write(to: tempFileURL)) != nil {
-                activeFilePath = tempFileURL.path
+        } else if isTargetFinder {
+            if item.isImage, let url = imageURL(for: item) {
+                let tempDir = FileManager.default.temporaryDirectory
+                let timestamp = Int(Date().timeIntervalSince1970)
+                let tempFileURL = tempDir.appendingPathComponent("Anh_Clipboard_\(timestamp).png")
+                if let data = try? Data(contentsOf: url), (try? data.write(to: tempFileURL)) != nil {
+                    activeFilePath = tempFileURL.path
+                }
+            } else if !item.isImage {
+                let tempDir = FileManager.default.temporaryDirectory
+                let timestamp = Int(Date().timeIntervalSince1970)
+                let tempFileURL = tempDir.appendingPathComponent("Van_ban_Clipboard_\(timestamp).txt")
+                if (try? item.text.write(to: tempFileURL, atomically: true, encoding: .utf8)) != nil {
+                    activeFilePath = tempFileURL.path
+                }
             }
         }
         
@@ -451,21 +462,16 @@ final class ClipboardManager: ObservableObject {
             hasData = true
         }
         
-        var isOriginalImage = false
-        if let filePath = activeFilePath {
-            let fileURL = URL(fileURLWithPath: filePath)
-            if let type = UTType(filenameExtension: fileURL.pathExtension) {
-                isOriginalImage = type.conforms(to: .image)
+        if item.isImage {
+            if let url = imageURL(for: item), let data = try? Data(contentsOf: url) {
+                pbItem.setData(data, forType: .png)
+                if let image = NSImage(data: data), let tiffData = image.tiffRepresentation {
+                    pbItem.setData(tiffData, forType: .tiff)
+                }
+                hasData = true
             }
         } else {
-            isOriginalImage = item.isImage
-        }
-        
-        if isOriginalImage, let url = imageURL(for: item), let data = try? Data(contentsOf: url) {
-            pbItem.setData(data, forType: .png)
-            if let image = NSImage(data: data), let tiffData = image.tiffRepresentation {
-                pbItem.setData(tiffData, forType: .tiff)
-            }
+            pbItem.setString(item.text, forType: .string)
             hasData = true
         }
         
