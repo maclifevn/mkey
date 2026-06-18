@@ -109,7 +109,6 @@ final class ClipboardManager: ObservableObject {
     private var timer: Timer?
     private let hotKeyMonitor = GlobalHotKey()
     private let picker = ClipboardPicker()
-    private var ignoreNextChange = false
     private let imageDir: URL
 
     private init() {
@@ -169,7 +168,7 @@ final class ClipboardManager: ObservableObject {
         updateHotKeyRegistration()
         lastChangeCount = pasteboard.changeCount
         timer?.invalidate()
-        let timer = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.poll() }
         }
         RunLoop.main.add(timer, forMode: .common)
@@ -202,7 +201,6 @@ final class ClipboardManager: ObservableObject {
         guard pasteboard.changeCount != lastChangeCount else { return }
         lastChangeCount = pasteboard.changeCount
 
-        if ignoreNextChange { ignoreNextChange = false; return }
         if isSensitive() { return }
 
         let source = NSWorkspace.shared.frontmostApplication?.localizedName
@@ -262,24 +260,20 @@ final class ClipboardManager: ObservableObject {
         guard let types = pasteboard.types else { return }
         let hasImage = types.contains(.png) || types.contains(.tiff)
         if hasImage {
+            var imgData: Data? = nil
+            var isPNG = false
+            if types.contains(.png), let png = pasteboard.data(forType: .png) {
+                imgData = png
+                isPNG = true
+            } else if types.contains(.tiff), let tiff = pasteboard.data(forType: .tiff) {
+                imgData = tiff
+                isPNG = false
+            }
+
+            guard let data = imgData, data.count <= ClipboardManager.maxImageBytes else { return }
             let changeCountAtStart = pasteboard.changeCount
+
             Task.detached(priority: .background) {
-                let pb = NSPasteboard.general
-                guard pb.changeCount == changeCountAtStart else { return }
-
-                var imgData: Data? = nil
-                var isPNG = false
-
-                if pb.types?.contains(.png) == true, let png = pb.data(forType: .png) {
-                    imgData = png
-                    isPNG = true
-                } else if pb.types?.contains(.tiff) == true, let tiff = pb.data(forType: .tiff) {
-                    imgData = tiff
-                    isPNG = false
-                }
-
-                guard let data = imgData, data.count <= ClipboardManager.maxImageBytes else { return }
-
                 let pngToWrite: Data?
                 if isPNG {
                     pngToWrite = data
@@ -433,7 +427,6 @@ final class ClipboardManager: ObservableObject {
 
     /// Put `item` on the clipboard and paste it into the previously focused app.
     func paste(_ item: ClipItem, into previousApp: NSRunningApplication?) {
-        ignoreNextChange = true
         pasteboard.clearContents()
         
         let pbItem = NSPasteboardItem()
