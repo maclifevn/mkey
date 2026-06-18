@@ -254,9 +254,7 @@ final class ClipboardPicker {
         }
         panel?.orderOut(nil)
         panel = nil
-        // we activated MKey to show the panel; hand focus back so the user
-        // returns to whatever they were doing (unless a paste will do it)
-        if wasOpen, !pasting { previousApp?.activate() }
+        if wasOpen, !pasting { previousApp?.activate(options: .activateIgnoringOtherApps) }
     }
 
     private func pick(_ item: ClipItem) {
@@ -512,8 +510,8 @@ private struct PickerRow: View {
             if item.isImage, let url = imageURL(item), let nsImage = ClipThumbnail.image(for: url) {
                 Image(nsImage: nsImage)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 52, height: 38, alignment: .leading)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 52, height: 38)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .overlay(RoundedRectangle(cornerRadius: 4).stroke(.quaternary))
             }
