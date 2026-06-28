@@ -42,6 +42,14 @@ struct AboutPage: View {
                     }
                     .padding(.top, 10)
 
+                    Button("Kiểm tra cập nhật") {
+                        AppState.shared.selectedPage = .system
+                        Task { await UpdateChecker.shared.check(manual: true) }
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .padding(.top, 8)
+
                     VStack(spacing: 10) {
                         InfoRow(icon: "keyboard",
                                 title: "Bộ gõ",

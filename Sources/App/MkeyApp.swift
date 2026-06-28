@@ -119,9 +119,13 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
 
         registerWorkspaceNotifications()
         observeQuickConvert()
+        observeUpdateAvailable()
 
         // clipboard history runs independently from the engine
         ClipboardManager.shared.startIfEnabled()
+
+        // check GitHub for a newer release (once/day, if enabled)
+        UpdateChecker.shared.autoCheckIfDue()
 
         // banner "Mở Cài đặt hệ thống" button asks us to (re-)register for AX
         NotificationCenter.default.addObserver(forName: .mkRequestAccessibility,
@@ -198,6 +202,27 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
                 alert.addButton(withTitle: "OK")
                 alert.window.level = .statusBar
                 alert.runModal()
+            }
+        }
+    }
+
+    private func observeUpdateAvailable() {
+        NotificationCenter.default.addObserver(forName: .mkUpdateAvailable,
+                                               object: nil, queue: .main) { note in
+            guard let info = note.object as? ReleaseInfo else { return }
+            Task { @MainActor in
+                let alert = NSAlert()
+                alert.messageText = "Đã có MKey \(info.version)"
+                let notes = info.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+                alert.informativeText = notes.isEmpty
+                    ? "Một phiên bản mới đã sẵn sàng để tải về."
+                    : String(notes.prefix(400))
+                alert.addButton(withTitle: "Xem bản mới")
+                alert.addButton(withTitle: "Để sau")
+                alert.window.level = .statusBar
+                if alert.runModal() == .alertFirstButtonReturn {
+                    UpdateChecker.shared.openReleasePage(info)
+                }
             }
         }
     }

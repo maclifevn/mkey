@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <Foundation/Foundation.h>
+#include <libproc.h>
 #include "Engine.h"
 #import "MKBridge.h"
 
@@ -47,6 +48,7 @@ extern "C" {
     //NOT the frontmostApplication while its window is up. Detection must go
     //through the AX focused element's owning process instead.
     NSArray* _slowPathApp = @[@"com.apple.Spotlight",
+                              @"com.apple.campo",              // new Spotlight on macOS 26/27 (Tahoe)
                               @"com.apple.launchpad.launcher",
                               @"com.raycast.macos",
                               @"com.runningwithcrayons.Alfred"];
@@ -133,11 +135,27 @@ extern "C" {
             } else {
                 bid = [NSRunningApplication runningApplicationWithProcessIdentifier:pid].bundleIdentifier;
             }
-            _axCachedIsSlow = (bid != nil) && [_slowPathApp containsObject:bid];
+
+            // Resolve the owning process's executable path. On macOS 26/27 the
+            // Spotlight search field can belong to a process that has no
+            // NSRunningApplication bundle id, so bundle-id matching alone misses
+            // it; matching the executable path (.../Spotlight.app/...) is robust.
+            NSString* exePath = nil;
+            char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+            if (proc_pidpath(pid, pathbuf, sizeof(pathbuf)) > 0) {
+                exePath = [NSString stringWithUTF8String:pathbuf];
+            }
+
+            bool slow = (bid != nil) && [_slowPathApp containsObject:bid];
+            if (!slow && exePath != nil) {
+                slow = [exePath containsString:@"/Spotlight.app/"] ||
+                       [exePath containsString:@"/Campo.app/"];   // new Spotlight (Tahoe)
+            }
+            _axCachedIsSlow = slow;
             _axCachedIsIncluded = AXAppIsIncluded(bid);
-            
-            if (_axCachedIsSlow && _axLoggedPid != pid) {
-                NSLog(@"mkey: AX direct-edit path active for %@ (pid %d)", bid, pid);
+
+            if (slow && _axLoggedPid != pid) {
+                NSLog(@"mkey: Accessibility edit path active for pid %d", pid);
                 _axLoggedPid = pid;
             }
         }
@@ -1020,6 +1038,15 @@ extern "C" {
 
         //handle keyboard
         if (type == kCGEventKeyDown) {
+            //A keystroke carrying Command/Control often changes the focus
+            //context without a mouse click (⌘Space opens Spotlight, ⌘Tab
+            //switches app). Invalidate the focus cache so the very next typed
+            //character re-detects the field — otherwise the first few chars in a
+            //freshly-opened Spotlight use the stale (wrong) path and scramble.
+            if (_flag & (kCGEventFlagMaskCommand | kCGEventFlagMaskControl)) {
+                AXInvalidateFocusCache();
+            }
+
             //send event signal to Engine
             vKeyHandleEvent(vKeyEvent::Keyboard,
                             vKeyEventState::KeyDown,
