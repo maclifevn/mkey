@@ -20,9 +20,14 @@ struct SystemPage: View {
             }
 
             Section("Cập nhật") {
-                Toggle("Tự động kiểm tra cập nhật khi khởi động",
+                Toggle("Tự động kiểm tra cập nhật",
                        isOn: Binding(get: { updater.autoCheckEnabled },
                                      set: { updater.autoCheckEnabled = $0 }))
+
+                Toggle("Tự động tải và cài đặt khi thoát",
+                       isOn: Binding(get: { updater.autoDownloadEnabled },
+                                     set: { updater.autoDownloadEnabled = $0 }))
+                    .disabled(!updater.autoCheckEnabled)
 
                 HStack(spacing: 8) {
                     Image(systemName: updateIcon)
@@ -35,18 +40,28 @@ struct SystemPage: View {
                         ProgressView().controlSize(.small)
                     } else {
                         Button("Kiểm tra ngay") {
-                            Task { await updater.check(manual: true) }
+                            updater.checkForUpdates()
                         }
+                        .disabled(!updater.canCheckForUpdates)
                     }
                 }
 
                 if case .available(let info) = updater.status {
                     HStack {
-                        Text("Phiên bản \(info.version) đã sẵn sàng.")
+                        Text("Phiên bản \(info) đã sẵn sàng.")
                         Spacer()
-                        Button("Xem bản mới") { updater.openReleasePage(info) }
+                        Button("Cập nhật…") { updater.checkForUpdates() }
+                            .disabled(!updater.canCheckForUpdates)
                             .buttonStyle(.borderedProminent)
                     }
+                }
+                if let lastCheck = updater.lastCheckDate {
+                    Text("Kiểm tra lần cuối: \(lastCheck.formatted(date: .abbreviated, time: .shortened))")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                if let notice = updater.availabilityNotice {
+                    Text(notice).font(.footnote).foregroundStyle(.secondary)
                 }
             }
 
@@ -105,7 +120,7 @@ struct SystemPage: View {
         case .idle:        return "Phiên bản hiện tại \(updater.currentVersion)."
         case .checking:    return "Đang kiểm tra cập nhật…"
         case .upToDate:    return "Bạn đang dùng bản mới nhất (\(updater.currentVersion))."
-        case .available(let info): return "Đã có bản \(info.version)."
+        case .available(let info): return "Đã có bản \(info)."
         case .failed(let msg):     return msg
         }
     }

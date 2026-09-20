@@ -22,6 +22,12 @@ settings:
     ENABLE_HARDENED_RUNTIME: NO
   configs:
     Release:
+      # Use the same Developer ID as MFinder so updates keep a stable identity
+      # for Accessibility permissions. Debug remains locally ad-hoc signed.
+      CODE_SIGN_IDENTITY: "Developer ID Application"
+      DEVELOPMENT_TEAM: CF5PGH3KGK
+      ENABLE_HARDENED_RUNTIME: YES
+      OTHER_CODE_SIGN_FLAGS: "--timestamp"
       # smaller, lighter release binary
       SWIFT_OPTIMIZATION_LEVEL: "-O"
       SWIFT_COMPILATION_MODE: wholemodule
@@ -37,6 +43,11 @@ settings:
       # keeping the type metadata SwiftUI relies on.
       SWIFT_REFLECTION_METADATA_LEVEL: without-names
 
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.9.6
+
 targets:
   mkey:
     type: application
@@ -45,6 +56,8 @@ targets:
       - path: Sources/Engine
       - path: Sources/Platform
       - path: Sources/App
+      - path: Vendor/Licenses/Sparkle/LICENSE.txt
+        buildPhase: resources
       - path: Sources/Support
         includes:
           - "Assets.xcassets"
@@ -62,6 +75,8 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
         GCC_WARN_64_TO_32_BIT_CONVERSION: NO
     dependencies:
+      - package: Sparkle
+        product: Sparkle
       - sdk: Carbon.framework
       - sdk: Cocoa.framework
       - sdk: ServiceManagement.framework

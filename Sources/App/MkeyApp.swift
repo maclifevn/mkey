@@ -13,7 +13,6 @@ import SwiftUI
 struct MkeyApp: App {
     @NSApplicationDelegateAdaptor(MkeyAppDelegate.self) private var appDelegate
     @StateObject private var state = AppState.shared
-    @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
         MenuBarExtra {
@@ -27,6 +26,7 @@ struct MkeyApp: App {
         Window("MKey — Bộ gõ Tiếng Việt", id: "settings") {
             SettingsRootView()
                 .environmentObject(state)
+                .background(WindowAttachment(id: "settings"))
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
@@ -35,6 +35,7 @@ struct MkeyApp: App {
         Window("Chào mừng đến với MKey", id: "welcome") {
             WelcomePage()
                 .environmentObject(state)
+                .background(WindowAttachment(id: "welcome"))
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
@@ -51,18 +52,17 @@ struct MenuBarLabel: View {
     var body: some View {
         Image(nsImage: StatusIcon.image(vietnamese: state.isVietnamese, gray: state.grayIcon, excluded: state.currentAppExcluded))
             .onReceive(NotificationCenter.default.publisher(for: .mkOpenSettingsWindow)) { _ in
-                openWindow(id: "settings")
-                NSApp.activate(ignoringOtherApps: true)
+                AppWindowPresenter.shared.open("settings", using: openWindow)
             }
             .onReceive(NotificationCenter.default.publisher(for: .mkOpenWelcomeWindow)) { _ in
-                openWindow(id: "welcome")
-                NSApp.activate(ignoringOtherApps: true)
+                AppWindowPresenter.shared.open("welcome", using: openWindow)
             }
     }
 }
 
 struct MenuContent: View {
     @EnvironmentObject private var state: AppState
+    @ObservedObject private var updater = UpdateChecker.shared
     @ObservedObject private var clipboard = ClipboardManager.shared
     @Environment(\.openWindow) private var openWindow
 
@@ -71,6 +71,8 @@ struct MenuContent: View {
             Button("Cấp quyền Trợ năng…") {
                 openWelcomeWindow()
             }
+            Button("Kiểm tra cập nhật…") { updater.checkForUpdates() }
+                .disabled(!updater.canCheckForUpdates)
             Divider()
             Button("Thoát MKey") {
                 NSApp.terminate(nil)
@@ -125,6 +127,8 @@ struct MenuContent: View {
 
             Button("Bảng điều khiển…") { open(.typing) }
             Button("Giới thiệu MKey") { open(.about) }
+            Button("Kiểm tra cập nhật…") { updater.checkForUpdates() }
+                .disabled(!updater.canCheckForUpdates)
 
             Divider()
 
@@ -145,14 +149,12 @@ struct MenuContent: View {
     }
 
     private func openWelcomeWindow() {
-        openWindow(id: "welcome")
-        NSApp.activate(ignoringOtherApps: true)
+        AppWindowPresenter.shared.open("welcome", using: openWindow)
     }
 
     private func open(_ page: SettingsPage) {
         state.selectedPage = page
-        openWindow(id: "settings")
-        NSApp.activate(ignoringOtherApps: true)
+        AppWindowPresenter.shared.open("settings", using: openWindow)
     }
 }
 
@@ -177,13 +179,12 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
 
         registerWorkspaceNotifications()
         observeQuickConvert()
-        observeUpdateAvailable()
 
         // clipboard history runs independently from the engine
         ClipboardManager.shared.startIfEnabled()
 
-        // check GitHub for a newer release (once/day, if enabled)
-        UpdateChecker.shared.autoCheckIfDue()
+        // Sparkle owns scheduled checks, signed downloads and installation.
+        UpdateChecker.shared.start()
 
         // banner "Mở Cài đặt hệ thống" button asks us to (re-)register for AX
         NotificationCenter.default.addObserver(forName: .mkRequestAccessibility,
@@ -192,15 +193,6 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
                 self?.askForAccessibility()
             }
         }
-
-        // Keep the Dock icon in sync with the "show in Dock" setting. Our
-        // windows briefly promote the app to .regular so they can grab focus
-        // on macOS 26 (an accessory app's window renders gray otherwise); once
-        // a window is key we drop back to .accessory so no Dock icon lingers.
-        NotificationCenter.default.addObserver(self, selector: #selector(mkWindowBecameKey(_:)),
-                                               name: NSWindow.didBecomeKeyNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(mkWindowWillClose(_:)),
-                                               name: NSWindow.willCloseNotification, object: nil)
 
         if AXIsProcessTrusted() {
             startEngine()
@@ -220,30 +212,6 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag { openSettingsWindow() }
         return true
-    }
-
-    // MARK: Dock icon / activation policy
-
-    private func isMkUIWindow(_ window: NSWindow?) -> Bool {
-        guard let id = window?.identifier?.rawValue else { return false }
-        return id.hasPrefix("settings") || id.hasPrefix("welcome")
-    }
-
-    @objc private func mkWindowBecameKey(_ note: Notification) {
-        guard isMkUIWindow(note.object as? NSWindow) else { return }
-        // Focus is secured; honour the user's choice to hide the Dock icon.
-        if !AppState.shared.showIconOnDock {
-            NSApp.setActivationPolicy(.accessory)
-        }
-    }
-
-    @objc private func mkWindowWillClose(_ note: Notification) {
-        guard isMkUIWindow(note.object as? NSWindow) else { return }
-        DispatchQueue.main.async {
-            if !AppState.shared.showIconOnDock {
-                NSApp.setActivationPolicy(.accessory)
-            }
-        }
     }
 
     // MARK: Engine
@@ -300,27 +268,6 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func observeUpdateAvailable() {
-        NotificationCenter.default.addObserver(forName: .mkUpdateAvailable,
-                                               object: nil, queue: .main) { note in
-            guard let info = note.object as? ReleaseInfo else { return }
-            Task { @MainActor in
-                let alert = NSAlert()
-                alert.messageText = "Đã có MKey \(info.version)"
-                let notes = info.notes.trimmingCharacters(in: .whitespacesAndNewlines)
-                alert.informativeText = notes.isEmpty
-                    ? "Một phiên bản mới đã sẵn sàng để tải về."
-                    : String(notes.prefix(400))
-                alert.addButton(withTitle: "Xem bản mới")
-                alert.addButton(withTitle: "Để sau")
-                alert.window.level = .statusBar
-                if alert.runModal() == .alertFirstButtonReturn {
-                    UpdateChecker.shared.openReleasePage(info)
-                }
-            }
-        }
-    }
-
     @objc private func receiveWake(_ note: Notification) {
         _ = MKBridge.startEventTap()
     }
@@ -356,22 +303,13 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
             if let welcomeWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "welcome" }) {
                 welcomeWindow.close()
             }
-            if let window = NSApp.windows.first(where: { $0.identifier?.rawValue == "settings" }) {
-                window.makeKeyAndOrderFront(nil)
-            } else {
-                NotificationCenter.default.post(name: .mkOpenSettingsWindow, object: nil)
-            }
+            NotificationCenter.default.post(name: .mkOpenSettingsWindow, object: nil)
         } else {
             if let settingsWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == "settings" }) {
                 settingsWindow.close()
             }
-            if let window = NSApp.windows.first(where: { $0.identifier?.rawValue == "welcome" }) {
-                window.makeKeyAndOrderFront(nil)
-            } else {
-                NotificationCenter.default.post(name: .mkOpenWelcomeWindow, object: nil)
-            }
+            NotificationCenter.default.post(name: .mkOpenWelcomeWindow, object: nil)
         }
-        NSApp.activate(ignoringOtherApps: true)
     }
 }
 
