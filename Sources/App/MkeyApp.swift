@@ -161,6 +161,7 @@ struct MenuContent: View {
 @MainActor
 final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
     private var permissionTimer: Timer?
+    private var wakeRetryCount = 0
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         AppState.registerDefaultSettings()
@@ -269,10 +270,29 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func receiveWake(_ note: Notification) {
-        _ = MKBridge.startEventTap()
+        wakeRetryCount = 0
+        retryStartEventTapAfterWake()
+    }
+
+    /// `startEventTap` can fail right after wake even though `AXIsProcessTrusted()`
+    /// later reports true, because macOS briefly reinstates the Accessibility
+    /// permission asynchronously. When that happens the tap is never recreated
+    /// and Vietnamese typing stays dead until the app is relaunched, so retry a
+    /// few times instead of silently giving up on the first failure.
+    private func retryStartEventTapAfterWake() {
+        if MKBridge.startEventTap() {
+            AppState.shared.accessibilityGranted = true
+            return
+        }
+        guard wakeRetryCount < 5 else { return }
+        wakeRetryCount += 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.retryStartEventTapAfterWake()
+        }
     }
 
     @objc private func receiveSleep(_ note: Notification) {
+        wakeRetryCount = 0
         _ = MKBridge.stopEventTap()
     }
 
