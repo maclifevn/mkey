@@ -1491,6 +1491,55 @@ bool checkQuickConsonant() {
 }
 /*==========================================================================================================*/
 
+static void normalizeFreeMarkAfterShape() {
+    if (!vFreeMark || vCodeTable != 0 || _index < 2 || _index >= MAX_BUFF ||
+        tempDisableKey || _longWordHelper.size() > 0 || hCode != vWillProcess ||
+        hBPC == 0 || hBPC > _index || hBPC != hNCC)
+        return;
+
+    Uint32 tone = 0;
+    int toneIndex = -1;
+    for (int index = 0; index < _index; index++) {
+        if (TypingWord[index] & (CHAR_CODE_MASK | PURE_CHARACTER_MASK | STANDALONE_MASK))
+            return;
+        if (TypingWord[index] & MARK_MASK) {
+            if (toneIndex >= 0)
+                return;
+            toneIndex = index;
+            tone = TypingWord[index] & MARK_MASK;
+        }
+    }
+    // Keep existing valid spellings (including both tone-placement styles).
+    if (toneIndex < 0 || (tone & (tone - 1)) != 0 || vIsVietnameseWord(TypingWord, _index))
+        return;
+
+    Uint32 candidate[MAX_BUFF];
+    std::copy(TypingWord, TypingWord + _index, candidate);
+    candidate[toneIndex] &= ~MARK_MASK;
+    int acceptedIndex = -1;
+    for (int index = 0; index < _index; index++) {
+        candidate[index] |= tone;
+        const bool known = vIsVietnameseWord(candidate, _index);
+        candidate[index] &= ~MARK_MASK;
+        if (known) {
+            if (acceptedIndex >= 0) //ambiguous dictionary result: keep the original word
+                return;
+            acceptedIndex = index;
+        }
+    }
+    if (acceptedIndex < 0 || acceptedIndex == toneIndex)
+        return;
+
+    TypingWord[toneIndex] &= ~MARK_MASK;
+    TypingWord[acceptedIndex] |= tone;
+    // Include the shape replacement that has not reached the text field yet.
+    const int first = std::min((int)_index - hBPC, std::min(toneIndex, acceptedIndex));
+    hBPC = hNCC = _index - first;
+    for (int index = _index - 1; index >= first; index--)
+        hData[_index - 1 - index] = GET(TypingWord[index]);
+    hExt = 4;
+}
+
 void vEnglishMode(const vKeyEventState& state, const Uint16& data, const bool& isCaps, const bool& otherControlKey) {
     hCode = vDoNothing;
     if (state == vKeyEventState::MouseDown || (otherControlKey && !isCaps)) {
@@ -1726,6 +1775,9 @@ void vKeyHandleEvent(const vKeyEvent& event,
             } else {
                 checkGrammar(0);
             }
+        } else if (vFreeMark && (IS_KEY_DOUBLE(data) || IS_KEY_W(data))) {
+            // A late circumflex/horn can move the tone's vowel; do not touch escapes.
+            normalizeFreeMarkAfterShape();
         }
         
         if (hCode == vRestore) {

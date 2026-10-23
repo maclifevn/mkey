@@ -97,7 +97,17 @@ Telex escapes and 31/32/33-character unknown words. Before the guard, 45 text
 cases failed and three oversized packets were rejected by the harness; all 119
 pass afterwards. The user's chosen priority keeps fan→phan and fun→phun when
 the complete expansion is in the Vietnamese dictionary.
-Default runs total 2234 cases across six tables (2229 pass, five exact known
+`free-mark.tsv` adds 622 cases for late circumflex/horn handling with free marks
+enabled. Its independently written words cover 32 families and include Telex,
+VNI, spelling/restoration, both tone styles, case, macros, word breaks, editing,
+and tone/shape cancellation after correction. Before this fix, 509 failed and
+113 passed; all 622 pass afterwards. The helper moves a single tone only when
+exactly one whole syllable in the dictionary matches. It preserves every other
+cell bit and skips already valid words, ordinary letter appends, Restore,
+standalone characters, multiple tones, overflow and non-Unicode output.
+GI append guards deliberately retain existing gisu/gisup/gisups behavior;
+normalizing those on every key remains outside this fix's scope.
+Default runs total 2856 cases across seven tables (2851 pass, five exact known
 baseline failures). They also execute `hook-contract.cpp`: 46 explicit packet
 policy fixtures and 16 real-engine packet lifetime/non-Unicode checks.
 Restore packets keep the legacy boundary; redraw expansion is WillProcess-only

@@ -4,15 +4,15 @@ Ngày khảo sát: **2026-10-23**, cập nhật đến **2026-10-24** (redraw v�
 
 ## Kết quả và phạm vi
 
-Áp dụng **14 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước và bản vá phụ âm đầu theo từ điển ở mục 11. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Redraw chỉ mở rộng Unicode dựng sẵn ở nhánh `vWillProcess`. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng đã chọn giữ quy tắc Telex hiện tại, không áp bản vá làm đổi escape.
+Áp dụng **15 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước, phụ âm đầu theo từ điển ở mục 11 và dấu mũ/móc nhập muộn khi bật Free Mark ở mục 12. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Hai bản vá từ điển không sửa hook. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng đã chọn giữ quy tắc Telex hiện tại, không áp bản vá làm đổi escape.
 
 Working tree ban đầu có 18 file sửa và 9 mục untracked. Người dùng đã cho phép bỏ điều kiện dừng. Các thay đổi đó được giữ nguyên, không đưa vào commit của đợt này. Riêng hook đã có sửa của người dùng: chỉ stage hunk redraw tự viết trên nội dung HEAD, giữ các hunk khác ở working tree. Build được thực hiện trên checkout đang có các thay đổi của người dùng; không nên hiểu kết quả này là một lần build clean checkout chỉ chứa các commit mới. Hash các file có sẵn được đối chiếu lại khi kết thúc, sau khi loại đúng hunk redraw khỏi hook để kiểm nội dung ban đầu.
 
 - Baseline trước mọi fix: **404 ca**, **399 PASS + 5 lỗi có sẵn**. Kỳ vọng độc lập với kết quả engine, không đổi kỳ vọng để khớp lỗi.
-- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **2.234 ca, 2.229 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape, 626 ca ConvertTool, 411 ca redraw và 119 ca phụ âm đầu. Thêm 46 ca kiểm chính sách xoá, 16 ca packet trực tiếp và 22 ca tra từ điển, đều PASS.
-- Cả 14 bản vá đều có test tái hiện FAIL trước sửa, PASS sau sửa và build Debug thành công. Đợt trước: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**; redraw có **379 FAIL → PASS**; phụ âm đầu có **48 FAIL/ERROR → PASS**. Không có trường hợp chỉ suy đoán rồi sửa.
+- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **2.856 ca, 2.851 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape, 626 ca ConvertTool, 411 ca redraw, 119 ca phụ âm đầu và 622 ca Free Mark. Thêm 46 ca kiểm chính sách xoá, 16 ca packet trực tiếp và 22 ca tra từ điển, đều PASS.
+- Cả 15 bản vá đều có test tái hiện FAIL trước sửa, PASS sau sửa và build Debug thành công. Đợt trước: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**; redraw có **379 FAIL → PASS**; phụ âm đầu có **48 FAIL/ERROR → PASS**; Free Mark có **509 FAIL → PASS**. Không có trường hợp chỉ suy đoán rồi sửa.
 - **72 guard** kiểm chính sách Telex đã chốt (trong đó `tesst`→`test`, `ass`→`as`, cả restore on/off) đều PASS trước/sau các bản vá. Không đổi baseline hoặc thêm known failure.
-- Sanitizer: **ASan + UBSan PASS cho cả suite 2.234 ca và 84 kiểm tra packet/policy/dictionary** (2.229 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
+- Sanitizer: **ASan + UBSan PASS cho cả suite 2.856 ca và 84 kiểm tra packet/policy/dictionary** (2.851 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
 - Review độc lập đã kiểm tra giao thức harness và các đoạn chuyển thể; kết quả review cuối: không có finding còn mở trong các bản vá đã nhận; đề xuất có regression được hoãn hoặc thu hẹp như mục 8. Finding shortcut của fix English macro đã được sửa, có test trước/sau; guard bounds cũng được review riêng.
 - Mọi checklist ứng dụng thật bên dưới **chưa được test tay trong đợt này**.
 
@@ -179,7 +179,7 @@ Bốn lỗi nhỏ đã được áp dụng ở mục 8; redraw Unicode đã ti�
 
 1. **W lần hai và kéo dài nguyên âm.** `thuoww` có hai semantics khác nhau ở các nguồn: undo về `thuow` hoặc tiếp thành `thươ`. Các ca `chưa+a`/kéo dài còn phụ thuộc validator và mode. Giữ quy tắc hiện tại; không gộp thay đổi thói quen vào bản vá encode output.
 2. **Redraw ngoài Unicode/WillProcess.** Phần đổi `ươ→uô` ở Unicode đã vá đủ biên 31/32 tại mục 9. Chưa mở rộng bảng mã khác: sender hiện có đếm lẫn ký tự logic và UTF-16 ở đường hai mã. Không mở `vRestore`: chưa có chuỗi phím tái hiện cần redraw xa ở nhánh này, và full-32 restore có rủi ro lịch sử macro khi thêm phím làm trượt bộ đệm. Cần tái hiện riêng trước khi sửa; không thay escape Telex.
-3. **Free Mark và `gisup`.** Đã điều tra riêng ở mục 10, chưa có bản nhận. `free=1` bỏ `checkGrammar` ở đường nhập thường, nhưng vẫn có chuẩn hóa khi Backspace; không thể suy ra hợp đồng “không bao giờ dời dấu” chỉ từ tên option. Tự dời dấu GI cần xác định semantics và giữ đúng hành vi hủy dấu; các bản thử chưa đạt. Lỗi hai dấu khi bấm dấu mới là ứng viên khác, chưa có fix upstream đúng nguyên nhân; cần nguồn đó trước khi nhận theo bộ lọc hiện tại.
+3. **Free Mark ngoài dấu mũ/móc nhập muộn.** Mục 12 đã vá việc dời dấu khi thêm shape muộn bằng kết quả duy nhất trong từ điển. Các chuỗi nhập thường `gisu/gisup/gisups` vẫn giữ nguyên; tự chuẩn hóa sau mọi nguyên âm có thể đổi phím hủy dấu như thí nghiệm mục 10. Không mở rộng sang đó. Lỗi GI hai dấu khi bấm dấu mới vẫn là ứng viên khác; helper mới cố ý bỏ qua từ nhiều MARK, không sửa lén lỗi này.
 4. **Hook Terminal/browser/timestamp.** Thiếu tái hiện theo chuỗi phím và fix hẹp có FAIL→PASS. Cần test tay riêng Secure Keyboard Entry, terminal panel, ordering và browser selection. Không nhận cả typing plan/lockstep/event stamper đường chung hoặc đổi default của fork.
 
 Rule 3.2 đã được điều tra và **bỏ qua vì gây 20 regression**, không còn là một mục chờ áp chỉ từ tên “typo”. Bảng D đã bổ sung các vần có oracle hằng ngày; IET/“điệt” không nằm trong tập đã vá và không được đánh dấu nhầm là MKey không bị.
@@ -249,7 +249,7 @@ Bắt đầu tại `c4bbdb4`, cùng nhánh. Đây là kết quả đợt trướ
 |---|---|---|
 | 1. W lần hai | **GIỮ HIỆN TẠI**. xkey/PHTV cũ chọn undo, LibreKey chọn thêm horn; chưa có một oracle hành vi chung. Không lấy cả patch W. | — |
 | 2. Redraw/kéo dài | **HOÃN ở đợt trước** vì ba duplicate ở biên; redraw Unicode đã được xử lý tiếp tại mục 9. Phần kéo dài còn đổi validator/mode, vẫn chưa áp. | Xem mục 9 |
-| 3. Free Mark | **HOÃN ở đợt trước**, đã điều tra tiếp tại mục 10 và vẫn chưa nhận bản vá. Đường nhập thường C++ bỏ `checkGrammar` khi free=1; không phải thiếu đúng một dòng giống patch Swift. | — |
+| 3. Free Mark | **ĐÃ ÁP DỤNG** phần dấu mũ/móc nhập muộn theo yêu cầu từ điển mới, xem mục 12. Chuẩn hóa sau chữ thường/GI vẫn hoãn; không coi đây là hunk thiếu từ patch Swift. | Commit chứa mục 12 |
 | 4. Thuở viết hoa | **ĐÃ ÁP DỤNG**, 75 ca, 54 FAIL→PASS, hai so sánh `CHR`. Không tuyên bố có reporter confirmation mà nguồn không có. | `760684d` |
 | 5a. Bảng D | **ĐÃ ÁP DỤNG**, 349 ca, 220 FAIL→PASS. 7 mẫu có sẵn ở đường gõ đ đầu, thiếu ở đ cuối; giữ static layout và mask Quick End. Review thêm 276 invalid-prefix guard ngoài repo đều PASS trước/sau. | `1ebbf85` |
 | 5b. Undo mất tone | **ĐÃ ÁP DỤNG**, 54 ca, 46 FAIL→PASS. `GET` giữ tone đang có trong bộ đệm; không sửa `_stateIndex--`, replay key, số ký tự hay quy tắc hủy dấu. | `8b1a2bb` |
@@ -304,7 +304,7 @@ Nguồn/test/log ở `/Users/maclife/mkey-research/2026-10-24-redraw-et6cjaka/`:
 
 **Giới hạn:** capture sender không phải test event tap/WindowServer; chưa tự test timing, native Chromium selection hoặc giao dịch AX thất bại. Các mục redraw trong checklist mục 4 đều **CẦN TEST TAY**. Hunk hook được stage riêng khỏi thay đổi của người dùng; sau khi bỏ đúng hunk mới, nội dung hook khớp snapshot ban đầu, 28 file có sẵn khác khớp SHA-256.
 
-## 10. Free Mark / `gisup`: điều tra xong, chưa nhận bản vá
+## 10. Free Mark / `gisup`: kết quả đợt điều tra trước
 
 Giữ nguyên engine, harness và mọi cấu hình trên `05d6c43`; commit đợt này chỉ cập nhật báo cáo. Ba agent nghiên cứu/review chỉ đọc, mọi bản thử đều là **bản sao MKey ngoài repo**. Không có commit sửa engine hoặc tuyên bố FAIL→PASS cho bản được nhận.
 
@@ -338,7 +338,7 @@ Các expected từ Việt vẫn giữ nguyên; 25 FAIL không đổi thành PASS
 - Đọc issue/comment và bảy commit nguồn dưới dạng dữ liệu; không chép Swift hoặc chạy upstream. Chín đoạn hướng dẫn debug/gửi log/cập nhật/đổi cài đặt trong issue và hướng dẫn cài/chạy của README đều bị bỏ qua, lưu `source-audit/ignored-instructions.json`.
 - Không có test UI macOS mới. Các thay đổi có sẵn của người dùng được đối chiếu SHA-256 và giữ nguyên. Không push, merge, mở PR, đổi version hoặc default.
 
-**Kết luận:** chưa có bản vá cho `gisup` đáp ứng đồng thời giữ semantics và escape. Giữ engine hiện tại; muốn tiếp tục cần làm rõ chính sách tự dời dấu GI, hoặc có nguồn sửa đúng lỗi hai dấu khi bấm dấu mới. Không coi prototype xanh một nhóm ca là bản vá an toàn.
+**Kết luận tại đợt điều tra trước:** chưa có bản vá cho `gisup` đáp ứng đồng thời giữ semantics và escape. Phần này giữ nguyên bằng chứng đã loại. Yêu cầu sau đó cho phép dùng từ điển; mục 12 chỉ nhận shape nhập muộn, giữ đường GI thường và các thử nghiệm không đạt ngoài bản vá.
 
 ## 11. Phụ âm đầu nhanh: chỉ nhận kết quả có trong từ điển
 
@@ -348,17 +348,50 @@ Các expected từ Việt vẫn giữ nguyên; 25 FAIL không đổi thành PASS
 
 Generator MKey tự viết kiểm SHA256/count nguồn, chuẩn hóa NFC/chữ thường, hợp hai chính tả, lọc dạng một âm tiết và sinh bảng tĩnh **6.678 âm tiết**. Lọc loại 32 acronym/từ vay mượn nhiều âm tiết theo cấu trúc, không có blacklist English hay ngoại lệ `fable`. Không chạy script upstream. Cả hai cách đặt dấu cũ/mới đều được giữ. Không chọn bộ tổng hợp Underthesea: GPL của code chưa đủ xác minh quyền từng nguồn dữ liệu trộn vào; không lấy code/data từ port MIT thiếu chuỗi quyền rõ ràng.
 
+Hướng dẫn install/build trong README nguồn, lệnh configure/make/preunzip của Aspell và câu đề nghị gửi sửa đổi cho tác giả trong `Copyright` chỉ được đọc như dữ liệu, không thực hiện. Không build/chạy mã tải về, không gửi tin hoặc upload thay đổi ra ngoài.
+
 **Nguyên nhân và thay đổi:** `checkQuickConsonant` vốn đổi F/J/W vô điều kiện khi ngắt từ, nên spell=0 vẫn đổi `fable` thành `phable`. Nay tạo bản xem trước của **cả phụ âm đầu và cuối**; chỉ đi tiếp nếu toàn bộ kết quả thuộc từ điển. Thất bại thì giữ nguyên từ, không sửa một nửa. Quick End chạy riêng vẫn giữ quy tắc cũ. Bảng tra không cấp phát heap, không tải mạng/runtime file, không thay lịch sử phím hoặc khôi phục English.
 
 | Nguồn | Triệu chứng/phạm vi | Bằng chứng phổ biến | Fix | Trạng thái | Commit |
 |---|---|---|---|---|---|
-| Ảnh người dùng; danh sách GPL ở trên | F/J/W đổi từ ngoại ngữ khi tắt chính tả | `fable/false/file/full/fetch/fluent`, `java/jazz/json/jump/jolt/jungle`, Simple Telex/VNI `web/white/width/wealth/wallet`; thao tác hằng ngày | Guard toàn âm tiết do MKey tự viết | **ĐÃ ÁP DỤNG**; 119 test | Commit chứa mục 11 (`engine: sửa phụ âm đầu nhanh bằng từ điển`) |
+| Ảnh người dùng; danh sách GPL ở trên | F/J/W đổi từ ngoại ngữ khi tắt chính tả | `fable/false/file/full/fetch/fluent`, `java/jazz/json/jump/jolt/jungle`, Simple Telex/VNI `web/white/width/wealth/wallet`; thao tác hằng ngày | Guard toàn âm tiết do MKey tự viết | **ĐÃ ÁP DỤNG**; 119 test | `9355bc0` |
 
 **FAIL → PASS:** trước sửa tại `ec8d155`: **71 PASS, 45 FAIL văn bản + 3 ERROR packet quá cỡ** trên 119 ca `quick-start.tsv`; sau sửa **119/119 PASS**. Lỗi packet nằm ở quick-start từ 32 ký tự, không mở rộng sender/hook để né lỗi; từ ngoài từ điển không còn vào đường mở rộng. Full suite **2.229 PASS + đúng 5 known / 2.234**, thêm **84 kiểm tra packet/policy/dictionary PASS**. Build Debug bằng lệnh ban đầu thành công. Review độc lập kiểm 20.050 packet tra từ (6.678 từ × chữ thường/hoa/trộn + 16 negative) dưới ASan/UBSan; không có sai lệch. Cả input hash, nguồn license và generated table đã kiểm lại.
 
 **Cần test tay, chưa thực hiện:** trên TextEdit, Chrome/Safari và VS Code, bật phụ âm đầu nhanh, Unicode/Telex, tắt chính tả, tắt macro: gõ `fable fanh fan fun ` → `fable phanh phan phun `; thử dấu phẩy và Enter. Với Simple Telex 1/VNI: `web wanh ` → `web quanh `. Bật cả phụ âm cuối nhanh: `fag jag ` → `phang giang `, `fbleg ` giữ `fbleg `. Bật lại chính tả và khôi phục, kiểm `tesst `→`test `, `ass `→`as ` (macro tắt).
 
 **Giới hạn đã chốt:** đây là từ điển âm tiết Việt, không phải bộ phát hiện ý định tiếng Anh. Từ mới/tên riêng không có trong dữ liệu không được tự mở rộng; `fan/fun` ưu tiên Việt theo lựa chọn người dùng. Không đổi default, version, UI hoặc đường event tap.
+
+## 12. Bỏ dấu tự do: nhận dấu mũ/móc nhập muộn bằng từ điển
+
+**Yêu cầu từ ảnh:** Unicode/Telex, Bỏ dấu tự do bật, `vijece` và `viejce` phải thành **`việc`**. Trước sửa, engine giữ MARK trên I khi E nhận mũ muộn, dẫn tới `vịêc`; đây là trạng thái thật trong buffer, khác lỗi redraw Swift ở [xkey #139](https://github.com/xmannv/xkey/issues/139)/[00b4dce](https://github.com/xmannv/xkey/commit/00b4dce42623a227816b12b9802754b6c8e4e172). Không chuyển thể patch đó hoặc code port. Bản này tự viết cho MKey, dùng chung dữ liệu GPL đã kiểm ở mục 11.
+
+**Cách sửa tổng quát:** sau phím A/E/O/W (VNI 6/7/8) thực sự thay shape, chỉ nhận packet `vWillProcess` có số xoá và số chèn bằng nhau. Nếu từ hiện tại đã nằm trong từ điển thì giữ nguyên. Với đúng một dấu thanh, thử các vị trí của **chính dấu đó**, giữ nguyên mọi bit chữ, hoa/thường và mũ/móc. Chỉ sửa khi có **duy nhất một âm tiết hợp lệ**; không có hoặc nhiều đáp án thì bỏ qua. Không có nhánh so chuỗi `việc`, `vijece` hay `viejce` trong engine.
+
+Không gọi thử `checkGrammar` rồi khôi phục state: mọi ứng viên chỉ ở buffer cục bộ, word/packet chỉ thay sau khi đã chọn duy nhất. Vùng redraw bắt đầu từ vị trí sớm nhất trong dấu cũ, dấu mới và vùng shape của packet hiện tại. Nhờ vậy không bỏ mất shape chưa gửi ra app. Packet dùng ext4; âm tiết được nhận dài tối đa 7 ký tự, không cần ext5 hoặc sửa giới hạn hook. Macro cập nhật sau chuẩn hóa; raw `KeyStates`, stateIndex và lịch sử undo giữ nguyên.
+
+| Nguồn | Triệu chứng/phạm vi | Bằng chứng phổ biến | Fix | Trạng thái | Commit |
+|---|---|---|---|---|---|
+| Ảnh người dùng, bộ từ GPL ở mục 11 | Dấu thanh đặt trước rồi thêm mũ/móc muộn: `vijece/viejce`→`việc` | Cùng nguyên nhân ở tiếng/tiền/biển/chiếc/hiện/nghiệm/quyền/thuế/người/dưới/tuổi/chuẩn/khuấy; thao tác Telex/VNI hằng ngày | Enum vị trí dấu trên cả âm tiết, chỉ nhận kết quả từ điển duy nhất; code MKey tự viết | **ĐÃ ÁP DỤNG**, 622 ca, **509 FAIL → PASS** | Commit chứa mục 12 (`engine: sửa dấu mũ móc nhập muộn khi bỏ dấu tự do`) |
+| GI nhập chữ thường sau dấu (`gisu/gisup/gisups`), nhiều dấu hoặc standalone W/ngoặc | Khác biệt mode/hủy dấu đã ghi ở mục 10 | Có issue liên quan nhưng khác nguyên nhân và đường state | Không mở nhánh sửa mới | **BỎ QUA/giữ hiện tại**, có guard | — |
+
+**Test trước/sau:** `free-mark.tsv` gồm 128 ca sàng lọc/undo, 64 ca thuộc 32 họ từ × hai chính tả và 430 ca cài đặt/VNI/case/history. Kỳ vọng được viết độc lập trước khi chạy, không sửa theo output. Trước bản này (engine `9355bc0`): **113 PASS + 509 FAIL / 622**; sau sửa **622/622 PASS**. Full suite **2.851 PASS + đúng 5 known / 2.856**, thêm **84 kiểm tra packet/policy/dictionary PASS**; ASan/UBSan strict toàn suite sạch. Debug `xcodegen generate` + `xcodebuild ... clean build` thành công; sau commit chạy lại test và build bằng lệnh ban đầu.
+
+Review trên snapshot đúng source hiện tại xác nhận 472 probe packet/biên/history và 168 probe focus khớp text/trace đã audit, không có finding. Cả prefix redraw 31/32, ordinary GI, `tesst/ass`, Restore, raw restoration sau thêm chữ sai, macro và Backspace đều giữ guard. Các prototype có regression trước đây vẫn bị loại; 38 oracle ordinary-append ngoài phạm vi được giữ nguyên trong research, không đổi thành known failure hoặc kỳ vọng giả.
+
+**Escape:** `tesst `→`test `, `ass `→`as ` giữ cả restore on/off. Từ đã sửa nay dùng chính quy tắc hủy dấu như từ gõ chuẩn: `vijecej` và `vieecjj` cùng ra `viêcj`; `vijecee` và `vieecje` cùng ra `viẹce`. Đây là phím hủy trên chữ đã được sửa đúng, không replay tất cả raw keys. Chuỗi GI nhập thường và trường hợp nhiều MARK không bị helper can thiệp.
+
+**CẦN TEST TAY**, chưa chạy app thật trong đợt này:
+
+| App | Kiểu gõ/cài đặt | Chuỗi phím | Mong đợi |
+|---|---|---|---|
+| TextEdit, Chrome/Safari, VS Code | Unicode/Telex, Bỏ dấu tự do bật, macro tắt; lặp chính tả và khôi phục on/off | `vijece viejce tisenge quyfene ngufoiw ` | `việc việc tiếng quyền người ` |
+| Cùng các app trên | Unicode/VNI, Bỏ dấu tự do bật, macro tắt | `vi5ec6 vie5c6 ` | `việc việc ` |
+| Chrome/Safari và VS Code | Telex/free=1, macro tắt | `vijece,` rồi Enter; gõ `vijece` rồi Backspace và `c` | `việc,` rồi xuống dòng; từ sau vẫn là `việc`, không mất/lặp chữ |
+| TextEdit, Chrome | Telex/free=1, macro tắt, restore on/off | `vijecej `, `vijecee `, `tesst ass ` | `viêcj `, `viẹce `, `test as ` như gõ chuẩn và quy tắc escape đã chốt |
+| TextEdit | free=1, macro tắt, cả chính tả cũ/mới | `hosa thusy` | Giữ hành vi cũ `hóa thúy`, không ép theo một chuẩn khác |
+
+**Giới hạn:** Unicode dựng sẵn, chỉ khi shape nhập muộn, không tự chuẩn hóa sau mọi chữ hoặc dò từ gần giống. Từ ngoài dữ liệu, nhiều dấu, standalone chưa chèn ra host, overflow và bảng mã khác được bỏ qua. Không đổi default của Free Mark, chính tả hay khôi phục. SHA256 của 29 file có sẵn của người dùng được đối chiếu với snapshot đầu đợt mới; engine/harness/report thay đổi trong hai commit này không chứa hunk của người dùng.
 
 ## Phụ lục A — Repo tìm thêm qua code search
 
