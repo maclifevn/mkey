@@ -24,6 +24,11 @@ ANSI keystrokes, output is UTF-8.
 Special keys: `<BS>`, `<ENTER>`, `<KPENTER>`, `<TAB>`, `<LEFT>`, `<RIGHT>`, `<ESC>`,
 `<CAPS>`, `<MOUSE>`, `<SESSION>`. JSON strings in `expected` preserve trailing
 spaces, tabs and newlines. Normal quotes in TSV are CSV escaping.
+`<MOD+ENTER>`, `<MOD+SHIFT+ENTER>`, `<MOD+DOT>`, `<MOD+SHIFT+DOT>` and
+`<MOD+SHIFT+COMMA>` set the engine's shared other-control flag (Command,
+Control, Option, Fn, etc.). The fake field does not insert text for shortcuts;
+it checks that they do not spuriously expand a macro. `<SHIFT+ENTER>` has Shift
+alone and remains an ordinary Return trigger. Real shortcut actions need UI QA.
 
 The simulated text field follows `MKEngineHook.mm`'s Unicode delivery contract:
 
@@ -63,9 +68,9 @@ known failure is an error, including an unexpected pass, until reviewed.
 When a targeted upstream fix resolves one, remove its known-failure exemption
 and add focused coverage to `regressions.tsv`; retain the original observation.
 
-`regressions.tsv` holds 61 cases for the six applied fixes. `screened.tsv` holds
+`regressions.tsv` holds 80 cases for the seven applied fixes. `screened.tsv` holds
 19 pre-fix passing probes for upstream bugs MKey already avoids, plus three
-delivery-contract checks. Default runs cover all three tables (487 cases).
+delivery-contract checks. Default runs cover all three tables (506 cases).
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 

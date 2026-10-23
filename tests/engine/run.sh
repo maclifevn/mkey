@@ -6,7 +6,7 @@ test_build="$(mktemp -d "${TMPDIR:-/tmp}/mkey-engine.XXXXXX")"
 trap 'rm -rf "$test_build"' EXIT
 compiler_flags=(-std=c++17 -g -Wall -Wextra -Wno-sign-compare -Wno-unused-parameter)
 if [[ "${SANITIZE:-0}" == 1 ]]; then
-    compiler_flags+=(-O1 -fsanitize=address,undefined -fno-omit-frame-pointer)
+    compiler_flags+=(-O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer)
 else
     compiler_flags+=(-O0)
 fi
