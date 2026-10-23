@@ -79,3 +79,25 @@ standalone-no-macro	telex,macro=0	w	"""ư"""
 standalone-vni-guard	vni	w	"""w"""
 standalone-simple1-guard	simple1	w	"""w"""
 standalone-simple2	simple2	w	"""ư"""
+restore-history-other-word	telex,restore=1,macro=0	tieengs ab<BS><BS><BS>k 	"""tiếngk """
+restore-history-other-chao	telex,restore=1,macro=0	chaof ab<BS><BS><BS>k 	"""chàok """
+restore-history-other-delete-more	telex,restore=1,macro=0	tieengs ab<BS><BS><BS><BS>k 	"""tiếnk """
+restore-history-immediate-space	telex,restore=1,macro=0	tieengs <BS>k 	"""tieengsk """
+restore-history-immediate-two-spaces	telex,restore=1,macro=0	tieengs  <BS><BS>k 	"""tieengsk """
+restore-history-prefixed-current	telex,restore=1,macro=0	xin tieengs <BS>k 	"""xin tieengsk """
+restore-delete-accented	telex,restore=1,macro=0	tieengs<BS>k 	"""tiếnk """
+restore-delete-horned	telex,restore=1,macro=0	nguowif<BS> 	"""ngườ """
+restore-history-after-english	telex,restore=1,macro=0	tieengs office<BS><BS><BS><BS><BS><BS>k 	"""tiếngk """
+restore-history-macro	telex,restore=1	vn <BS>x 	"""Việt Namx """
+restore-history-next-word	telex,restore=1,macro=0	tieengs ab<BS><BS><BS>k chaof 	"""tiếngk chào """
+restore-history-punctuation	telex,restore=1,macro=0	chaof, ab<BS><BS><BS><BS>k 	"""chàok """
+restore-history-tempoff	telex,restore=1,macro=0	aafk<ENGINEOFF>zz 	"""ầkzz """	Temporary engine bypass must invalidate keys which omit the bypassed characters.
+restore-history-tempoff-on	telex,restore=1,macro=0	aafk<ENGINEOFF>zz<ENGINEON> 	"""ầkzz """	Enabling the engine again does not reconstruct missing key history.
+restore-history-tempoff-next	telex,restore=1,macro=0	aafk<ENGINEOFF>zz chaof 	"""ầkzz chào """	A fresh word after bypass owns its own key history.
+restore-delete-literal-prefix	telex,restore=1,macro=0	te<BS>ieengsk 	"""tieengsk """	Literal Backspace retains provably aligned restoration keys.
+restore-history-shortcut	telex,restore=1,macro=0	aafk<MOD+ENTER>	"""ầk"""	A shortcut cannot trigger text replay from the old word.
+restore-history-shift-shortcut	telex,restore=1,macro=0	aafk<MOD+SHIFT+ENTER>	"""ầk"""	Shift does not make a control shortcut a text restore trigger.
+restore-history-mouse	telex,restore=1,macro=0	aafk<MOUSE>b 	"""ầkb """	The hook discards a mouse reset response; old keys must not survive it.
+restore-history-session	telex,restore=1,macro=0	aafk<SESSION>b 	"""ầkb """	An explicit session reset starts an independent raw-key owner.
+restore-history-cursor	telex,restore=1,macro=0	aafk<LEFT>b	"""aafbk"""	A plain cursor boundary retains ordinary wrong-spelling restoration.
+restore-history-mouse-next-tone	telex,restore=1,macro=0	aafk<MOUSE>af 	"""ầkà """	A mouse reset must not silently replace raw state before the next word adds a tone.

@@ -203,6 +203,16 @@ public:
                 i += 9;
                 continue;
             }
+            if (keys.compare(i, 11, "<ENGINEOFF>") == 0) {
+                vTempOffEngine(true);
+                i += 11;
+                continue;
+            }
+            if (keys.compare(i, 10, "<ENGINEON>") == 0) {
+                vTempOffEngine(false);
+                i += 10;
+                continue;
+            }
             if (keys.compare(i, 7, "<MOUSE>") == 0) {
                 // RequestNewSession in MKEngineHook.mm.
                 if (vLanguage != 0) vKeyHandleEvent(Mouse, MouseDown, 0);

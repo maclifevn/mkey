@@ -24,6 +24,8 @@ ANSI keystrokes, output is UTF-8.
 Special keys: `<BS>`, `<ENTER>`, `<KPENTER>`, `<TAB>`, `<LEFT>`, `<RIGHT>`, `<ESC>`,
 `<CAPS>`, `<MOUSE>`, `<SESSION>`. JSON strings in `expected` preserve trailing
 spaces, tabs and newlines. Normal quotes in TSV are CSV escaping.
+`<ENGINEOFF>` and `<ENGINEON>` call `vTempOffEngine(true/false)` without
+inserting text, to verify that bypassed keys cannot reuse stale restoration data.
 `<MOD+ENTER>`, `<MOD+SHIFT+ENTER>`, `<MOD+DOT>`, `<MOD+SHIFT+DOT>` and
 `<MOD+SHIFT+COMMA>` set the engine's shared other-control flag (Command,
 Control, Option, Fn, etc.). The fake field does not insert text for shortcuts;
@@ -68,9 +70,13 @@ known failure is an error, including an unexpected pass, until reviewed.
 When a targeted upstream fix resolves one, remove its known-failure exemption
 and add focused coverage to `regressions.tsv`; retain the original observation.
 
-`regressions.tsv` holds 80 cases for the seven applied fixes. `screened.tsv` holds
+`regressions.tsv` holds 102 cases for the eight applied fixes. The last 22 check
+restoration history after backspace, macros and temporary engine bypass;
+13 failed before the history guard. The five English baseline observations
+remain unchanged, pending the behavior choices described in the report.
+`screened.tsv` holds
 19 pre-fix passing probes for upstream bugs MKey already avoids, plus three
-delivery-contract checks. Default runs cover all three tables (506 cases).
+delivery-contract checks. Default runs cover all three tables (528 cases).
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 
