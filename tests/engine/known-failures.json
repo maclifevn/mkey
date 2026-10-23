@@ -1,0 +1,22 @@
+{
+  "english-test": {
+    "actual": "tét ",
+    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+  },
+  "english-office": {
+    "actual": "ofice ",
+    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+  },
+  "english-password": {
+    "actual": "pasword ",
+    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+  },
+  "english-coffee": {
+    "actual": "cofee ",
+    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+  },
+  "english-messenger": {
+    "actual": "Mesenger ",
+    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+  }
+}

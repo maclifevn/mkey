@@ -1,0 +1,3638 @@
+[
+  {
+    "id": "telex-001",
+    "settings": "telex",
+    "keys": "a",
+    "expected": "a",
+    "actual": "a",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-001",
+    "settings": "vni",
+    "keys": "a",
+    "expected": "a",
+    "actual": "a",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-002",
+    "settings": "telex",
+    "keys": "as",
+    "expected": "á",
+    "actual": "á",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-002",
+    "settings": "vni",
+    "keys": "a1",
+    "expected": "á",
+    "actual": "á",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-003",
+    "settings": "telex",
+    "keys": "af",
+    "expected": "à",
+    "actual": "à",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-003",
+    "settings": "vni",
+    "keys": "a2",
+    "expected": "à",
+    "actual": "à",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-004",
+    "settings": "telex",
+    "keys": "ar",
+    "expected": "ả",
+    "actual": "ả",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-004",
+    "settings": "vni",
+    "keys": "a3",
+    "expected": "ả",
+    "actual": "ả",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-005",
+    "settings": "telex",
+    "keys": "ax",
+    "expected": "ã",
+    "actual": "ã",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-005",
+    "settings": "vni",
+    "keys": "a4",
+    "expected": "ã",
+    "actual": "ã",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-006",
+    "settings": "telex",
+    "keys": "aj",
+    "expected": "ạ",
+    "actual": "ạ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-006",
+    "settings": "vni",
+    "keys": "a5",
+    "expected": "ạ",
+    "actual": "ạ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-007",
+    "settings": "telex",
+    "keys": "aa",
+    "expected": "â",
+    "actual": "â",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-007",
+    "settings": "vni",
+    "keys": "a6",
+    "expected": "â",
+    "actual": "â",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-008",
+    "settings": "telex",
+    "keys": "aas",
+    "expected": "ấ",
+    "actual": "ấ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-008",
+    "settings": "vni",
+    "keys": "a61",
+    "expected": "ấ",
+    "actual": "ấ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-009",
+    "settings": "telex",
+    "keys": "aaf",
+    "expected": "ầ",
+    "actual": "ầ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-009",
+    "settings": "vni",
+    "keys": "a62",
+    "expected": "ầ",
+    "actual": "ầ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-010",
+    "settings": "telex",
+    "keys": "aar",
+    "expected": "ẩ",
+    "actual": "ẩ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-010",
+    "settings": "vni",
+    "keys": "a63",
+    "expected": "ẩ",
+    "actual": "ẩ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-011",
+    "settings": "telex",
+    "keys": "aax",
+    "expected": "ẫ",
+    "actual": "ẫ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-011",
+    "settings": "vni",
+    "keys": "a64",
+    "expected": "ẫ",
+    "actual": "ẫ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-012",
+    "settings": "telex",
+    "keys": "aaj",
+    "expected": "ậ",
+    "actual": "ậ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-012",
+    "settings": "vni",
+    "keys": "a65",
+    "expected": "ậ",
+    "actual": "ậ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-013",
+    "settings": "telex",
+    "keys": "aw",
+    "expected": "ă",
+    "actual": "ă",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-013",
+    "settings": "vni",
+    "keys": "a8",
+    "expected": "ă",
+    "actual": "ă",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-014",
+    "settings": "telex",
+    "keys": "aws",
+    "expected": "ắ",
+    "actual": "ắ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-014",
+    "settings": "vni",
+    "keys": "a81",
+    "expected": "ắ",
+    "actual": "ắ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-015",
+    "settings": "telex",
+    "keys": "awf",
+    "expected": "ằ",
+    "actual": "ằ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-015",
+    "settings": "vni",
+    "keys": "a82",
+    "expected": "ằ",
+    "actual": "ằ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-016",
+    "settings": "telex",
+    "keys": "awr",
+    "expected": "ẳ",
+    "actual": "ẳ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-016",
+    "settings": "vni",
+    "keys": "a83",
+    "expected": "ẳ",
+    "actual": "ẳ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-017",
+    "settings": "telex",
+    "keys": "awx",
+    "expected": "ẵ",
+    "actual": "ẵ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-017",
+    "settings": "vni",
+    "keys": "a84",
+    "expected": "ẵ",
+    "actual": "ẵ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-018",
+    "settings": "telex",
+    "keys": "awj",
+    "expected": "ặ",
+    "actual": "ặ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-018",
+    "settings": "vni",
+    "keys": "a85",
+    "expected": "ặ",
+    "actual": "ặ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-019",
+    "settings": "telex",
+    "keys": "e",
+    "expected": "e",
+    "actual": "e",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-019",
+    "settings": "vni",
+    "keys": "e",
+    "expected": "e",
+    "actual": "e",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-020",
+    "settings": "telex",
+    "keys": "es",
+    "expected": "é",
+    "actual": "é",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-020",
+    "settings": "vni",
+    "keys": "e1",
+    "expected": "é",
+    "actual": "é",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-021",
+    "settings": "telex",
+    "keys": "ef",
+    "expected": "è",
+    "actual": "è",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-021",
+    "settings": "vni",
+    "keys": "e2",
+    "expected": "è",
+    "actual": "è",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-022",
+    "settings": "telex",
+    "keys": "er",
+    "expected": "ẻ",
+    "actual": "ẻ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-022",
+    "settings": "vni",
+    "keys": "e3",
+    "expected": "ẻ",
+    "actual": "ẻ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-023",
+    "settings": "telex",
+    "keys": "ex",
+    "expected": "ẽ",
+    "actual": "ẽ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-023",
+    "settings": "vni",
+    "keys": "e4",
+    "expected": "ẽ",
+    "actual": "ẽ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-024",
+    "settings": "telex",
+    "keys": "ej",
+    "expected": "ẹ",
+    "actual": "ẹ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-024",
+    "settings": "vni",
+    "keys": "e5",
+    "expected": "ẹ",
+    "actual": "ẹ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-025",
+    "settings": "telex",
+    "keys": "ee",
+    "expected": "ê",
+    "actual": "ê",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-025",
+    "settings": "vni",
+    "keys": "e6",
+    "expected": "ê",
+    "actual": "ê",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-026",
+    "settings": "telex",
+    "keys": "ees",
+    "expected": "ế",
+    "actual": "ế",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-026",
+    "settings": "vni",
+    "keys": "e61",
+    "expected": "ế",
+    "actual": "ế",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-027",
+    "settings": "telex",
+    "keys": "eef",
+    "expected": "ề",
+    "actual": "ề",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-027",
+    "settings": "vni",
+    "keys": "e62",
+    "expected": "ề",
+    "actual": "ề",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-028",
+    "settings": "telex",
+    "keys": "eer",
+    "expected": "ể",
+    "actual": "ể",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-028",
+    "settings": "vni",
+    "keys": "e63",
+    "expected": "ể",
+    "actual": "ể",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-029",
+    "settings": "telex",
+    "keys": "eex",
+    "expected": "ễ",
+    "actual": "ễ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-029",
+    "settings": "vni",
+    "keys": "e64",
+    "expected": "ễ",
+    "actual": "ễ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-030",
+    "settings": "telex",
+    "keys": "eej",
+    "expected": "ệ",
+    "actual": "ệ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-030",
+    "settings": "vni",
+    "keys": "e65",
+    "expected": "ệ",
+    "actual": "ệ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-031",
+    "settings": "telex",
+    "keys": "i",
+    "expected": "i",
+    "actual": "i",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-031",
+    "settings": "vni",
+    "keys": "i",
+    "expected": "i",
+    "actual": "i",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-032",
+    "settings": "telex",
+    "keys": "is",
+    "expected": "í",
+    "actual": "í",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-032",
+    "settings": "vni",
+    "keys": "i1",
+    "expected": "í",
+    "actual": "í",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-033",
+    "settings": "telex",
+    "keys": "if",
+    "expected": "ì",
+    "actual": "ì",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-033",
+    "settings": "vni",
+    "keys": "i2",
+    "expected": "ì",
+    "actual": "ì",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-034",
+    "settings": "telex",
+    "keys": "ir",
+    "expected": "ỉ",
+    "actual": "ỉ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-034",
+    "settings": "vni",
+    "keys": "i3",
+    "expected": "ỉ",
+    "actual": "ỉ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-035",
+    "settings": "telex",
+    "keys": "ix",
+    "expected": "ĩ",
+    "actual": "ĩ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-035",
+    "settings": "vni",
+    "keys": "i4",
+    "expected": "ĩ",
+    "actual": "ĩ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-036",
+    "settings": "telex",
+    "keys": "ij",
+    "expected": "ị",
+    "actual": "ị",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-036",
+    "settings": "vni",
+    "keys": "i5",
+    "expected": "ị",
+    "actual": "ị",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-037",
+    "settings": "telex",
+    "keys": "o",
+    "expected": "o",
+    "actual": "o",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-037",
+    "settings": "vni",
+    "keys": "o",
+    "expected": "o",
+    "actual": "o",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-038",
+    "settings": "telex",
+    "keys": "os",
+    "expected": "ó",
+    "actual": "ó",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-038",
+    "settings": "vni",
+    "keys": "o1",
+    "expected": "ó",
+    "actual": "ó",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-039",
+    "settings": "telex",
+    "keys": "of",
+    "expected": "ò",
+    "actual": "ò",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-039",
+    "settings": "vni",
+    "keys": "o2",
+    "expected": "ò",
+    "actual": "ò",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-040",
+    "settings": "telex",
+    "keys": "or",
+    "expected": "ỏ",
+    "actual": "ỏ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-040",
+    "settings": "vni",
+    "keys": "o3",
+    "expected": "ỏ",
+    "actual": "ỏ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-041",
+    "settings": "telex",
+    "keys": "ox",
+    "expected": "õ",
+    "actual": "õ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-041",
+    "settings": "vni",
+    "keys": "o4",
+    "expected": "õ",
+    "actual": "õ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-042",
+    "settings": "telex",
+    "keys": "oj",
+    "expected": "ọ",
+    "actual": "ọ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-042",
+    "settings": "vni",
+    "keys": "o5",
+    "expected": "ọ",
+    "actual": "ọ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-043",
+    "settings": "telex",
+    "keys": "oo",
+    "expected": "ô",
+    "actual": "ô",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-043",
+    "settings": "vni",
+    "keys": "o6",
+    "expected": "ô",
+    "actual": "ô",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-044",
+    "settings": "telex",
+    "keys": "oos",
+    "expected": "ố",
+    "actual": "ố",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-044",
+    "settings": "vni",
+    "keys": "o61",
+    "expected": "ố",
+    "actual": "ố",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-045",
+    "settings": "telex",
+    "keys": "oof",
+    "expected": "ồ",
+    "actual": "ồ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-045",
+    "settings": "vni",
+    "keys": "o62",
+    "expected": "ồ",
+    "actual": "ồ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-046",
+    "settings": "telex",
+    "keys": "oor",
+    "expected": "ổ",
+    "actual": "ổ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-046",
+    "settings": "vni",
+    "keys": "o63",
+    "expected": "ổ",
+    "actual": "ổ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-047",
+    "settings": "telex",
+    "keys": "oox",
+    "expected": "ỗ",
+    "actual": "ỗ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-047",
+    "settings": "vni",
+    "keys": "o64",
+    "expected": "ỗ",
+    "actual": "ỗ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-048",
+    "settings": "telex",
+    "keys": "ooj",
+    "expected": "ộ",
+    "actual": "ộ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-048",
+    "settings": "vni",
+    "keys": "o65",
+    "expected": "ộ",
+    "actual": "ộ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-049",
+    "settings": "telex",
+    "keys": "ow",
+    "expected": "ơ",
+    "actual": "ơ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-049",
+    "settings": "vni",
+    "keys": "o7",
+    "expected": "ơ",
+    "actual": "ơ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-050",
+    "settings": "telex",
+    "keys": "ows",
+    "expected": "ớ",
+    "actual": "ớ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-050",
+    "settings": "vni",
+    "keys": "o71",
+    "expected": "ớ",
+    "actual": "ớ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-051",
+    "settings": "telex",
+    "keys": "owf",
+    "expected": "ờ",
+    "actual": "ờ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-051",
+    "settings": "vni",
+    "keys": "o72",
+    "expected": "ờ",
+    "actual": "ờ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-052",
+    "settings": "telex",
+    "keys": "owr",
+    "expected": "ở",
+    "actual": "ở",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-052",
+    "settings": "vni",
+    "keys": "o73",
+    "expected": "ở",
+    "actual": "ở",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-053",
+    "settings": "telex",
+    "keys": "owx",
+    "expected": "ỡ",
+    "actual": "ỡ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-053",
+    "settings": "vni",
+    "keys": "o74",
+    "expected": "ỡ",
+    "actual": "ỡ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-054",
+    "settings": "telex",
+    "keys": "owj",
+    "expected": "ợ",
+    "actual": "ợ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-054",
+    "settings": "vni",
+    "keys": "o75",
+    "expected": "ợ",
+    "actual": "ợ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-055",
+    "settings": "telex",
+    "keys": "u",
+    "expected": "u",
+    "actual": "u",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-055",
+    "settings": "vni",
+    "keys": "u",
+    "expected": "u",
+    "actual": "u",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-056",
+    "settings": "telex",
+    "keys": "us",
+    "expected": "ú",
+    "actual": "ú",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-056",
+    "settings": "vni",
+    "keys": "u1",
+    "expected": "ú",
+    "actual": "ú",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-057",
+    "settings": "telex",
+    "keys": "uf",
+    "expected": "ù",
+    "actual": "ù",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-057",
+    "settings": "vni",
+    "keys": "u2",
+    "expected": "ù",
+    "actual": "ù",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-058",
+    "settings": "telex",
+    "keys": "ur",
+    "expected": "ủ",
+    "actual": "ủ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-058",
+    "settings": "vni",
+    "keys": "u3",
+    "expected": "ủ",
+    "actual": "ủ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-059",
+    "settings": "telex",
+    "keys": "ux",
+    "expected": "ũ",
+    "actual": "ũ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-059",
+    "settings": "vni",
+    "keys": "u4",
+    "expected": "ũ",
+    "actual": "ũ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-060",
+    "settings": "telex",
+    "keys": "uj",
+    "expected": "ụ",
+    "actual": "ụ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-060",
+    "settings": "vni",
+    "keys": "u5",
+    "expected": "ụ",
+    "actual": "ụ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-061",
+    "settings": "telex",
+    "keys": "uw",
+    "expected": "ư",
+    "actual": "ư",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-061",
+    "settings": "vni",
+    "keys": "u7",
+    "expected": "ư",
+    "actual": "ư",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-062",
+    "settings": "telex",
+    "keys": "uws",
+    "expected": "ứ",
+    "actual": "ứ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-062",
+    "settings": "vni",
+    "keys": "u71",
+    "expected": "ứ",
+    "actual": "ứ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-063",
+    "settings": "telex",
+    "keys": "uwf",
+    "expected": "ừ",
+    "actual": "ừ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-063",
+    "settings": "vni",
+    "keys": "u72",
+    "expected": "ừ",
+    "actual": "ừ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-064",
+    "settings": "telex",
+    "keys": "uwr",
+    "expected": "ử",
+    "actual": "ử",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-064",
+    "settings": "vni",
+    "keys": "u73",
+    "expected": "ử",
+    "actual": "ử",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-065",
+    "settings": "telex",
+    "keys": "uwx",
+    "expected": "ữ",
+    "actual": "ữ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-065",
+    "settings": "vni",
+    "keys": "u74",
+    "expected": "ữ",
+    "actual": "ữ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-066",
+    "settings": "telex",
+    "keys": "uwj",
+    "expected": "ự",
+    "actual": "ự",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-066",
+    "settings": "vni",
+    "keys": "u75",
+    "expected": "ự",
+    "actual": "ự",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-067",
+    "settings": "telex",
+    "keys": "y",
+    "expected": "y",
+    "actual": "y",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-067",
+    "settings": "vni",
+    "keys": "y",
+    "expected": "y",
+    "actual": "y",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-068",
+    "settings": "telex",
+    "keys": "ys",
+    "expected": "ý",
+    "actual": "ý",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-068",
+    "settings": "vni",
+    "keys": "y1",
+    "expected": "ý",
+    "actual": "ý",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-069",
+    "settings": "telex",
+    "keys": "yf",
+    "expected": "ỳ",
+    "actual": "ỳ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-069",
+    "settings": "vni",
+    "keys": "y2",
+    "expected": "ỳ",
+    "actual": "ỳ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-070",
+    "settings": "telex",
+    "keys": "yr",
+    "expected": "ỷ",
+    "actual": "ỷ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-070",
+    "settings": "vni",
+    "keys": "y3",
+    "expected": "ỷ",
+    "actual": "ỷ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-071",
+    "settings": "telex",
+    "keys": "yx",
+    "expected": "ỹ",
+    "actual": "ỹ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-071",
+    "settings": "vni",
+    "keys": "y4",
+    "expected": "ỹ",
+    "actual": "ỹ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-072",
+    "settings": "telex",
+    "keys": "yj",
+    "expected": "ỵ",
+    "actual": "ỵ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-072",
+    "settings": "vni",
+    "keys": "y5",
+    "expected": "ỵ",
+    "actual": "ỵ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-073",
+    "settings": "telex",
+    "keys": "dd",
+    "expected": "đ",
+    "actual": "đ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-073",
+    "settings": "vni",
+    "keys": "d9",
+    "expected": "đ",
+    "actual": "đ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-074",
+    "settings": "telex",
+    "keys": "xin",
+    "expected": "xin",
+    "actual": "xin",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-074",
+    "settings": "vni",
+    "keys": "xin",
+    "expected": "xin",
+    "actual": "xin",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-075",
+    "settings": "telex",
+    "keys": "chaof",
+    "expected": "chào",
+    "actual": "chào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-075",
+    "settings": "vni",
+    "keys": "chao2",
+    "expected": "chào",
+    "actual": "chào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-076",
+    "settings": "telex",
+    "keys": "tieengs",
+    "expected": "tiếng",
+    "actual": "tiếng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-076",
+    "settings": "vni",
+    "keys": "tie6ng1",
+    "expected": "tiếng",
+    "actual": "tiếng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-077",
+    "settings": "telex",
+    "keys": "vieetj",
+    "expected": "việt",
+    "actual": "việt",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-077",
+    "settings": "vni",
+    "keys": "vie6t5",
+    "expected": "việt",
+    "actual": "việt",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-078",
+    "settings": "telex",
+    "keys": "nguowif",
+    "expected": "người",
+    "actual": "người",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-078",
+    "settings": "vni",
+    "keys": "nguoi72",
+    "expected": "người",
+    "actual": "người",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-079",
+    "settings": "telex",
+    "keys": "khuyur",
+    "expected": "khuỷu",
+    "actual": "khuỷu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-079",
+    "settings": "vni",
+    "keys": "khuyu3",
+    "expected": "khuỷu",
+    "actual": "khuỷu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-080",
+    "settings": "telex",
+    "keys": "quoocs",
+    "expected": "quốc",
+    "actual": "quốc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-080",
+    "settings": "vni",
+    "keys": "quo6c1",
+    "expected": "quốc",
+    "actual": "quốc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-081",
+    "settings": "telex",
+    "keys": "ginf",
+    "expected": "gìn",
+    "actual": "gìn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-081",
+    "settings": "vni",
+    "keys": "gin2",
+    "expected": "gìn",
+    "actual": "gìn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-082",
+    "settings": "telex",
+    "keys": "giuwx",
+    "expected": "giữ",
+    "actual": "giữ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-082",
+    "settings": "vni",
+    "keys": "giu74",
+    "expected": "giữ",
+    "actual": "giữ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-083",
+    "settings": "telex",
+    "keys": "thuowr",
+    "expected": "thuở",
+    "actual": "thuở",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-083",
+    "settings": "vni",
+    "keys": "thuo73",
+    "expected": "thuở",
+    "actual": "thuở",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-084",
+    "settings": "telex",
+    "keys": "uown",
+    "expected": "ươn",
+    "actual": "ươn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-084",
+    "settings": "vni",
+    "keys": "uo7n",
+    "expected": "ươn",
+    "actual": "ươn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-085",
+    "settings": "telex",
+    "keys": "nuowcs",
+    "expected": "nước",
+    "actual": "nước",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-085",
+    "settings": "vni",
+    "keys": "nuo7c1",
+    "expected": "nước",
+    "actual": "nước",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-086",
+    "settings": "telex",
+    "keys": "dduwowngf",
+    "expected": "đường",
+    "actual": "đường",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-086",
+    "settings": "vni",
+    "keys": "duo972ng",
+    "expected": "đường",
+    "actual": "đường",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-087",
+    "settings": "telex",
+    "keys": "truowngf",
+    "expected": "trường",
+    "actual": "trường",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-087",
+    "settings": "vni",
+    "keys": "truo7ng2",
+    "expected": "trường",
+    "actual": "trường",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-088",
+    "settings": "telex",
+    "keys": "hojc",
+    "expected": "học",
+    "actual": "học",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-088",
+    "settings": "vni",
+    "keys": "hoc5",
+    "expected": "học",
+    "actual": "học",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-089",
+    "settings": "telex",
+    "keys": "tieenf",
+    "expected": "tiền",
+    "actual": "tiền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-089",
+    "settings": "vni",
+    "keys": "tie6n2",
+    "expected": "tiền",
+    "actual": "tiền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-090",
+    "settings": "telex",
+    "keys": "thuwowngr",
+    "expected": "thưởng",
+    "actual": "thưởng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-090",
+    "settings": "vni",
+    "keys": "thuo7ng3",
+    "expected": "thưởng",
+    "actual": "thưởng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-091",
+    "settings": "telex",
+    "keys": "buoofn",
+    "expected": "buồn",
+    "actual": "buồn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-091",
+    "settings": "vni",
+    "keys": "buo6n2",
+    "expected": "buồn",
+    "actual": "buồn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-092",
+    "settings": "telex",
+    "keys": "muoons",
+    "expected": "muốn",
+    "actual": "muốn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-092",
+    "settings": "vni",
+    "keys": "muo6n1",
+    "expected": "muốn",
+    "actual": "muốn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-093",
+    "settings": "telex",
+    "keys": "bieenr",
+    "expected": "biển",
+    "actual": "biển",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-093",
+    "settings": "vni",
+    "keys": "bie6n3",
+    "expected": "biển",
+    "actual": "biển",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-094",
+    "settings": "telex",
+    "keys": "dieenx",
+    "expected": "diễn",
+    "actual": "diễn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-094",
+    "settings": "vni",
+    "keys": "die6n4",
+    "expected": "diễn",
+    "actual": "diễn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-095",
+    "settings": "telex",
+    "keys": "nghieepj",
+    "expected": "nghiệp",
+    "actual": "nghiệp",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-095",
+    "settings": "vni",
+    "keys": "nghie6p5",
+    "expected": "nghiệp",
+    "actual": "nghiệp",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-096",
+    "settings": "telex",
+    "keys": "khoong",
+    "expected": "không",
+    "actual": "không",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-096",
+    "settings": "vni",
+    "keys": "kho6ng",
+    "expected": "không",
+    "actual": "không",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-097",
+    "settings": "telex",
+    "keys": "dduowcj",
+    "expected": "được",
+    "actual": "được",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-097",
+    "settings": "vni",
+    "keys": "duo97c5",
+    "expected": "được",
+    "actual": "được",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-098",
+    "settings": "telex",
+    "keys": "thichs",
+    "expected": "thích",
+    "actual": "thích",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-098",
+    "settings": "vni",
+    "keys": "thich1",
+    "expected": "thích",
+    "actual": "thích",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-099",
+    "settings": "telex",
+    "keys": "tinhf",
+    "expected": "tình",
+    "actual": "tình",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-099",
+    "settings": "vni",
+    "keys": "tinh2",
+    "expected": "tình",
+    "actual": "tình",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-100",
+    "settings": "telex",
+    "keys": "nhieeuf",
+    "expected": "nhiều",
+    "actual": "nhiều",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-100",
+    "settings": "vni",
+    "keys": "nhie6u2",
+    "expected": "nhiều",
+    "actual": "nhiều",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-101",
+    "settings": "telex",
+    "keys": "chieeuf",
+    "expected": "chiều",
+    "actual": "chiều",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-101",
+    "settings": "vni",
+    "keys": "chie6u2",
+    "expected": "chiều",
+    "actual": "chiều",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-102",
+    "settings": "telex",
+    "keys": "yeeu",
+    "expected": "yêu",
+    "actual": "yêu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-102",
+    "settings": "vni",
+    "keys": "ye6u",
+    "expected": "yêu",
+    "actual": "yêu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-103",
+    "settings": "telex",
+    "keys": "quyeenf",
+    "expected": "quyền",
+    "actual": "quyền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-103",
+    "settings": "vni",
+    "keys": "quye6n2",
+    "expected": "quyền",
+    "actual": "quyền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-105",
+    "settings": "telex",
+    "keys": "quyeets",
+    "expected": "quyết",
+    "actual": "quyết",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-105",
+    "settings": "vni",
+    "keys": "quye6t1",
+    "expected": "quyết",
+    "actual": "quyết",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-106",
+    "settings": "telex",
+    "keys": "nguyeen",
+    "expected": "nguyên",
+    "actual": "nguyên",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-106",
+    "settings": "vni",
+    "keys": "nguye6n",
+    "expected": "nguyên",
+    "actual": "nguyên",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-107",
+    "settings": "telex",
+    "keys": "nguyeenx",
+    "expected": "nguyễn",
+    "actual": "nguyễn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-107",
+    "settings": "vni",
+    "keys": "nguye6n4",
+    "expected": "nguyễn",
+    "actual": "nguyễn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-108",
+    "settings": "telex",
+    "keys": "nghieeng",
+    "expected": "nghiêng",
+    "actual": "nghiêng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-108",
+    "settings": "vni",
+    "keys": "nghie6ng",
+    "expected": "nghiêng",
+    "actual": "nghiêng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-109",
+    "settings": "telex",
+    "keys": "nghieng",
+    "expected": "nghieng",
+    "actual": "nghieng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-109",
+    "settings": "vni",
+    "keys": "nghieng",
+    "expected": "nghieng",
+    "actual": "nghieng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-110",
+    "settings": "telex",
+    "keys": "nganhf",
+    "expected": "ngành",
+    "actual": "ngành",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-110",
+    "settings": "vni",
+    "keys": "nganh2",
+    "expected": "ngành",
+    "actual": "ngành",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-111",
+    "settings": "telex",
+    "keys": "hanhf",
+    "expected": "hành",
+    "actual": "hành",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-111",
+    "settings": "vni",
+    "keys": "hanh2",
+    "expected": "hành",
+    "actual": "hành",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-112",
+    "settings": "telex",
+    "keys": "phoor",
+    "expected": "phổ",
+    "actual": "phổ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-112",
+    "settings": "vni",
+    "keys": "pho63",
+    "expected": "phổ",
+    "actual": "phổ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-113",
+    "settings": "telex",
+    "keys": "thoong",
+    "expected": "thông",
+    "actual": "thông",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-113",
+    "settings": "vni",
+    "keys": "tho6ng",
+    "expected": "thông",
+    "actual": "thông",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-114",
+    "settings": "telex",
+    "keys": "banf",
+    "expected": "bàn",
+    "actual": "bàn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-114",
+    "settings": "vni",
+    "keys": "ban2",
+    "expected": "bàn",
+    "actual": "bàn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-115",
+    "settings": "telex",
+    "keys": "phamr",
+    "expected": "phảm",
+    "actual": "phảm",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-115",
+    "settings": "vni",
+    "keys": "pham3",
+    "expected": "phảm",
+    "actual": "phảm",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-116",
+    "settings": "telex",
+    "keys": "phaamr",
+    "expected": "phẩm",
+    "actual": "phẩm",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-116",
+    "settings": "vni",
+    "keys": "pha6m3",
+    "expected": "phẩm",
+    "actual": "phẩm",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-117",
+    "settings": "telex",
+    "keys": "caans",
+    "expected": "cấn",
+    "actual": "cấn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-117",
+    "settings": "vni",
+    "keys": "ca6n1",
+    "expected": "cấn",
+    "actual": "cấn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-118",
+    "settings": "telex",
+    "keys": "caafn",
+    "expected": "cần",
+    "actual": "cần",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-118",
+    "settings": "vni",
+    "keys": "ca6n2",
+    "expected": "cần",
+    "actual": "cần",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-119",
+    "settings": "telex",
+    "keys": "seex",
+    "expected": "sễ",
+    "actual": "sễ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-119",
+    "settings": "vni",
+    "keys": "se64",
+    "expected": "sễ",
+    "actual": "sễ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-120",
+    "settings": "telex",
+    "keys": "suaw",
+    "expected": "sưa",
+    "actual": "sưa",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-120",
+    "settings": "vni",
+    "keys": "sua7",
+    "expected": "sưa",
+    "actual": "sưa",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-121",
+    "settings": "telex",
+    "keys": "suawr",
+    "expected": "sửa",
+    "actual": "sửa",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-121",
+    "settings": "vni",
+    "keys": "sua73",
+    "expected": "sửa",
+    "actual": "sửa",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-122",
+    "settings": "telex",
+    "keys": "giair",
+    "expected": "giải",
+    "actual": "giải",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-122",
+    "settings": "vni",
+    "keys": "giai3",
+    "expected": "giải",
+    "actual": "giải",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-123",
+    "settings": "telex",
+    "keys": "giowis",
+    "expected": "giới",
+    "actual": "giới",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-123",
+    "settings": "vni",
+    "keys": "gio7i1",
+    "expected": "giới",
+    "actual": "giới",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-124",
+    "settings": "telex",
+    "keys": "tuoori",
+    "expected": "tuổi",
+    "actual": "tuổi",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-124",
+    "settings": "vni",
+    "keys": "tuo6i3",
+    "expected": "tuổi",
+    "actual": "tuổi",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-125",
+    "settings": "telex",
+    "keys": "cuowif",
+    "expected": "cười",
+    "actual": "cười",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-125",
+    "settings": "vni",
+    "keys": "cuoi72",
+    "expected": "cười",
+    "actual": "cười",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-126",
+    "settings": "telex",
+    "keys": "kieeur",
+    "expected": "kiểu",
+    "actual": "kiểu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-126",
+    "settings": "vni",
+    "keys": "kie6u3",
+    "expected": "kiểu",
+    "actual": "kiểu",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-127",
+    "settings": "telex",
+    "keys": "huyeefn",
+    "expected": "huyền",
+    "actual": "huyền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-127",
+    "settings": "vni",
+    "keys": "huye6n2",
+    "expected": "huyền",
+    "actual": "huyền",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-128",
+    "settings": "telex",
+    "keys": "chuyeenj",
+    "expected": "chuyện",
+    "actual": "chuyện",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-128",
+    "settings": "vni",
+    "keys": "chuye6n5",
+    "expected": "chuyện",
+    "actual": "chuyện",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-129",
+    "settings": "telex",
+    "keys": "thaayf",
+    "expected": "thầy",
+    "actual": "thầy",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-129",
+    "settings": "vni",
+    "keys": "tha6y2",
+    "expected": "thầy",
+    "actual": "thầy",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-130",
+    "settings": "telex",
+    "keys": "traafn",
+    "expected": "trần",
+    "actual": "trần",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-130",
+    "settings": "vni",
+    "keys": "tra6n2",
+    "expected": "trần",
+    "actual": "trần",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-131",
+    "settings": "telex",
+    "keys": "luyeenj",
+    "expected": "luyện",
+    "actual": "luyện",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-131",
+    "settings": "vni",
+    "keys": "luye6n5",
+    "expected": "luyện",
+    "actual": "luyện",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-132",
+    "settings": "telex",
+    "keys": "oong",
+    "expected": "ông",
+    "actual": "ông",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-132",
+    "settings": "vni",
+    "keys": "o6ng",
+    "expected": "ông",
+    "actual": "ông",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-133",
+    "settings": "telex",
+    "keys": "oocs",
+    "expected": "ốc",
+    "actual": "ốc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-133",
+    "settings": "vni",
+    "keys": "o6c1",
+    "expected": "ốc",
+    "actual": "ốc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-134",
+    "settings": "telex",
+    "keys": "een",
+    "expected": "ên",
+    "actual": "ên",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-134",
+    "settings": "vni",
+    "keys": "e6n",
+    "expected": "ên",
+    "actual": "ên",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-135",
+    "settings": "telex",
+    "keys": "uwowcs",
+    "expected": "ước",
+    "actual": "ước",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-135",
+    "settings": "vni",
+    "keys": "uo7c1",
+    "expected": "ước",
+    "actual": "ước",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-01-default",
+    "settings": "telex",
+    "keys": "tieengs vieetj ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-01-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "tieengs vieetj ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-01-restore",
+    "settings": "telex,restore=1",
+    "keys": "tieengs vieetj ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-01-default",
+    "settings": "vni",
+    "keys": "tie6ng1 vie6t5 ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-01-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "tie6ng1 vie6t5 ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-01-restore",
+    "settings": "vni,restore=1",
+    "keys": "tie6ng1 vie6t5 ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-02-default",
+    "settings": "telex",
+    "keys": "nguowif vieetj nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-02-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "nguowif vieetj nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-02-restore",
+    "settings": "telex,restore=1",
+    "keys": "nguowif vieetj nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-02-default",
+    "settings": "vni",
+    "keys": "nguoi72 vie6t5 nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-02-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "nguoi72 vie6t5 nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-02-restore",
+    "settings": "vni,restore=1",
+    "keys": "nguoi72 vie6t5 nam ",
+    "expected": "người việt nam ",
+    "actual": "người việt nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-03-default",
+    "settings": "telex",
+    "keys": "ginf giuwx ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-03-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "ginf giuwx ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-03-restore",
+    "settings": "telex,restore=1",
+    "keys": "ginf giuwx ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-03-default",
+    "settings": "vni",
+    "keys": "gin2 giu74 ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-03-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "gin2 giu74 ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-03-restore",
+    "settings": "vni,restore=1",
+    "keys": "gin2 giu74 ",
+    "expected": "gìn giữ ",
+    "actual": "gìn giữ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-04-default",
+    "settings": "telex",
+    "keys": "xin chaof!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-04-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "xin chaof!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-04-restore",
+    "settings": "telex,restore=1",
+    "keys": "xin chaof!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-04-default",
+    "settings": "vni",
+    "keys": "xin chao2!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-04-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "xin chao2!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-04-restore",
+    "settings": "vni,restore=1",
+    "keys": "xin chao2!",
+    "expected": "xin chào!",
+    "actual": "xin chào!",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-05-default",
+    "settings": "telex",
+    "keys": "quoocs nguwx.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-05-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "quoocs nguwx.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-05-restore",
+    "settings": "telex,restore=1",
+    "keys": "quoocs nguwx.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-05-default",
+    "settings": "vni",
+    "keys": "quo6c1 ngu74.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-05-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "quo6c1 ngu74.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-05-restore",
+    "settings": "vni,restore=1",
+    "keys": "quo6c1 ngu74.",
+    "expected": "quốc ngữ.",
+    "actual": "quốc ngữ.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-06-default",
+    "settings": "telex",
+    "keys": "khuyur tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-06-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "khuyur tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-06-restore",
+    "settings": "telex,restore=1",
+    "keys": "khuyur tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-06-default",
+    "settings": "vni",
+    "keys": "khuyu3 tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-06-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "khuyu3 tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-06-restore",
+    "settings": "vni,restore=1",
+    "keys": "khuyu3 tay ",
+    "expected": "khuỷu tay ",
+    "actual": "khuỷu tay ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-07-default",
+    "settings": "telex",
+    "keys": "thuowr xuwa ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-07-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "thuowr xuwa ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-07-restore",
+    "settings": "telex,restore=1",
+    "keys": "thuowr xuwa ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-07-default",
+    "settings": "vni",
+    "keys": "thuo73 xua7 ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-07-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "thuo73 xua7 ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-07-restore",
+    "settings": "vni,restore=1",
+    "keys": "thuo73 xua7 ",
+    "expected": "thuở xưa ",
+    "actual": "thuở xưa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-08-default",
+    "settings": "telex",
+    "keys": "ddoongf hoof ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-08-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "ddoongf hoof ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-08-restore",
+    "settings": "telex,restore=1",
+    "keys": "ddoongf hoof ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-08-default",
+    "settings": "vni",
+    "keys": "do96ng2 ho62 ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-08-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "do96ng2 ho62 ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-08-restore",
+    "settings": "vni,restore=1",
+    "keys": "do96ng2 ho62 ",
+    "expected": "đồng hồ ",
+    "actual": "đồng hồ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-09-default",
+    "settings": "telex",
+    "keys": "con dduwowngf ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-09-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "con dduwowngf ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-09-restore",
+    "settings": "telex,restore=1",
+    "keys": "con dduwowngf ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-09-default",
+    "settings": "vni",
+    "keys": "con duo97ng2 ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-09-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "con duo97ng2 ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-09-restore",
+    "settings": "vni,restore=1",
+    "keys": "con duo97ng2 ",
+    "expected": "con đường ",
+    "actual": "con đường ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-10-default",
+    "settings": "telex",
+    "keys": "truowngf hojc ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-10-spell-off",
+    "settings": "telex,spell=0",
+    "keys": "truowngf hojc ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "telex-sentence-10-restore",
+    "settings": "telex,restore=1",
+    "keys": "truowngf hojc ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-10-default",
+    "settings": "vni",
+    "keys": "truo7ng2 hoc5 ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-10-spell-off",
+    "settings": "vni,spell=0",
+    "keys": "truo7ng2 hoc5 ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "vni-sentence-10-restore",
+    "settings": "vni,restore=1",
+    "keys": "truo7ng2 hoc5 ",
+    "expected": "trường học ",
+    "actual": "trường học ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "old-hoa",
+    "settings": "telex,modern=0",
+    "keys": "hoaf thuyr",
+    "expected": "hòa thủy",
+    "actual": "hòa thủy",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "modern-hoa",
+    "settings": "telex,modern=1",
+    "keys": "hoaf thuyr",
+    "expected": "hoà thuỷ",
+    "actual": "hoà thuỷ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "old-hoa-vni",
+    "settings": "vni,modern=0",
+    "keys": "hoa2 thuy3",
+    "expected": "hòa thủy",
+    "actual": "hòa thủy",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "modern-hoa-vni",
+    "settings": "vni,modern=1",
+    "keys": "hoa2 thuy3",
+    "expected": "hoà thuỷ",
+    "actual": "hoà thuỷ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "free-mark",
+    "settings": "telex,free=1",
+    "keys": "tieengs vieetj",
+    "expected": "tiếng việt",
+    "actual": "tiếng việt",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "free-mark-vni",
+    "settings": "vni,free=1",
+    "keys": "tie6ng1 vie6t5",
+    "expected": "tiếng việt",
+    "actual": "tiếng việt",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "title-case",
+    "settings": "telex",
+    "keys": "Nguowif Vieetj Nam",
+    "expected": "Người Việt Nam",
+    "actual": "Người Việt Nam",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "upper-case",
+    "settings": "telex",
+    "keys": "NGUOWIF VIEETJ NAM",
+    "expected": "NGƯỜI VIỆT NAM",
+    "actual": "NGƯỜI VIỆT NAM",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "title-case-vni",
+    "settings": "vni",
+    "keys": "Nguoi72 Vie6t5 Nam",
+    "expected": "Người Việt Nam",
+    "actual": "Người Việt Nam",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "upper-case-vni",
+    "settings": "vni",
+    "keys": "NGUOI72 VIE6T5 NAM",
+    "expected": "NGƯỜI VIỆT NAM",
+    "actual": "NGƯỜI VIỆT NAM",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "caps-lock",
+    "settings": "telex",
+    "keys": "<CAPS>nguowif vieetj nam<CAPS>",
+    "expected": "NGƯỜI VIỆT NAM",
+    "actual": "NGƯỜI VIỆT NAM",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "caps-lock-vni",
+    "settings": "vni",
+    "keys": "<CAPS>nguoi72 vie6t5<CAPS>",
+    "expected": "NGƯỜI VIỆT",
+    "actual": "NGƯỜI VIỆT",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-ch",
+    "settings": "telex,quick=1",
+    "keys": "ccaof",
+    "expected": "chào",
+    "actual": "chào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-gi",
+    "settings": "telex,quick=1",
+    "keys": "gguwx",
+    "expected": "giữ",
+    "actual": "giữ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-kh",
+    "settings": "telex,quick=1",
+    "keys": "kkoong",
+    "expected": "không",
+    "actual": "không",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-ng",
+    "settings": "telex,quick=1",
+    "keys": "nnuowif",
+    "expected": "người",
+    "actual": "người",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-qu",
+    "settings": "telex,quick=1",
+    "keys": "qqoocs",
+    "expected": "quốc",
+    "actual": "quốc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-ph",
+    "settings": "telex,quick=1",
+    "keys": "ppoor",
+    "expected": "phổ",
+    "actual": "phổ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-th",
+    "settings": "telex,quick=1",
+    "keys": "ttuowngr",
+    "expected": "thưởng",
+    "actual": "thưởng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-upper",
+    "settings": "telex,quick=1",
+    "keys": "CCAOF",
+    "expected": "CHÀO",
+    "actual": "CHÀO",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-off",
+    "settings": "telex,quick=0",
+    "keys": "cc",
+    "expected": "cc",
+    "actual": "cc",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "restore-off",
+    "settings": "telex,restore=0",
+    "keys": "test ",
+    "expected": "tét ",
+    "actual": "tét ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "spell-off-double-a",
+    "settings": "telex,spell=0",
+    "keys": "aaa ",
+    "expected": "aa ",
+    "actual": "aa ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "cancel-tone-telex",
+    "settings": "telex",
+    "keys": "as<BS>af",
+    "expected": "à",
+    "actual": "à",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "cancel-tone-z",
+    "settings": "telex",
+    "keys": "asz",
+    "expected": "a",
+    "actual": "a",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "cancel-tone-vni",
+    "settings": "vni",
+    "keys": "a10",
+    "expected": "a",
+    "actual": "a",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "double-tone",
+    "settings": "telex",
+    "keys": "ass",
+    "expected": "as",
+    "actual": "as",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "double-tone-vni",
+    "settings": "vni",
+    "keys": "a11",
+    "expected": "a1",
+    "actual": "a1",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "delete-end",
+    "settings": "telex",
+    "keys": "tieengs<BS>",
+    "expected": "tiến",
+    "actual": "tiến",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "delete-and-continue",
+    "settings": "telex",
+    "keys": "tieengs<BS>g",
+    "expected": "tiếng",
+    "actual": "tiếng",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "delete-space",
+    "settings": "telex",
+    "keys": "chaof <BS>s",
+    "expected": "cháo",
+    "actual": "cháo",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "two-spaces",
+    "settings": "telex",
+    "keys": "xin  chaof",
+    "expected": "xin  chào",
+    "actual": "xin  chào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "punctuation",
+    "settings": "telex",
+    "keys": "xin, chaof.",
+    "expected": "xin, chào.",
+    "actual": "xin, chào.",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "enter",
+    "settings": "telex",
+    "keys": "chaof<ENTER>banj",
+    "expected": "chào\nbạn",
+    "actual": "chào\nbạn",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "tab",
+    "settings": "telex",
+    "keys": "xin<TAB>chaof",
+    "expected": "xin\tchào",
+    "actual": "xin\tchào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "session",
+    "settings": "telex",
+    "keys": "as<SESSION>s",
+    "expected": "ás",
+    "actual": "ás",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "mouse-reset",
+    "settings": "telex",
+    "keys": "as<MOUSE>s",
+    "expected": "ás",
+    "actual": "ás",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "move-caret",
+    "settings": "telex",
+    "keys": "xin<LEFT><RIGHT> chaof",
+    "expected": "xin chào",
+    "actual": "xin chào",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-disabled",
+    "settings": "telex,macro=0",
+    "keys": "btw ",
+    "expected": "btw ",
+    "actual": "btw ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-ascii",
+    "settings": "telex",
+    "keys": "btw ",
+    "expected": "by the way ",
+    "actual": "by the way ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-unicode",
+    "settings": "telex",
+    "keys": "vn ",
+    "expected": "Việt Nam ",
+    "actual": "Việt Nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-unicode-d",
+    "settings": "telex",
+    "keys": "dc ",
+    "expected": "địa chỉ ",
+    "actual": "địa chỉ ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-enter",
+    "settings": "telex",
+    "keys": "vn<ENTER>",
+    "expected": "Việt Nam\n",
+    "actual": "Việt Nam\n",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-long",
+    "settings": "telex",
+    "keys": "longmacro ",
+    "expected": "một hai ba bốn năm sáu bảy tám chín mười ",
+    "actual": "một hai ba bốn năm sáu bảy tám chín mười ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-caps-title",
+    "settings": "telex,autocaps=1",
+    "keys": "Btw ",
+    "expected": "By the way ",
+    "actual": "By the way ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-caps-upper",
+    "settings": "telex,autocaps=1",
+    "keys": "BTW ",
+    "expected": "BY THE WAY ",
+    "actual": "BY THE WAY ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-vni",
+    "settings": "vni",
+    "keys": "vn ",
+    "expected": "Việt Nam ",
+    "actual": "Việt Nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-english",
+    "settings": "telex,language=0",
+    "keys": "vn ",
+    "expected": "Việt Nam ",
+    "actual": "Việt Nam ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "macro-english-off",
+    "settings": "telex,language=0,macroEnglish=0",
+    "keys": "vn ",
+    "expected": "vn ",
+    "actual": "vn ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-start",
+    "settings": "telex,quickStart=1",
+    "keys": "fanh ",
+    "expected": "phanh ",
+    "actual": "phanh ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "quick-end",
+    "settings": "telex,quickEnd=1",
+    "keys": "hag ",
+    "expected": "hang ",
+    "actual": "hang ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "simple1",
+    "settings": "simple1",
+    "keys": "tieengs vieetj ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "simple2",
+    "settings": "simple2",
+    "keys": "tieengs vieetj ",
+    "expected": "tiếng việt ",
+    "actual": "tiếng việt ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-test",
+    "settings": "telex,restore=1",
+    "keys": "test ",
+    "expected": "test ",
+    "actual": "tét ",
+    "exit_code": 0,
+    "status": "XFAIL"
+  },
+  {
+    "id": "english-text",
+    "settings": "telex,restore=1",
+    "keys": "text ",
+    "expected": "text ",
+    "actual": "text ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-hello",
+    "settings": "telex,restore=1",
+    "keys": "hello ",
+    "expected": "hello ",
+    "actual": "hello ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-office",
+    "settings": "telex,restore=1",
+    "keys": "office ",
+    "expected": "office ",
+    "actual": "ofice ",
+    "exit_code": 0,
+    "status": "XFAIL"
+  },
+  {
+    "id": "english-windows",
+    "settings": "telex,restore=1",
+    "keys": "windows ",
+    "expected": "windows ",
+    "actual": "windows ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-microsoft",
+    "settings": "telex,restore=1",
+    "keys": "Microsoft ",
+    "expected": "Microsoft ",
+    "actual": "Microsoft ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-software",
+    "settings": "telex,restore=1",
+    "keys": "software ",
+    "expected": "software ",
+    "actual": "software ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-password",
+    "settings": "telex,restore=1",
+    "keys": "password ",
+    "expected": "password ",
+    "actual": "pasword ",
+    "exit_code": 0,
+    "status": "XFAIL"
+  },
+  {
+    "id": "english-address",
+    "settings": "telex,restore=1",
+    "keys": "address ",
+    "expected": "address ",
+    "actual": "address ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-browser",
+    "settings": "telex,restore=1",
+    "keys": "browser ",
+    "expected": "browser ",
+    "actual": "browser ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-swift",
+    "settings": "telex,restore=1",
+    "keys": "swift ",
+    "expected": "swift ",
+    "actual": "swift ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-coffee",
+    "settings": "telex,restore=1",
+    "keys": "coffee ",
+    "expected": "coffee ",
+    "actual": "cofee ",
+    "exit_code": 0,
+    "status": "XFAIL"
+  },
+  {
+    "id": "english-access",
+    "settings": "telex,restore=1",
+    "keys": "access ",
+    "expected": "access ",
+    "actual": "access ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-docker",
+    "settings": "telex,restore=1",
+    "keys": "docker ",
+    "expected": "docker ",
+    "actual": "docker ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-google",
+    "settings": "telex,restore=1",
+    "keys": "Google ",
+    "expected": "Google ",
+    "actual": "Google ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-firefox",
+    "settings": "telex,restore=1",
+    "keys": "Firefox ",
+    "expected": "Firefox ",
+    "actual": "Firefox ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-telegram",
+    "settings": "telex,restore=1",
+    "keys": "Telegram ",
+    "expected": "Telegram ",
+    "actual": "Telegram ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-messenger",
+    "settings": "telex,restore=1",
+    "keys": "Messenger ",
+    "expected": "Messenger ",
+    "actual": "Mesenger ",
+    "exit_code": 0,
+    "status": "XFAIL"
+  },
+  {
+    "id": "english-slack",
+    "settings": "telex,restore=1",
+    "keys": "Slack ",
+    "expected": "Slack ",
+    "actual": "Slack ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-discord",
+    "settings": "telex,restore=1",
+    "keys": "Discord ",
+    "expected": "Discord ",
+    "actual": "Discord ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-notion",
+    "settings": "telex,restore=1",
+    "keys": "Notion ",
+    "expected": "Notion ",
+    "actual": "Notion ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-terminal",
+    "settings": "telex,restore=1",
+    "keys": "terminal ",
+    "expected": "terminal ",
+    "actual": "terminal ",
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "id": "english-support",
+    "settings": "telex,restore=1",
+    "keys": "support ",
+    "expected": "support ",
+    "actual": "support ",
+    "exit_code": 0,
+    "status": "PASS"
+  }
+]
