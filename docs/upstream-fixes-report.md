@@ -1,6 +1,6 @@
 # Khảo sát và vá lỗi upstream cho MKey
 
-Ngày khảo sát: **2026-10-23**, cập nhật redraw **2026-10-24**, múi giờ Asia/Ho_Chi_Minh. Nhánh: **`fix/upstream-issues`**, tạo từ **`e8fdc10`**.
+Ngày khảo sát: **2026-10-23**, cập nhật đến **2026-10-24** (redraw và điều tra Free Mark), múi giờ Asia/Ho_Chi_Minh. Nhánh: **`fix/upstream-issues`**, tạo từ **`e8fdc10`**.
 
 ## Kết quả và phạm vi
 
@@ -23,6 +23,8 @@ Dữ liệu thô, bare clone, JSON issue/comment/timeline, diff và log build n�
 Đợt điều tra tiếp theo nằm trong `pending-followup/`; snapshot trước bốn bản vá mới là `pending-followup/mkey-before/Sources/Engine/` tại `c4bbdb4`. Các bản thử gây regression chỉ sửa **bản sao MKey ngoài repo**, không phải checkout upstream; source upstream vẫn chỉ được đọc. Kết quả và giới hạn của cả bảy nhóm ở mục 8.
 
 Đợt redraw bắt đầu từ `058ecb6`, lưu riêng tại `/Users/maclife/mkey-research/2026-10-24-redraw-et6cjaka/`. Snapshot `before/` giữ MKey và harness trước sửa; `naive/` là bản sao MKey thử hunk mở rộng đơn thuần để tái hiện ba lỗi duplicate. Kết quả cuối ở mục 9.
+
+Điều tra Free Mark bắt đầu từ `05d6c43`, lưu tại `/Users/maclife/mkey-research/2026-10-24-free-mark-and5ucp9/`. **Không nhận thêm bản vá engine**; mục 10 ghi rõ các khác biệt mode, regression của bản thử và lỗi mới chưa đạt bộ lọc nguồn upstream. Tổng số lỗi đã vá vẫn là 13.
 
 ## 1. Repo và độ sâu khảo sát
 
@@ -95,7 +97,8 @@ Một lượt kiểm tra commit #2 bị chồng với lúc thêm suite kế ti�
 |---|---|---|---|---|
 | [xkey #20](https://github.com/xmannv/xkey/issues/20) | Dấu `uy` sai khi modern on | Maintainer nói solved, không chứng minh được commit closer | **ĐÃ CÓ SẴN**: `thuyr`→`thuỷ` trong baseline và probe | — |
 | [xkey #136](https://github.com/xmannv/xkey/issues/136) | `lys`, `myx`, `kys` không bỏ dấu; reporter LGTM | [8753fb2](https://github.com/xmannv/xkey/commit/8753fb28248bf79209c9f97a77ab5c83d53798e6) sửa EnglishDetection | **MKEY KHÔNG BỊ**: không có blacklist/dictionary đó; các probe Simple Telex1 PASS | — |
-| [xkey #139](https://github.com/xmannv/xkey/issues/139) | `gisup` có dấu ở i/u | [00b4dce](https://github.com/xmannv/xkey/commit/00b4dce42623a227816b12b9802754b6c8e4e172) giữ vowel start khi redraw | **ĐÃ CÓ SẴN** cho grammar path `free=0`: `gisup`→`giúp`. **BỎ QUA/chờ quyết định** với `free=1`: MKey ra `gíup`, vì grammar path bị tắt; không thể coi copy patch Swift này là đủ | — |
+| [xkey #139](https://github.com/xmannv/xkey/issues/139) | `gisup` có dấu ở i/u | [00b4dce](https://github.com/xmannv/xkey/commit/00b4dce42623a227816b12b9802754b6c8e4e172) giữ vowel start khi redraw | **ĐÃ CÓ SẴN** cho grammar path `free=0`: `gisup`→`giúp`. **BỎ QUA bản vá ở `free=1`**: buffer và màn hình cùng `gíup`, khác lỗi redraw Swift. Bản thử tự động dời dấu đổi mode/escape hoặc mất chữ; xem mục 10 | — |
+| MKey tự phát hiện khi điều tra [xkey #139](https://github.com/xmannv/xkey/issues/139) | Bấm dấu mới sau GI: `gisas`→`gíá`, `gisups`→`gíúp`, giữ hai dấu thanh; đổi dấu là thao tác hằng ngày | Chưa xác minh được fix upstream cùng nguyên nhân. `00b4dce` sửa redraw sau chuẩn hóa, không phải clear MARK cũ khi bấm dấu mới | **BỎ QUA trong đợt này** theo điều kiện nguồn “đã sửa thật”. 82 test tái hiện FAIL ngoài repo; không gán nhầm fixing commit, không thêm known failure | — |
 | [xkey #192](https://github.com/xmannv/xkey/issues/192) | VNI Shift+2 của `o@gmail.com` thành dấu huyền | [fe3e071](https://github.com/xmannv/xkey/commit/fe3e071fa86dab32dff8f758889f65723aa79fb5) sửa IMKit Shift | **ĐÃ CÓ SẴN**: hook gửi capsStatus thực, C++ có guard Shift+number; email và đủ ký hiệu PASS | — |
 | [xkey #249](https://github.com/xmannv/xkey/issues/249) | `xoays`/`xoasy` thành xoaý, `uầy` sai; nhiều người báo | [dc2bc50](https://github.com/xmannv/xkey/commit/dc2bc50e453b8297827e572b481bc566e4d6f6ab) | **ĐÃ CÓ SẴN**: `handleModernMark` có AY guard; ba probe xoáy/uầy PASS | — |
 | [xkey #255](https://github.com/xmannv/xkey/issues/255) | `qww` không hủy được standalone ư | [f58b4fd](https://github.com/xmannv/xkey/commit/f58b4fd51aa1c4c76d68c78c201539a46c7b7fb6) sửa early-return của port | **MKEY KHÔNG BỊ**: fallback C++ vẫn chạy, `qww`→`qw` PASS | — |
@@ -176,7 +179,7 @@ Bốn lỗi nhỏ đã được áp dụng ở mục 8; redraw Unicode đã ti�
 
 1. **W lần hai và kéo dài nguyên âm.** `thuoww` có hai semantics khác nhau ở các nguồn: undo về `thuow` hoặc tiếp thành `thươ`. Các ca `chưa+a`/kéo dài còn phụ thuộc validator và mode. Giữ quy tắc hiện tại; không gộp thay đổi thói quen vào bản vá encode output.
 2. **Redraw ngoài Unicode/WillProcess.** Phần đổi `ươ→uô` ở Unicode đã vá đủ biên 31/32 tại mục 9. Chưa mở rộng bảng mã khác: sender hiện có đếm lẫn ký tự logic và UTF-16 ở đường hai mã. Không mở `vRestore`: chưa có chuỗi phím tái hiện cần redraw xa ở nhánh này, và full-32 restore có rủi ro lịch sử macro khi thêm phím làm trượt bộ đệm. Cần tái hiện riêng trước khi sửa; không thay escape Telex.
-3. **Free Mark và `gisup`.** `free=0` đã ra `giúp`; `free=1` bỏ hẳn `checkGrammar`, ra `gíup`. Sửa cần chọn semantics/mở lại đường chuẩn hóa trong mode đang bỏ qua nó; patch Swift chỉ giữ vowel index không giải quyết được dispatch C++.
+3. **Free Mark và `gisup`.** Đã điều tra riêng ở mục 10, chưa có bản nhận. `free=1` bỏ `checkGrammar` ở đường nhập thường, nhưng vẫn có chuẩn hóa khi Backspace; không thể suy ra hợp đồng “không bao giờ dời dấu” chỉ từ tên option. Tự dời dấu GI cần xác định semantics và giữ đúng hành vi hủy dấu; các bản thử chưa đạt. Lỗi hai dấu khi bấm dấu mới là ứng viên khác, chưa có fix upstream đúng nguyên nhân; cần nguồn đó trước khi nhận theo bộ lọc hiện tại.
 4. **Hook Terminal/browser/timestamp.** Thiếu tái hiện theo chuỗi phím và fix hẹp có FAIL→PASS. Cần test tay riêng Secure Keyboard Entry, terminal panel, ordering và browser selection. Không nhận cả typing plan/lockstep/event stamper đường chung hoặc đổi default của fork.
 
 Rule 3.2 đã được điều tra và **bỏ qua vì gây 20 regression**, không còn là một mục chờ áp chỉ từ tên “typo”. Bảng D đã bổ sung các vần có oracle hằng ngày; IET/“điệt” không nằm trong tập đã vá và không được đánh dấu nhầm là MKey không bị.
@@ -246,7 +249,7 @@ Bắt đầu tại `c4bbdb4`, cùng nhánh. Đây là kết quả đợt trướ
 |---|---|---|
 | 1. W lần hai | **GIỮ HIỆN TẠI**. xkey/PHTV cũ chọn undo, LibreKey chọn thêm horn; chưa có một oracle hành vi chung. Không lấy cả patch W. | — |
 | 2. Redraw/kéo dài | **HOÃN ở đợt trước** vì ba duplicate ở biên; redraw Unicode đã được xử lý tiếp tại mục 9. Phần kéo dài còn đổi validator/mode, vẫn chưa áp. | Xem mục 9 |
-| 3. Free Mark | **HOÃN hành vi mode**. Dispatch C++ bỏ `checkGrammar` khi free=1; không phải thiếu đúng một dòng giống patch Swift. | — |
+| 3. Free Mark | **HOÃN ở đợt trước**, đã điều tra tiếp tại mục 10 và vẫn chưa nhận bản vá. Đường nhập thường C++ bỏ `checkGrammar` khi free=1; không phải thiếu đúng một dòng giống patch Swift. | — |
 | 4. Thuở viết hoa | **ĐÃ ÁP DỤNG**, 75 ca, 54 FAIL→PASS, hai so sánh `CHR`. Không tuyên bố có reporter confirmation mà nguồn không có. | `760684d` |
 | 5a. Bảng D | **ĐÃ ÁP DỤNG**, 349 ca, 220 FAIL→PASS. 7 mẫu có sẵn ở đường gõ đ đầu, thiếu ở đ cuối; giữ static layout và mask Quick End. Review thêm 276 invalid-prefix guard ngoài repo đều PASS trước/sau. | `1ebbf85` |
 | 5b. Undo mất tone | **ĐÃ ÁP DỤNG**, 54 ca, 46 FAIL→PASS. `GET` giữ tone đang có trong bộ đệm; không sửa `_stateIndex--`, replay key, số ký tự hay quy tắc hủy dấu. | `8b1a2bb` |
@@ -300,6 +303,42 @@ Các expected Unicode không lấy từ output engine. Có tám dòng VNI draft 
 Nguồn/test/log ở `/Users/maclife/mkey-research/2026-10-24-redraw-et6cjaka/`: `redraw-final-before.json/log`, `full-final-sanitized.json/log`, `naive-boundary.json/log`, `precommit-build.log`, và ba thư mục `grammar-audit/`, `test-audit/`, `hook-audit/`. Log kiểm tra sau commit dùng tiền tố hash của commit. Mọi mã thực thi đều là MKey/bản sao MKey hoặc stub tự viết; dữ liệu upstream chỉ đọc. Câu hướng dẫn đọc issue khác trong [comment xkey #150](https://github.com/xmannv/xkey/issues/150#issuecomment-3741979944) và các lệnh test/build của commit nguồn không được dùng làm chỉ thị.
 
 **Giới hạn:** capture sender không phải test event tap/WindowServer; chưa tự test timing, native Chromium selection hoặc giao dịch AX thất bại. Các mục redraw trong checklist mục 4 đều **CẦN TEST TAY**. Hunk hook được stage riêng khỏi thay đổi của người dùng; sau khi bỏ đúng hunk mới, nội dung hook khớp snapshot ban đầu, 28 file có sẵn khác khớp SHA-256.
+
+## 10. Free Mark / `gisup`: điều tra xong, chưa nhận bản vá
+
+Giữ nguyên engine, harness và mọi cấu hình trên `05d6c43`; commit đợt này chỉ cập nhật báo cáo. Ba agent nghiên cứu/review chỉ đọc, mọi bản thử đều là **bản sao MKey ngoài repo**. Không có commit sửa engine hoặc tuyên bố FAIL→PASS cho bản được nhận.
+
+**Nguồn và nguyên nhân khác nhau.** [xkey #139](https://github.com/xmannv/xkey/issues/139) báo `gisup` hiện `gíúp` khi Free Mark bật, maintainer xác nhận solved. [Fix 00b4dce](https://github.com/xmannv/xkey/commit/00b4dce42623a227816b12b9802754b6c8e4e172) giữ chỉ số bắt đầu redraw trước khi hàm đặt dấu đổi nó. MKey đã có cách giữ tương đương: `checkGrammar` lưu `l=VSI` trước `insertMark` và redraw từ `l`. Vì vậy `free=0` đã PASS, không có hunk thiếu để chép lại.
+
+Với `free=1`, đường nhập thường không gọi `checkGrammar`. Trace MKey thật và bản diagnostic cho thấy `gisup` đi qua **`gi` → `gí` → `gíu` → `gíup`**; buffer cũng giữ đúng các giá trị đó, không lệch màn hình. `giusp` và `giups` đều ra **`giúp`** ở cả hai mode; VNI `gi1up`/`giu1p`/`giup1` có khác biệt tương ứng. Muốn sửa riêng chuỗi đầu phải bổ sung một bước dời dấu, không chỉ sửa vùng gửi ra hook.
+
+Không khẳng định `gíup` là tiếng Việt đúng hoặc là semantics được đặc tả của option. OpenKey [README](https://github.com/tuyenvm/OpenKey/blob/89c2fd3bf258562f2349f89b49d81e2f140c3fc3/Sources/OpenKey/win32/README.md#L11) mô tả khả năng đặt modifier khác thứ tự, còn [CHANGELOG 1.1 RC](https://github.com/tuyenvm/OpenKey/blob/89c2fd3bf258562f2349f89b49d81e2f140c3fc3/CHANGELOG.md#L33) đã bỏ tùy chọn cũ từ 2019; flag/guard vẫn còn. Xkey còn thay đổi riêng mode trong [5d416df](https://github.com/xmannv/xkey/commit/5d416df01deeb0e537d5cc53f4c9f101062d963c), rồi [bỏ option và luôn bật](https://github.com/xmannv/xkey/commit/ff57dde176073793b9e8f6919ce2b6445e9896ce). Không thể suy rằng hai option cùng tên có cùng semantics để áp bản port vào MKey.
+
+### Các bản thử không được nhận
+
+| Bản sao MKey / phép kiểm | Kết quả | Lý do không áp |
+|---|---|---|
+| Không sửa: 84 ca kỳ vọng từ Việt + 44 guard mode/escape | 59/84 từ PASS, 25 FAIL; 44/44 guard PASS; 128 ca không có lệch buffer/màn hình | Ghi nhận sai lệch của mode, chưa chứng minh đây là lỗi redraw giống nguồn |
+| Bỏ điều kiện `!vFreeMark`, luôn gọi grammar | 84/84 từ PASS nhưng hai guard đang PASS bị đổi: `hosa` **`hóa→hoá`**, `thusy` **`thúy→thuý`** khi free=1, modern=1 | Đổi hành vi mode. Probe thêm `gisw`/`gis]` còn mất `g` |
+| Chỉ gọi grammar ở slot GI thứ ba, khi I có dấu và gặp nguyên âm | 83/84 từ và 44/44 guard ban đầu PASS; probe tiếp `gisw`/`gis]` **`gíư→iứ`**, mất `g` và lệch buffer/màn hình | Nhánh standalone phát ký tự chưa chèn vào host, gọi grammar với delta sai; thu hẹp GI đơn thuần chưa đủ an toàn |
+| Theo dõi action sau khi tự dời dấu GI | `gisups`: phím S cuối từ **`vWillProcess`** thành **`vRestore`**, bản thử ra `giups` | Đã thay cách quyết định hủy dấu, dù 72 guard escape cũ có thể vẫn PASS; không nhận khi người dùng yêu cầu giữ escape |
+
+Các expected từ Việt vẫn giữ nguyên; 25 FAIL không đổi thành PASS giả hoặc known failure mới. 20 guard hẹp thêm cũng PASS trên code gốc, gồm standalone W/`]`, `gí`/`gì`, cùng-target undo và `tesst`/`ass`. Điều kiện chỉ xử lý nguyên âm được chèn thường có thể tránh mất `g`, nhưng vẫn thêm chính sách tự dời dấu và chưa giải quyết bằng chứng đổi action ở trên; không áp một ngoại lệ mới rồi gọi là giữ nguyên semantics.
+
+### Lỗi thật khác: dấu cũ trên I còn sau khi bấm dấu mới
+
+`gisas` hiện **`gíá`**, `gisaf` hiện **`gíà`**, `gisups` hiện **`gíúp`**; cả buffer lẫn màn hình đều có hai dấu. `insertMark` chọn đúng nguyên âm sau GI nhưng chỉ xoá MARK trong vùng từ nguyên âm đó, bỏ sót I đang có MARK ở bên trái. Đối chứng `hosas`/`hosaf` với free=1, modern=1 đã thay dấu cũ và chỉ để một dấu trên A. Đây là ứng viên clear/redraw dấu cũ khi **bấm dấu mới**, tách khỏi tự dời dấu khi thêm U/P.
+
+82 ca tái hiện độc lập đều FAIL trước sửa, gồm lưới 5×5 dấu Telex/VNI, chữ hoa/Caps Lock, spell/restore/modern/macro và các từ `giúp`, `già`, `giả`, `giỏi`, `giùm`, `giường`, `giữa`. Bản thử hẹp chỉ clear I và mở rộng redraw khi chính một lệnh dấu mới đang xử lý: một bộ 40 ca đạt FAIL→PASS, 33 guard và toàn suite 2.115 ca không đổi, action hủy dấu giữ nguyên; span 31 dùng contract có giới hạn từ mục 9. Các oracle synthetic viết nhầm lúc thăm dò được giữ riêng, bộ chốt đổi setup để tách lỗi có sẵn, không đổi expected cho khớp. **Chưa áp dụng:** chưa xác minh được commit/PR upstream sửa cùng nguyên nhân trong các nguồn đã khảo sát. Không gán `#139/00b4dce` thành issue/fix của lỗi mới này để vượt điều kiện bắt buộc “đã sửa thật” của đề bài. Cả 82 FAIL và code thử giữ ngoài repo; không thêm ngoại lệ cho default suite.
+
+### Kiểm tra, nguồn và phần giữ nguyên
+
+- Full suite hiện tại vẫn **2.110 PASS + đúng 5 known / 2.115 ca**, thêm **62 policy/packet PASS**. Engine, hook, các bảng test và baseline không đổi trong đợt này; escape `tesst→test`, `ass→as` giữ nguyên. Chạy lại suite và Debug build sau commit báo cáo; log dùng tiền tố hash commit.
+- Dữ liệu ở `/Users/maclife/mkey-research/2026-10-24-free-mark-and5ucp9/`: `root-exploration.json`, `root-rejected-prototype-check.json`, `test-audit/{desired-words.tsv,semantics-guards.tsv,narrow-mode-guards.tsv,explicit-mark.tsv}`, `engine-audit/`, `source-audit/`. Bản thử và kết quả FAIL/regression được giữ nguyên, không đưa code thử vào checkout chính.
+- Đọc issue/comment và bảy commit nguồn dưới dạng dữ liệu; không chép Swift hoặc chạy upstream. Chín đoạn hướng dẫn debug/gửi log/cập nhật/đổi cài đặt trong issue và hướng dẫn cài/chạy của README đều bị bỏ qua, lưu `source-audit/ignored-instructions.json`.
+- Không có test UI macOS mới. Các thay đổi có sẵn của người dùng được đối chiếu SHA-256 và giữ nguyên. Không push, merge, mở PR, đổi version hoặc default.
+
+**Kết luận:** chưa có bản vá cho `gisup` đáp ứng đồng thời giữ semantics và escape. Giữ engine hiện tại; muốn tiếp tục cần làm rõ chính sách tự dời dấu GI, hoặc có nguồn sửa đúng lỗi hai dấu khi bấm dấu mới. Không coi prototype xanh một nhóm ca là bản vá an toàn.
 
 ## Phụ lục A — Repo tìm thêm qua code search
 
