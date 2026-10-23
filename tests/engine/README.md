@@ -91,13 +91,26 @@ cases (230 failed before the casing fix). `redraw.tsv` adds 411 cases:
 active window, 36 macro cases and 20 tone/undo/prefix cases. 379 failed before
 the redraw repair; all 411 pass after it. Expected text stays independent of
 rendered engine output, including the correct nonduplicated text at 31/32.
-Default runs total 2115 cases across five tables (2110 pass, five exact known
+`quick-start.tsv` adds 119 dictionary-backed quick-start cases: English F/J/W,
+Vietnamese syllables, combined quick endings, case, macro/history, word breaks,
+Telex escapes and 31/32/33-character unknown words. Before the guard, 45 text
+cases failed and three oversized packets were rejected by the harness; all 119
+pass afterwards. The user's chosen priority keeps fan→phan and fun→phun when
+the complete expansion is in the Vietnamese dictionary.
+Default runs total 2234 cases across six tables (2229 pass, five exact known
 baseline failures). They also execute `hook-contract.cpp`: 46 explicit packet
 policy fixtures and 16 real-engine packet lifetime/non-Unicode checks.
 Restore packets keep the legacy boundary; redraw expansion is WillProcess-only
 to preserve Telex replay and avoid widening an unverified macro/history path.
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
+
+`dictionary-contract.cpp` checks 22 independent raw-cell membership fixtures,
+including both tone styles, letter shapes, uppercase, unsupported flags and
+tone positions. `run.sh` also verifies the pinned dictionary input hashes and
+reproduces the generated 6678-entry table; it does not fetch data or run any
+upstream scripts. Data provenance and GPL notices are in
+`third_party/hunspell-vi/` and `Sources/Engine/VietnameseDictionary-NOTICE.txt`.
 
 The same CLI calls `convertUtil()` directly when settings start with `convert`:
 

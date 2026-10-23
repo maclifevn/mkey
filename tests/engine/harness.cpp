@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 
+int checkDictionaryContract();
+
 int vLanguage = 1, vInputType = 0, vFreeMark = 0, vCodeTable = 0;
 int vSwitchKeyStatus = 0, vCheckSpelling = 1, vUseModernOrthography = 1;
 int vQuickTelex = 0, vRestoreIfWrongSpelling = 0, vFixRecommendBrowser = 1;
@@ -308,7 +310,7 @@ public:
 int main(int argc, char** argv) {
     try {
         if (argc == 2 && std::string(argv[1]) == "--check-contract")
-            return checkHookContract();
+            return checkHookContract() || checkDictionaryContract();
         if (argc < 3 || argc > 4) {
             std::cerr << "usage: engine-harness SETTINGS ASCII_KEYS [--trace]\n";
             std::cerr << "       engine-harness convert,OPTIONS UTF8_TEXT\n";

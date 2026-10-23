@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include <string.h>
 #include "Macro.h"
+#include "VietnameseDictionary.h"
 
 using namespace std;
 
@@ -1422,6 +1423,28 @@ void vTempOffEngine(const bool& off) {
 
 bool checkQuickConsonant() {
     if (_index <= 1) return false;
+    if (vQuickStartConsonant && _quickStartConsonant.find(CHR(0)) != _quickStartConsonant.end()) {
+        // Validate the complete expansion before changing either end of the word.
+        // Unknown words keep their spelling even when spelling checks are off.
+        if (_longWordHelper.size() > 0 || _index >= MAX_BUFF - 2)
+            return false;
+        Uint32 candidate[MAX_BUFF];
+        int count = _index + 1;
+        candidate[0] = _quickStartConsonant[CHR(0)][0] | (TypingWord[0] & CAPS_MASK);
+        candidate[1] = _quickStartConsonant[CHR(0)][1] |
+            ((TypingWord[0] & CAPS_MASK) && (TypingWord[1] & CAPS_MASK) ? CAPS_MASK : 0);
+        for (int index = 1; index < _index; index++)
+            candidate[index + 1] = TypingWord[index];
+        if (vQuickEndConsonant && !IS_CONSONANT((Uint16)candidate[count - 2]) &&
+            _quickEndConsonant.find((Uint16)candidate[count - 1]) != _quickEndConsonant.end()) {
+            const Uint16 ending = (Uint16)candidate[count - 1];
+            const Uint32 caps = candidate[count - 1] & CAPS_MASK;
+            candidate[count - 1] = _quickEndConsonant[ending][0] | caps;
+            candidate[count++] = _quickEndConsonant[ending][1] | caps;
+        }
+        if (!vIsVietnameseWord(candidate, count))
+            return false;
+    }
     l = 0;
     if (_index > 0) {
         if (vQuickStartConsonant && _quickStartConsonant.find(CHR(0)) != _quickStartConsonant.end()) {
