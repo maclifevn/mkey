@@ -1677,7 +1677,8 @@ void vKeyHandleEvent(const vKeyEvent& event,
                         hMacroKey.pop_back();
                     }
                 }
-                for (i = _index - hBPC; i < hNCC + (_index - hBPC); i++) {
+                int written = hNCC + (hCode == vRestore ? 1 : 0);
+                for (i = _index - written < 0 ? 0 : _index - written; i < _index; i++) {
                     hMacroKey.push_back(TypingWord[i]);
                 }
             }

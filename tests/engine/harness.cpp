@@ -115,6 +115,8 @@ public:
         addMacro("btw", "by the way");
         addMacro("vn", "Việt Nam");
         addMacro("dc", "địa chỉ");
+        addMacro("ưds", "windows");
+        addMacro("test", "kiểm tra");
         addMacro("longmacro", "một hai ba bốn năm sáu bảy tám chín mười");
     }
 
