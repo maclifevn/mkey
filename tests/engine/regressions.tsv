@@ -1,1 +1,9 @@
 id	settings	keys	expected
+backspace-undo-telex	telex,spell=0	thaaa<BS><BS>aa	"""thâ"""
+backspace-undo-vni	vni,spell=0	tha66<BS><BS>a6	"""thâ"""
+backspace-undo-tone	telex,spell=0	nhaamff<BS>f	"""nhầm"""
+backspace-undo-tone-vni	vni,spell=0	nha6m22<BS>2	"""nhầm"""
+backspace-undo-spell-on	telex,spell=1	thaaa<BS><BS>aa	"""thâ"""
+backspace-undo-macro-off	telex,spell=0,macro=0	thaaa<BS><BS>aa	"""thâ"""
+backspace-undo-upper	telex,spell=0	THAAA<BS><BS>AA	"""THÂ"""
+backspace-undo-boundary	telex,spell=0	thaaa<BS><BS>aa, chaof	"""thâ, chào"""

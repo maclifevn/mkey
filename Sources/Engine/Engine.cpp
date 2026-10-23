@@ -1598,6 +1598,8 @@ void vKeyHandleEvent(const vKeyEvent& event,
                 }
                 if (vCheckSpelling)
                     checkSpelling();
+                else
+                    tempDisableKey = false; //backspace ends a doubled-key undo
             }
             if (vUseMacro && hMacroKey.size() > 0) {
                 hMacroKey.pop_back();
