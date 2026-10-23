@@ -11,11 +11,12 @@ else
     compiler_flags+=(-O0)
 fi
 clang++ "${compiler_flags[@]}" -I "$engine_source" \
-    "$repo_root/tests/engine/harness.cpp" "$engine_source"/*.cpp \
+    "$repo_root/tests/engine/harness.cpp" "$repo_root/tests/engine/hook-contract.cpp" "$engine_source"/*.cpp \
     -o "$test_build/engine-harness"
 if [[ "${1:-}" == --probe ]]; then
     shift
     "$test_build/engine-harness" "$@"
 else
+    "$test_build/engine-harness" --check-contract
     python3 "$repo_root/tests/engine/run.py" "$test_build/engine-harness" "$@"
 fi

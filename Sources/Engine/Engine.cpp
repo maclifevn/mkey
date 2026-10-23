@@ -1003,7 +1003,10 @@ void insertAOE(const Uint16& data, const bool& isCaps) {
     findAndCalculateVowel();
     
     //remove W tone
+    int firstHornRemoved = _index;
     for (ii = VSI; ii <= VEI; ii++) {
+        if (vCodeTable == 0 && (TypingWord[ii] & TONEW_MASK) && ii < firstHornRemoved)
+            firstHornRemoved = ii;
         TypingWord[ii] &= ~TONEW_MASK;
     }
     
@@ -1033,6 +1036,16 @@ void insertAOE(const Uint16& data, const bool& isCaps) {
         } else { //preresent old char
             hData[_index - 1 - ii] = GET(TypingWord[ii]);
         }
+    }
+    // Redraw every horn removed above, including vowels before the target.
+    // Only Unicode's hook can deliver the full 32-character replacement.
+    if (hCode == vWillProcess && ii > firstHornRemoved) {
+        for (ii--; ii >= firstHornRemoved; ii--) {
+            hBPC++;
+            hData[_index - 1 - ii] = GET(TypingWord[ii]);
+        }
+        if (hBPC >= MAX_BUFF - 1)
+            hExt = vUnicodeFullRedraw;
     }
     hNCC = hBPC;
 }
@@ -1489,6 +1502,8 @@ void vKeyHandleEvent(const vKeyEvent& event,
                      const Uint16& data,
                      const Uint8& capsStatus,
                      const bool& otherControlKey) {
+    if (hExt == vUnicodeFullRedraw)
+        hExt = 3; //the redraw marker belongs to the previous key only
     _isCaps = (capsStatus == 1 || //shift
                capsStatus == 2); //caps lock
     if (event == vKeyEvent::Mouse || otherControlKey)

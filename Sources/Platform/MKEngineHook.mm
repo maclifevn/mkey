@@ -1122,6 +1122,9 @@ extern "C" {
                     return NULL;
                 }
 
+                const Byte originalBackspaceCount = pData->backspaceCount;
+                bool insertedEmptyCharacter = false;
+
                 //fix autocomplete
                 if (vFixRecommendBrowser && pData->extCode != 4) {
                     if (vFixChromiumBrowser && _frontMostNeedsChromiumFix) {
@@ -1133,12 +1136,13 @@ extern "C" {
                     } else {
                         SendEmptyCharacter();
                         pData->backspaceCount++;
+                        insertedEmptyCharacter = true;
 
                     }
                 }
 
                 //send backspace
-                if (pData->backspaceCount > 0 && pData->backspaceCount < MAX_BUFF) {
+                if (vCanSendBackspace(*pData, originalBackspaceCount, insertedEmptyCharacter, vCodeTable)) {
                     for (_i = 0; _i < pData->backspaceCount; _i++) {
                         SendBackspace();
                     }

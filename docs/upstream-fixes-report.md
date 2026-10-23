@@ -1,18 +1,18 @@
 # Khảo sát và vá lỗi upstream cho MKey
 
-Ngày khảo sát: **2026-10-23**, múi giờ Asia/Ho_Chi_Minh. Nhánh: **`fix/upstream-issues`**, tạo từ **`e8fdc10`**.
+Ngày khảo sát: **2026-10-23**, cập nhật redraw **2026-10-24**, múi giờ Asia/Ho_Chi_Minh. Nhánh: **`fix/upstream-issues`**, tạo từ **`e8fdc10`**.
 
 ## Kết quả và phạm vi
 
-Áp dụng **12 lỗi**, mỗi lỗi một commit: 7 ở đợt đầu, 1 lỗi lịch sử phím và 4 bản vá nhỏ từ đợt điều tra các mục còn lại. Thay đổi sản phẩm chỉ ở `Sources/Engine/Engine.cpp`, `Sources/Engine/Vietnamese.cpp` và `Sources/Engine/ConvertTool.cpp`. Không sửa hook, UI, giá trị mặc định, version; không push, merge hay mở PR. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng đã chọn giữ quy tắc Telex hiện tại, không áp bản vá làm đổi escape.
+Áp dụng **13 lỗi**, mỗi lỗi một commit: 12 lỗi từ các đợt trước và bản vá redraw ở mục 9. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Redraw chỉ mở rộng Unicode dựng sẵn ở nhánh `vWillProcess`. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng đã chọn giữ quy tắc Telex hiện tại, không áp bản vá làm đổi escape.
 
-Working tree ban đầu có 18 file sửa và 9 mục untracked. Người dùng đã cho phép bỏ điều kiện dừng. Các thay đổi đó được giữ nguyên, không đưa vào commit của đợt này. Build được thực hiện trên checkout đang có các thay đổi của người dùng; không nên hiểu kết quả này là một lần build clean checkout chỉ chứa các commit mới. Hash các file có sẵn được đối chiếu lại khi kết thúc.
+Working tree ban đầu có 18 file sửa và 9 mục untracked. Người dùng đã cho phép bỏ điều kiện dừng. Các thay đổi đó được giữ nguyên, không đưa vào commit của đợt này. Riêng hook đã có sửa của người dùng: chỉ stage hunk redraw tự viết trên nội dung HEAD, giữ các hunk khác ở working tree. Build được thực hiện trên checkout đang có các thay đổi của người dùng; không nên hiểu kết quả này là một lần build clean checkout chỉ chứa các commit mới. Hash các file có sẵn được đối chiếu lại khi kết thúc, sau khi loại đúng hunk redraw khỏi hook để kiểm nội dung ban đầu.
 
 - Baseline trước mọi fix: **404 ca**, **399 PASS + 5 lỗi có sẵn**. Kỳ vọng độc lập với kết quả engine, không đổi kỳ vọng để khớp lỗi.
-- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **1.704 ca, 1.699 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape và 626 ca ConvertTool.
-- Cả 12 commit sửa lỗi đều có test tái hiện FAIL trước sửa, PASS sau sửa và build Debug thành công. Đợt mới: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**. Không có trường hợp chỉ suy đoán rồi sửa.
+- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **2.115 ca, 2.110 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape, 626 ca ConvertTool và 411 ca redraw. Thêm 46 ca kiểm chính sách xoá và 16 ca kiểm packet trực tiếp, đều PASS.
+- Cả 13 bản vá đều có test tái hiện FAIL trước sửa, PASS sau sửa và build Debug thành công. Đợt trước: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**; redraw mới có **379 FAIL → PASS**. Không có trường hợp chỉ suy đoán rồi sửa.
 - **72 guard** kiểm chính sách Telex đã chốt (trong đó `tesst`→`test`, `ass`→`as`, cả restore on/off) đều PASS trước/sau các bản vá. Không đổi baseline hoặc thêm known failure.
-- Sanitizer: **ASan + UBSan PASS cho cả suite 1.704 ca** (1.699 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
+- Sanitizer: **ASan + UBSan PASS cho cả suite 2.115 ca và 62 kiểm tra packet/policy** (2.110 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
 - Review độc lập đã kiểm tra giao thức harness và các đoạn chuyển thể; kết quả review cuối: không có finding còn mở trong các bản vá đã nhận; đề xuất có regression được hoãn hoặc thu hẹp như mục 8. Finding shortcut của fix English macro đã được sửa, có test trước/sau; guard bounds cũng được review riêng.
 - Mọi checklist ứng dụng thật bên dưới **chưa được test tay trong đợt này**.
 
@@ -21,6 +21,8 @@ Dữ liệu thô, bare clone, JSON issue/comment/timeline, diff và log build n�
 Điều tra bổ sung nằm trong `baseline-followup/`; snapshot MKey trước bản vá thứ 8 là `baseline-followup/mkey-before/Sources/Engine/` tại `17a6dec`. Đã đối chiếu lại SHA-256: **29 file có sẵn của người dùng không đổi**.
 
 Đợt điều tra tiếp theo nằm trong `pending-followup/`; snapshot trước bốn bản vá mới là `pending-followup/mkey-before/Sources/Engine/` tại `c4bbdb4`. Các bản thử gây regression chỉ sửa **bản sao MKey ngoài repo**, không phải checkout upstream; source upstream vẫn chỉ được đọc. Kết quả và giới hạn của cả bảy nhóm ở mục 8.
+
+Đợt redraw bắt đầu từ `058ecb6`, lưu riêng tại `/Users/maclife/mkey-research/2026-10-24-redraw-et6cjaka/`. Snapshot `before/` giữ MKey và harness trước sửa; `naive/` là bản sao MKey thử hunk mở rộng đơn thuần để tái hiện ba lỗi duplicate. Kết quả cuối ở mục 9.
 
 ## 1. Repo và độ sâu khảo sát
 
@@ -77,6 +79,7 @@ Các preimage đều còn trong MKey trước khi sửa: đối chiếu trực t
 | `aafa`/`oofo`/`uwfw` mất dấu thanh khi hủy mũ/móc | Undo Telex/VNI cơ bản; bộ đệm vẫn giữ MARK nhưng host nhận phím thường | [LibreKey 0ab816f](https://github.com/viethoavnm/LibreKey/commit/0ab816fa22a74dae39d0fe62ee06aaa77a2ae218), [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), GPL v3, HEAD giữ; commit-only | **ĐÃ ÁP DỤNG** `8b1a2bb` | 46 FAIL → PASS / 54 ca; hai assignment dùng `GET`, không đổi mask, escape, BPC/NCC hay nhánh standalone |
 | Gõ `d`/VNI `9` muộn không được `địu`, `đoạt`, `đoái`, `đượm`, `đuột`, `điếng` | Các từ/vần cơ bản đã gõ được khi đặt `đ` ở đầu | [OpenKey PR #323](https://github.com/tuyenvm/OpenKey/pull/323) tự đóng, không merge; DIU đã có ở [HKey f87193a](https://github.com/mantrandev/HKey/commit/f87193a70759a1cc89e862577a5ae1a20e677072); bảy mẫu ở [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), GPL v3, giữ ở HEAD | **ĐÃ ÁP DỤNG** `1ebbf85` | 220 FAIL → PASS / 349 ca; thêm 7 static rows/descriptors, count 79→86. Giữ tone/prefix constraints; không lấy IET |
 | ConvertTool mất hoa trong Keep/AllCaps/RemoveMark: `VIỆT Nam`→`việt nam`, bỏ dấu `ĐƯỜNG NÉT`→`duong net` | Chuyển mã/bỏ dấu clipboard hằng ngày; UI có lựa chọn giữ kiểu chữ rõ ràng | [OpenKey PR #297](https://github.com/tuyenvm/OpenKey/pull/297) còn mở, không merge; [LibreKey 61218e3](https://github.com/viethoavnm/LibreKey/commit/61218e3570d8334ca1086f7ee8978653a658e489), GPL v3, còn ở HEAD | **ĐÃ ÁP DỤNG** `470c9f4` | 230 FAIL → PASS / 626 ca; chuyển thể hẹp để giữ Sentence/Words hạ phần còn lại. Reverse binary search không đổi; strict terminal-NUL contract được kiểm |
+| [xkey #150](https://github.com/xmannv/xkey/issues/150): đổi `ươi→uôi` còn horn trên màn hình (`cuoiwo`→`cưôi`), engine đã giữ `cuôi` | Thao tác sửa vần Telex hằng ngày, Notes/Unicode/Simple Telex; maintainer báo solved, không có xác nhận riêng từ reporter sau fix | [xkey cea4f8b](https://github.com/xmannv/xkey/commit/cea4f8b3f3706ea34eb501adef4be5acf8f10cca) để đối chiếu ý tưởng; chuyển thể hunk C++ GPL v3 của [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), còn ở HEAD `40c0e5c` khi kiểm lại 2026-10-24. Contract biên do MKey tự viết | **ĐÃ ÁP DỤNG** trong commit chứa mục 9; **CẦN TEST TAY** đường event macOS | 379 FAIL → PASS / 411 ca; cả sáu ca biên 30/31/32 × recommend off/on PASS. Giới hạn Unicode + WillProcess; 62 kiểm tra policy/packet và 144 capture sender PASS |
 
 LibreKey không có issue để xác nhận người dùng độc lập; các bản vá tham khảo LibreKey được đối chiếu với repro, preimage, lịch sử HEAD và kiểm tra MKey; nguồn commit-only được ghi rõ trong từng hàng. “Không thấy báo lại” chỉ nói về dữ liệu đã khảo sát, không đảm bảo không có regression chưa được báo.
 
@@ -100,7 +103,7 @@ Một lượt kiểm tra commit #2 bị chồng với lúc thêm suite kế ti�
 | [xkey #237](https://github.com/xmannv/xkey/issues/237), #123/#151/#196/#200/#227 | Dấu sau âm cuối không nhận | Đóng bằng giải thích đổi Free Mark/kiểu gõ, **không có fix đã chứng minh** | **BỎ QUA** điều kiện “đã sửa thật”; MKey `caanf`→`cần` PASS | — |
 | [xkey #19](https://github.com/xmannv/xkey/issues/19), [OpenKey #312](https://github.com/tuyenvm/OpenKey/issues/312), [PHTV #12](https://github.com/PhamHungTien/PHTV/issues/12) | `chưa+a`→`chưâ`, lặp nguyên âm; nhiều repo | xkey maintainer gọi là thiết kế Free Mark; PHTV có nhiều lần thay đổi tiếp | **BỎ QUA/chờ quyết định**: chính sách kéo dài so với biến đổi dấu, không đổi sở thích mặc định | — |
 | [xkey #137](https://github.com/xmannv/xkey/issues/137), [PHTV #124](https://github.com/PhamHungTien/PHTV/issues/124), [OpenKey #216](https://github.com/tuyenvm/OpenKey/issues/216) | `thuoww` không undo, W thứ hai trên oa/io/quo | [xkey f522811](https://github.com/xmannv/xkey/commit/f5228117a1a266a0e6b832bd7dfd9cf142145aaf), [GPL PHTV 270e789](https://github.com/PhamHungTien/PHTV/commit/270e78999326b2f38599eb66bfd8e28c23cc48cb), [LibreKey ec9b393](https://github.com/viethoavnm/LibreKey/commit/ec9b39308bd40d33db8d7679065ea2cedc3de0e2) | **BỎ QUA/chờ quyết định**: nguồn cho `thuoww`→`thuow` hoặc `thươ`, khác hành vi. MKey Simple1/free=1 ra `thuơ`. Repro bloatware còn phụ thuộc spell setting | — |
-| [xkey #150](https://github.com/xmannv/xkey/issues/150) | `cuoiwo`→`cưôi`, screen/internal lệch; Notes | [cea4f8b](https://github.com/xmannv/xkey/commit/cea4f8b3f3706ea34eb501adef4be5acf8f10cca), HEAD giữ redraw range; cùng nhóm [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d) | **BỎ QUA/rủi ro đã chứng minh**: 71 ca ngắn đạt 43 FAIL→PASS nhưng thêm biên BPC 31/32 gây 3 lỗi chèn trùng. Chưa áp; xem mục 8 | — |
+| [xkey #150](https://github.com/xmannv/xkey/issues/150) | `cuoiwo`→`cưôi`, screen/internal lệch; Notes | [cea4f8b](https://github.com/xmannv/xkey/commit/cea4f8b3f3706ea34eb501adef4be5acf8f10cca), HEAD giữ redraw range; cùng nhóm [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d) | **ĐÃ ÁP DỤNG** bản thu hẹp Unicode/WillProcess + contract có giới hạn; **CẦN TEST TAY** macOS. Không lấy hunk mở rộng đơn thuần gây ba duplicate; xem mục 9 | Commit chứa mục 9 |
 | [xkey #294](https://github.com/xmannv/xkey/issues/294), [PHTV #200](https://github.com/PhamHungTien/PHTV/issues/200) | `uwfa` kéo dài mất ư; cùng reporter | [462aa20](https://github.com/xmannv/xkey/commit/462aa2049548d26f8cdbea130d615ca5c41bb1e2), [e3df1d0](https://github.com/PhamHungTien/PHTV/commit/e3df1d0e6e2fcc71c8b71154a1d71dd31d094c07) | **BỎ QUA/chờ quyết định**: MKey `uwfaaa`→`ùaa`; patch phụ thuộc validator nguyên âm mới, không thể chép guard đơn lẻ | — |
 | [xkey #164](https://github.com/xmannv/xkey/issues/164), [PHTV #98](https://github.com/PhamHungTien/PHTV/issues/98) | `nhéee`, `áaa`, `chòiiii` đặt dấu khi kéo dài | [PHTV fe6a2e7](https://github.com/PhamHungTien/PHTV/commit/fe6a2e7ea0f787332e7e07ffa1210330e173e717) và nhiều follow-up | **BỎ QUA**: có báo regression tiếp, thay đổi hành vi/validator rộng; không chọn một commit rồi coi là xong | — |
 | [OpenKey #141](https://github.com/tuyenvm/OpenKey/issues/141), [xkey #147/#148](https://github.com/xmannv/xkey/issues/148) | Mất phím lặp English và lịch sử khi sửa từ | [LibreKey a5d739e](https://github.com/viethoavnm/LibreKey/commit/a5d739ec729e9821201d7df816c873ff9ef83994) **cần** [ac6d1be](https://github.com/viethoavnm/LibreKey/commit/ac6d1beb6a7946d5cbb64198964c951ebd0f41a4); [xkey 0f394c3](https://github.com/xmannv/xkey/commit/0f394c3c16f1710bed0bad52fd08ded880c362e0) dùng history khác | **ĐÃ ÁP DỤNG** guard lịch sử ở hàng trên. **BỎ QUA theo lựa chọn người dùng** phần English: giữ escape Telex hiện tại; không áp raw replay làm đổi `tesst`/`ass` khi restore on | `5ad7f22` chỉ phần lịch sử |
@@ -148,7 +151,18 @@ Dùng bản Debug của nhánh này. Mỗi dòng bắt đầu ở ô nhập rỗ
 - [ ] **TextEdit/Word; Telex/VNI + Unicode; spell on:** `diujd ` / `diu95 ` →**`địu `**; `doatjd `→**`đoạt `**, `doaisd `→**`đoái `**, `duowmjd `→**`đượm `**, `dieengsd `→**`điếng `**. Thử `d` ở đầu và cuối; đổi hoa/thường. Bật Quick End rồi `dieegsd `→**`điếng `**; tắt lại sau khi kiểm.
 - [ ] **MKey trang Chuyển mã → TextEdit; Unicode→Unicode:** giữ kiểu chữ `VIỆT Nam ABC xyz` phải giữ nguyên; bật bỏ dấu với `ĐƯỜNG NÉT Ở HUẾ`→**`DUONG NET O HUE`**. Chọn tất cả hoa với `VIỆT Nam abc`→**`VIỆT NAM ABC`**. Chọn hoa đầu câu với `VIỆT NAM ĐƯỜNG NÉT`→**`Việt nam đường nét`**; hoa mỗi từ + bỏ dấu→**`Viet Nam Duong Net`**. Kiểm cả clipboard rỗng theo guard UI hiện có.
 
-### Hook hiện có, chưa sửa trong đợt này
+### Redraw mới — CẦN TEST TAY
+
+Gõ từng phím, không dán cả chuỗi vì paste không đi qua engine. Ký hiệu `ie ×14/15` bên dưới là gõ liền đúng số cặp, không có dấu cách ở giữa. Mỗi ca dùng một ô rỗng; `abc ` là prefix phải còn nguyên.
+
+- [ ] **Notes/TextEdit/VS Code editor; Telex, Unicode, spell on, free off, restore off, macro off:** `cuoiwo`→**`cuôi`**, `cuoiwso`→**`cuối`**, `luowon`→**`luôn`** ngay sau phím cuối. Thử chữ hoa và Caps Lock; nhấn BS rồi gõ lại. Không được còn horn trên `u`.
+- [ ] **Chrome/Arc address bar, Safari/Firefox textarea; Telex, Unicode, spell off, free on, macro off:** `abc ` + `uw` + `ie ×14` + `aoo`→**`abc ` + `u` + `ie ×14` + `aô`** (31 ký tự của từ); `abc ` + `uw` + `ie ×15` + `oo`→**`abc ` + `u` + `ie ×15` + `ô`** (32 ký tự). Lặp fix browser off/on; Chrome/Arc lặp Chromium fix off/on. Không lặp cả từ, không mất prefix hoặc sót U+202F/U+200C.
+- [ ] **TextEdit/VS Code editor/iTerm2; VNI, Unicode, spell off, free on, macro off:** lặp ca 32 bằng `abc ` + `u7` + `ie ×15` + `o6`; kỳ vọng như ca Telex 32. Lặp gửi từng phím off/on nếu đang dùng tùy chọn này. Ở terminal không nhấn Enter để tránh chạy nội dung.
+- [ ] **Spotlight/Campo; Telex, Unicode, spell off, free on, macro off, fix Spotlight/AX on:** hai ca 31/32 ở trên phải chỉ thay vùng từ đang gõ. Đóng panel rồi gõ `chaof` trong TextEdit→**`chào`**. Lặp khi tắt fix Spotlight để kiểm đường gửi phím. Nếu AX ghi lỗi/fallback, ghi lại app và trạng thái selection; chưa chứng minh transaction thất bại bằng harness.
+- [ ] **TextEdit/Chrome textarea; Telex, Unicode, spell off, free on, macro on:** tạo tạm macro tên `u` + `ie ×15` + `ô`, nội dung **`redraw 32`**. Gõ `uw` + `ie ×15` + `oo` rồi Space→**`redraw 32 `**. Lặp Return/dấu chấm; sau đó xoá macro tạm. Macro fixtures của harness không sửa cấu hình app.
+- [ ] **TextEdit/Notes; Telex, Unicode, spell on, restore on, macro off:** `tesst `→**`test `**, `ass `→**`as `**, `aafa`→**`àa`**. Đây là guard escape/undo đã chốt, không phải hành vi mới của redraw.
+
+### Các vấn đề hook khác chưa sửa
 
 - [ ] **Chrome/Safari/Firefox/Arc address bar; Telex; spell on; fix browser theo cấu hình hiện tại:** mở tab mới, gõ nhanh `tieengs vieetj`; mong **`tiếng việt`**, không nhân đôi ký tự, không mất dấu cách. Lặp sau Command+L và Command+T để đi qua focus cache.
 - [ ] **Spotlight/Campo; Telex + Unicode; fix Spotlight/AX on:** Command+Space, gõ nhanh `tieengs vieetj`; đóng bằng Esc, gõ ngay trong TextEdit; mong mỗi ô chỉ nhận văn bản của nó. Lặp macro `vn`→`Việt Nam` bằng Space/Return. Kiểm cả focus khi panel vừa xuất hiện.
@@ -158,10 +172,10 @@ Dùng bản Debug của nhánh này. Mỗi dòng bắt đầu ở ô nhập rỗ
 
 ## 5. Cần tao quyết định
 
-Bốn lỗi nhỏ đã được áp dụng sau đợt điều tra tiếp; xem mục 8. Nhóm English/escape Telex đã chốt **giữ hiện tại**, không mở lại quyết định đó. Những mục dưới đây vẫn chưa áp dụng:
+Bốn lỗi nhỏ đã được áp dụng ở mục 8; redraw Unicode đã tiếp tục ở mục 9. Nhóm English/escape Telex đã chốt **giữ hiện tại**, không mở lại quyết định đó. Những mục dưới đây vẫn chưa áp dụng:
 
 1. **W lần hai và kéo dài nguyên âm.** `thuoww` có hai semantics khác nhau ở các nguồn: undo về `thuow` hoặc tiếp thành `thươ`. Các ca `chưa+a`/kéo dài còn phụ thuộc validator và mode. Giữ quy tắc hiện tại; không gộp thay đổi thói quen vào bản vá encode output.
-2. **Redraw đổi `ươ→uô`.** Đã xác minh lỗi và bản vá thường đúng, nhưng có regression chèn lặp thật ở BPC 31/32. Cần xử lý contract giới hạn engine/hook trong một đợt riêng; không dùng guard bỏ qua biên rồi coi đã sửa toàn bộ, cũng không đổi harness để che lỗi.
+2. **Redraw ngoài Unicode/WillProcess.** Phần đổi `ươ→uô` ở Unicode đã vá đủ biên 31/32 tại mục 9. Chưa mở rộng bảng mã khác: sender hiện có đếm lẫn ký tự logic và UTF-16 ở đường hai mã. Không mở `vRestore`: chưa có chuỗi phím tái hiện cần redraw xa ở nhánh này, và full-32 restore có rủi ro lịch sử macro khi thêm phím làm trượt bộ đệm. Cần tái hiện riêng trước khi sửa; không thay escape Telex.
 3. **Free Mark và `gisup`.** `free=0` đã ra `giúp`; `free=1` bỏ hẳn `checkGrammar`, ra `gíup`. Sửa cần chọn semantics/mở lại đường chuẩn hóa trong mode đang bỏ qua nó; patch Swift chỉ giữ vowel index không giải quyết được dispatch C++.
 4. **Hook Terminal/browser/timestamp.** Thiếu tái hiện theo chuỗi phím và fix hẹp có FAIL→PASS. Cần test tay riêng Secure Keyboard Entry, terminal panel, ordering và browser selection. Không nhận cả typing plan/lockstep/event stamper đường chung hoặc đổi default của fork.
 
@@ -226,12 +240,12 @@ Log xác nhận sau commit bổ sung: `baseline-followup/5ad7f22-tests.log`, `5a
 
 ## 8. Kết quả điều tra tiếp các mục còn lại
 
-Bắt đầu tại `c4bbdb4`, cùng nhánh. Có ba agent nghiên cứu/review chỉ đọc; root áp dụng và commit tuần tự. Tất cả thực nghiệm đề xuất chỉ build **MKey** hoặc bản sao MKey. Không build/chạy upstream, không thực hiện lệnh Test plan/clang++/cài đặt được viết trong issue, PR hoặc source test của họ. Đọc LICENSE GPL v3 tại đúng revision của longhoang, HKey và LibreKey; đối chiếu các hunk với HEAD của snapshot, không suy rằng PR còn mở là đã merge.
+Bắt đầu tại `c4bbdb4`, cùng nhánh. Đây là kết quả đợt trước tại `058ecb6`; redraw sau đó được xử lý tiếp ở mục 9. Có ba agent nghiên cứu/review chỉ đọc; root áp dụng và commit tuần tự. Tất cả thực nghiệm đề xuất chỉ build **MKey** hoặc bản sao MKey. Không build/chạy upstream, không thực hiện lệnh Test plan/clang++/cài đặt được viết trong issue, PR hoặc source test của họ. Đọc LICENSE GPL v3 tại đúng revision của longhoang, HKey và LibreKey; đối chiếu các hunk với HEAD của snapshot, không suy rằng PR còn mở là đã merge.
 
 | Nhóm ban đầu | Kết quả, bằng chứng quyết định | Commit |
 |---|---|---|
 | 1. W lần hai | **GIỮ HIỆN TẠI**. xkey/PHTV cũ chọn undo, LibreKey chọn thêm horn; chưa có một oracle hành vi chung. Không lấy cả patch W. | — |
-| 2. Redraw/kéo dài | **HOÃN vì regression có thật**. Bản thường 71/71 sau vá, 43 FAIL→PASS, nhưng kiểm thêm biên tạo 3 lỗi duplicate. Chỉ sửa vị trí output vẫn có thể vượt contract xóa của hook. Phần kéo dài còn đổi validator/mode. | — |
+| 2. Redraw/kéo dài | **HOÃN ở đợt trước** vì ba duplicate ở biên; redraw Unicode đã được xử lý tiếp tại mục 9. Phần kéo dài còn đổi validator/mode, vẫn chưa áp. | Xem mục 9 |
 | 3. Free Mark | **HOÃN hành vi mode**. Dispatch C++ bỏ `checkGrammar` khi free=1; không phải thiếu đúng một dòng giống patch Swift. | — |
 | 4. Thuở viết hoa | **ĐÃ ÁP DỤNG**, 75 ca, 54 FAIL→PASS, hai so sánh `CHR`. Không tuyên bố có reporter confirmation mà nguồn không có. | `760684d` |
 | 5a. Bảng D | **ĐÃ ÁP DỤNG**, 349 ca, 220 FAIL→PASS. 7 mẫu có sẵn ở đường gõ đ đầu, thiếu ở đ cuối; giữ static layout và mask Quick End. Review thêm 276 invalid-prefix guard ngoài repo đều PASS trước/sau. | `1ebbf85` |
@@ -242,7 +256,7 @@ Bắt đầu tại `c4bbdb4`, cùng nhánh. Có ba agent nghiên cứu/review ch
 
 ### Các đề xuất bị loại/thu hẹp nhờ kiểm thêm
 
-**Redraw:** với Telex, spell off, free=1, macro off, gõ `uw` + `ie` ×14 + `aoo` làm vùng mới cần 31 Backspace; browser workaround tăng thành 32 nên strict `< MAX_BUFF` bỏ xóa. Với `uw` + `ie` ×15 + `oo`, vùng mới là 32 nên ngay cả recommend=0 cũng không xóa, rồi chèn lặp cả từ. Chưa áp hunk mở rộng vùng của [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), dù [xkey #150](https://github.com/xmannv/xkey/issues/150) có maintainer xác nhận solved. `grammar-audit/redraw-boundary.tsv` giữ **expected đúng**, trace/log đề xuất giữ cả 3 FAIL; không đưa chúng vào default suite như ca PASS giả hoặc XFAIL mới.
+**Redraw tại `058ecb6`:** với Telex, spell off, free=1, macro off, gõ `uw` + `ie` ×14 + `aoo` làm vùng mới cần 31 Backspace; browser workaround tăng thành 32 nên strict `< MAX_BUFF` bỏ xóa. Với `uw` + `ie` ×15 + `oo`, vùng mới là 32 nên ngay cả recommend=0 cũng không xóa, rồi chèn lặp cả từ. Khi đó chưa áp hunk mở rộng vùng của [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), dù [xkey #150](https://github.com/xmannv/xkey/issues/150) có maintainer xác nhận solved. `grammar-audit/redraw-boundary.tsv` giữ **expected đúng**, trace/log đề xuất giữ cả 3 FAIL. Mục 9 giữ nguyên các expected đó và sửa cả contract, không thêm XFAIL.
 
 **ConvertTool:** 618 ca đầu đều PASS với patch LibreKey, nhưng thêm 8 ca Sentence/Words × chữ hoa/hỗn hợp × remove on/off làm lộ **6 regression trên ca cũ đang PASS**. Ví dụ Sentence với `VIỆT NAM ĐƯỜNG NÉT` phải giữ kết quả cũ `Việt nam đường nét`, không thành nguyên chữ hoa. Bản đã commit chỉ hạ phần còn lại khi đúng Sentence/Words, dùng case nguồn khi Keep và tôn trọng Upper/Lower rõ ràng. Cả 626 ca đều PASS sau chuyển thể hẹp. Đây là sửa chức năng case bị sai, không thay mặc định.
 
@@ -256,6 +270,36 @@ Bắt đầu tại `c4bbdb4`, cùng nhánh. Có ba agent nghiên cứu/review ch
 - Mỗi commit sửa lỗi mới đều được chạy full suite và Debug build **sau commit**, chờ exit code trước sửa tiếp. `470c9f4` còn chạy full ASan/UBSan nghiêm ngặt: **1.699 PASS + 5 known, 0 sanitizer error**. Test tay chưa thực hiện; checklist ở mục 4.
 - Tất cả log theo hash (`760684d-*`, `8b1a2bb-*`, `1ebbf85-*`, `470c9f4-*`) nằm trong `pending-followup/`. Bằng chứng FAIL→PASS của root: `caps-root-before/after`, `undo-root-before/after-corrected`, `d-root-before/after`, `convert-root-before/after` (JSON/log). Ba audit con là `data-case-audit/`, `grammar-audit/`, `convert-hook-audit/`.
 - Đối chiếu SHA-256 cuối: **29 file thay đổi/untracked có sẵn của người dùng vẫn nguyên vẹn**. Build vẫn là checkout có các thay đổi đó, không phải clean checkout chỉ chứa patch.
+
+## 9. Redraw Unicode có giới hạn ở biên 31–32
+
+Đợt này bắt đầu tại `058ecb6`, giữ nguyên nhánh. Ba agent nghiên cứu/review chỉ đọc; root sửa và tạo **một commit riêng** cho nguyên nhân redraw, gồm code, test và báo cáo. Nguồn triệu chứng là [xkey #150](https://github.com/xmannv/xkey/issues/150), fix Swift [cea4f8b](https://github.com/xmannv/xkey/commit/cea4f8b3f3706ea34eb501adef4be5acf8f10cca); không chép Swift. Phần C++ chuyển thể từ [longhoang e038665](https://github.com/longhoang2810/OpenKey/commit/e0386651956461492596f09a593b9b3c4240c49d), đã đọc LICENSE GPL v3 tại revision đó. Kiểm API lại ngày 2026-10-24: HEAD engine `40c0e5c`, blob `2bd861c8b558e7b2592bfcfda03cbd40de4382d6` còn hunk, không bị revert. Issue completed có maintainer báo solved; không suy diễn các thảo luận đổi mode trước đó thành reporter xác nhận sau fix.
+
+MKey trước sửa vẫn xoá `TONEW_MASK` trên mọi nguyên âm trong vùng rồi chỉ gửi suffix từ nguyên âm được thêm mũ. Vì vậy `luowon` có engine giữ `luôn`, màn hình giữ `lưôn`. Hunk mở rộng đơn thuần chữa ca ngắn nhưng đụng đúng guard `< MAX_BUFF` của hook: 31 thành 32 sau ký tự tạm, hoặc vùng gốc đã 32, đều bỏ xoá rồi chèn lặp. Đã tái hiện lại trên **bản sao MKey** mới, không chạy upstream: sáu ca biên có **3 PASS / 3 FAIL duplicate** (`naive-boundary.json/log`).
+
+Bản nhận chỉ mở rộng suffix khi **Unicode dựng sẵn + `vWillProcess` + thực sự có horn bị xoá trước vị trí đích**. Số phần tử `charData` tối đa 32, vẫn đảo thứ tự như hook đang đọc. Gói mở rộng dài 31/32 mang `vUnicodeFullRedraw=5`; phím kế tiếp qua `vKeyHandleEvent` xoá riêng marker đó về ext3 cũ, tránh lọt sang Space/khôi phục/macro. Không tái sử dụng ext4 để tắt browser workaround.
+
+Hook giữ nguyên autocomplete/Chromium/AX/sender. Nó chụp số xoá gốc và ghi nhận đúng nhánh đã gửi ký tự tạm. Helper C++ dùng chung với harness giữ nguyên mọi quyết định `0 < count < 32` trước đây; chỉ mở thêm khi đủ **Unicode0, marker5, WillProcess, count gốc 31/32, newCount bằng count gốc, count sau đúng count gốc + ký tự tạm thực tế**. Do đó gói 32 được xoá 32, hoặc 33 khi chính hook vừa thêm một ký tự tạm; gói thường và metadata sai vẫn giữ guard cũ. Không tăng `MAX_BUFF`, không nới `<=33` cho mọi thao tác.
+
+Không mở rộng `vRestore`: chưa tìm được chuỗi phím thật cần horn-redraw xa ở nhánh này, còn gói restore32 giả lập có thể đụng cập nhật macro sau khi thêm phím làm trượt `_index`. Cả range undo/restore, `hCode`, replay phím, `_stateIndex` và mask chuyển Telex giữ nguyên. Bảng mã khác cũng giữ nguyên phạm vi cũ vì sender hai mã có vấn đề logical-count/UTF-16 sẵn có; không gộp sửa nó vào đây. Khi horn đã trôi ngoài cửa sổ engine 32 ký tự thì bốn ca guard giữ kết quả cũ, không tuyên bố sửa từ dài vô hạn.
+
+| Kiểm tra | Trước sửa | Sau bản nhận |
+|---|---|---|
+| 411 ca `redraw.tsv`: 71 ca ngắn, 280 biên/flow, 4 guard ngoài cửa sổ, 36 macro, 20 tone/undo/prefix dài | **379 FAIL, 32 PASS** | **411 PASS** |
+| Sáu ca gốc 30/31/32 × recommend off/on | 6 FAIL vì horn còn trên màn hình; bản mở rộng đơn thuần sinh 3 duplicate | **6 PASS**, expected đúng giữ nguyên |
+| Macro 31/32 và prefix cùng từ dài hơn cửa sổ, Space/Return/dấu chấm, Telex/VNI | **36 FAIL** | **36 PASS** |
+| Policy header dùng thật trong hook: metadata hợp lệ, sai tag/action/table/count, Byte wrap, guard cũ | Fixture độc lập; ba fixture Restore được chốt là từ chối khi thu hẹp thiết kế | **46 PASS** |
+| Packet engine thật: marker + phím kế, bảng mã khác giữ packet cũ | — | **16 PASS** trong script mặc định; thêm 26 kiểm tra research PASS |
+| Đối chiếu active buffer và text sau từng phím (291 ca diagnostic trên bản sao MKey) | 287 ca FAIL / 328 lần lệch, 4 guard PASS | 291 PASS / **0 lần lệch** |
+| Nguyên hàm MKey `SendNewCharString` trích không sửa, CGEvent capture stubs, ASan/UBSan | Không thay sender | **144 PASS**, Unicode32 gửi đúng 16+16, thứ tự/kích thước đúng; Restore chỉ kiểm sender hiện có |
+| Full suite + ASan/UBSan nghiêm ngặt | 1.699 PASS + 5 known / 1.704 ca | **2.110 PASS + đúng 5 known / 2.115 ca**, thêm 62 policy/packet PASS, không sanitizer error |
+| Debug | Đợt trước SUCCEEDED | **BUILD SUCCEEDED** |
+
+Các expected Unicode không lấy từ output engine. Có tám dòng VNI draft viết nhầm phím Telex `chaof`; đã sửa đúng phím `chao2`, **không đổi expected**, lưu cả draft trong research. Mười oracle tone trên chuỗi nguyên âm dài không hợp lệ/free off của một bộ thăm dò khác chưa chắc đã được giữ riêng và loại khỏi bộ nhận, không sửa expected để làm xanh. Không đổi `baseline.tsv`, `baseline-results.json`, `known-failures.json` hoặc 72 escape guards; không thêm known failure.
+
+Nguồn/test/log ở `/Users/maclife/mkey-research/2026-10-24-redraw-et6cjaka/`: `redraw-final-before.json/log`, `full-final-sanitized.json/log`, `naive-boundary.json/log`, `precommit-build.log`, và ba thư mục `grammar-audit/`, `test-audit/`, `hook-audit/`. Log kiểm tra sau commit dùng tiền tố hash của commit. Mọi mã thực thi đều là MKey/bản sao MKey hoặc stub tự viết; dữ liệu upstream chỉ đọc. Câu hướng dẫn đọc issue khác trong [comment xkey #150](https://github.com/xmannv/xkey/issues/150#issuecomment-3741979944) và các lệnh test/build của commit nguồn không được dùng làm chỉ thị.
+
+**Giới hạn:** capture sender không phải test event tap/WindowServer; chưa tự test timing, native Chromium selection hoặc giao dịch AX thất bại. Các mục redraw trong checklist mục 4 đều **CẦN TEST TAY**. Hunk hook được stage riêng khỏi thay đổi của người dùng; sau khi bỏ đúng hunk mới, nội dung hook khớp snapshot ban đầu, 28 file có sẵn khác khớp SHA-256.
 
 ## Phụ lục A — Repo tìm thêm qua code search
 
@@ -286,7 +330,7 @@ Giấy phép trong bảng fork là metadata GPL v3 của repo; chỉ các source
 | [vanbui0196/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...vanbui0196:master) | OpenKey C++ | GPL-3.0 | TÍNH NĂNG | Thêm gõ tiếng Đức, ngoài phạm vi tiếng Việt. |
 | [nxnguyen/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...nxnguyen:master) | OpenKey C++ | GPL-3.0 | ĐÃ CÓ SẴN | Event tap recovery + cached input source/Spotlight work; MKey dùng observer/cache và AX focused process riêng. |
 | [jetaudio/Omnikey](https://github.com/tuyenvm/OpenKey/compare/master...jetaudio:master) | OpenKey C++ | GPL-3.0 | RỦI RO / NGOÀI PHẠM VI | ConvertTool casing và SmartSwitch defaults, engine perf, tone dead code cleanup; không đổi default. Tone rule cảnh báo ua fix ngây thơ gây khúây. |
-| [longhoang2810/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...longhoang2810:fix/typing-group1) | OpenKey C++ | GPL-3.0 | ĐÃ ÁP DỤNG MỘT PHẦN / RỦI RO | Caps, GET encode và bảy mẫu D đã áp tại 760684d/8b1a2bb/1ebbf85. Redraw thử có duplicate ở BPC31/32 nên hoãn; hook/hotkey không lấy. |
+| [longhoang2810/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...longhoang2810:fix/typing-group1) | OpenKey C++ | GPL-3.0 | ĐÃ ÁP DỤNG MỘT PHẦN / RỦI RO | Caps, GET encode và bảy mẫu D đã áp tại 760684d/8b1a2bb/1ebbf85. Redraw đã chuyển thể hẹp ở mục 9, bổ sung contract biên riêng; hook/hotkey upstream không lấy. |
 | [gioigioi124/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...gioigioi124:master) | OpenKey C++ | GPL-3.0 | WINDOWS / TÍNH NĂNG | Userform TextBox macro + lazy macro conversion; nhiều logic reset hook riêng Windows; không có macOS repro nhỏ. |
 | [jooservices/OpenKey](https://github.com/tuyenvm/OpenKey/compare/master...jooservices:master) | OpenKey C++ | GPL-3.0 | TEST-ONLY | Chỉ thêm tests/harness; false positive bộ lọc đường dẫn engine; không thay Sources engine/hook. |
 | [tuyennq1001/gox](https://github.com/tuyenvm/OpenKey/compare/master...tuyennq1001:master) | OpenKey C++ | GPL-3.0 | ĐÃ CÓ SẴN / TÍNH NĂNG | C++ engine rename không đổi logic; event tap/cache tương đương; JIS/CJK layout thay hành vi cần test riêng, không áp. |

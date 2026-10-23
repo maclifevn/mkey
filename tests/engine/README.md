@@ -18,7 +18,8 @@ quick Telex, free marks, uppercase/Shift/Caps Lock, English restoration, macros,
 backspace, punctuation, Enter, Tab, cursor movement, mouse and session boundaries.
 Settings omitted in a row use the values in `MKBridge.mm` (Unicode, spelling on,
 modern orthography on, macros on, restoration/quick Telex/free marks off).
-Fixtures are `btw`, `vn`, `dc`, `longmacro`, `ưds`, `test`, `r`, and `ko`;
+Fixtures are `btw`, `vn`, `dc`, `longmacro`, `ưds`, `test`, `r`, and `ko`,
+plus three explicit long-vowel macro keys for redraw window/prefix checks;
 production preferences are never read or changed. Input is ASCII physical US
 ANSI keystrokes, output is UTF-8.
 Special keys: `<BS>`, `<ENTER>`, `<KPENTER>`, `<TAB>`, `<LEFT>`, `<RIGHT>`, `<ESC>`,
@@ -38,7 +39,10 @@ The simulated text field follows `MKEngineHook.mm`'s Unicode delivery contract:
 - Each key goes through `vKeyHandleEvent()` (or `vEnglishMode()` for English
   macro cases). `vDoNothing` forwards the original key, including backspace.
 - `vWillProcess` replaces `backspaceCount` characters with **reversed** `charData`.
-  The hook's strict `< MAX_BUFF` deletion guard is retained.
+  The hook and harness use the same bounded deletion policy in `DataType.h`.
+  The legacy `< MAX_BUFF` guard remains; only a Unicode WillProcess packet
+  explicitly marked `vUnicodeFullRedraw` may delete its full 31/32-character
+  replacement span (plus the sentinel actually inserted by the hook).
 - `vRestore` and `vRestoreAndStartNewSession` additionally forward the original
   trigger; the latter then clears the word. Control keys are forwarded too.
 - `vReplaceMaro` inserts **forward** `macroData`, then the original trigger.
@@ -56,8 +60,8 @@ apps, inline selection, Accessibility replacement, injected event timing,
 non-US layouts, simultaneous Shift+Caps Lock, other encodings, or emoji. Its
 ordinary event path assumes a non-nice-space app, no autocomplete selection,
 and Chromium's special fix off. Browser selection and the U+200C alternative
-still need manual testing. The MAX_BUFF boundary is retained, including the
-hook's failure to delete if the workaround raises a count of 31 to 32. Macro
+still need manual testing. Untagged packets retain the MAX_BUFF boundary,
+including the old guard when a count of 31 becomes 32. Macro
 chunk boundaries likewise need manual testing. English mode ignores mouse
 notifications, as the hook returns before Vietnamese mouse handling.
 
@@ -82,7 +86,16 @@ escapes; the report records that decision.
 19 pre-fix passing probes for upstream bugs MKey already avoids, 72 guards for
 the chosen Telex escape policy, and three delivery-contract checks. Default
 runs also include `convert.tsv`: 626 independently authored Unicode conversion
-cases (230 failed before the casing fix), for 1704 cases across four tables.
+cases (230 failed before the casing fix). `redraw.tsv` adds 411 cases:
+71 short-word cases, 280 boundary/edit/history cases, four guards outside the
+active window, 36 macro cases and 20 tone/undo/prefix cases. 379 failed before
+the redraw repair; all 411 pass after it. Expected text stays independent of
+rendered engine output, including the correct nonduplicated text at 31/32.
+Default runs total 2115 cases across five tables (2110 pass, five exact known
+baseline failures). They also execute `hook-contract.cpp`: 46 explicit packet
+policy fixtures and 16 real-engine packet lifetime/non-Unicode checks.
+Restore packets keep the legacy boundary; redraw expansion is WillProcess-only
+to preserve Telex replay and avoid widening an unverified macro/history path.
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 
@@ -105,3 +118,6 @@ representation issue that this casing fix does not address.
 To check an engine regression against the saved pre-fix MKey source, set
 `MKEY_ENGINE_SOURCE` to that local snapshot. Do not point it at downloaded
 upstream code: this investigation only reads upstream sources.
+Use the matching saved harness when the engine/hook header protocol differs;
+the redraw pre-fix run uses its original harness with only the same test macro
+fixtures added, not a compatibility shim that hides the old deletion guard.

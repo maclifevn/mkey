@@ -109,6 +109,8 @@ static void convertText(const std::string& options, const std::string& input) {
     std::cout.write(output.data(), output.size() - 1);
 }
 
+int checkHookContract();
+
 class TextField {
     std::u32string text;
     size_t caret = 0;
@@ -156,6 +158,10 @@ public:
         addMacro("r", "rồi");
         addMacro("ko", "không");
         addMacro("longmacro", "một hai ba bốn năm sáu bảy tám chín mười");
+        // Full-window redraw must keep the macro key in step with the text.
+        addMacro("uieieieieieieieieieieieieieieaô", "redraw 31");
+        addMacro("uieieieieieieieieieieieieieieieô", "redraw 32");
+        addMacro("abcuieieieieieieieieieieieieieieieô", "redraw prefix");
     }
 
     void key(const Key& key) {
@@ -187,14 +193,17 @@ public:
             case vRestore:
             case vRestoreAndStartNewSession: {
                 const auto action = state->code;
+                const Byte originalBackspaceCount = state->backspaceCount;
+                bool insertedEmptyCharacter = false;
                 // Normal (non-AX, non-Chromium-special) hook path. Keep the
                 // Byte mutation too: at MAX_BUFF this is not a net-zero trick.
                 if (vFixRecommendBrowser && state->extCode != 4) {
                     insert(U'\u202f');
                     ++state->backspaceCount;
+                    insertedEmptyCharacter = true;
                 }
-                // Keep the hook's exact < MAX_BUFF guard, including its boundary.
-                if (state->backspaceCount < MAX_BUFF)
+                // Exercise the same bounded deletion policy as the real hook.
+                if (vCanSendBackspace(*state, originalBackspaceCount, insertedEmptyCharacter, vCodeTable))
                     for (int i = 0; i < state->backspaceCount; ++i) backspace();
                 if (state->newCharCount > MAX_BUFF)
                     throw std::runtime_error("engine character buffer overflow");
@@ -298,6 +307,8 @@ public:
 
 int main(int argc, char** argv) {
     try {
+        if (argc == 2 && std::string(argv[1]) == "--check-contract")
+            return checkHookContract();
         if (argc < 3 || argc > 4) {
             std::cerr << "usage: engine-harness SETTINGS ASCII_KEYS [--trace]\n";
             std::cerr << "       engine-harness convert,OPTIONS UTF8_TEXT\n";

@@ -51,6 +51,10 @@ enum HoolCodeState {
     vRestoreAndStartNewSession, //special flag: use for restore key if invalid word with break character (, . ")
 };
 
+enum HookExtCode {
+    vUnicodeFullRedraw = 5,
+};
+
 //bytes data for main program
 struct vKeyHookState {
     /*
@@ -69,6 +73,7 @@ struct vKeyHookState {
      * 2: Delete key
      * 3: Normal key
      * 4: Should not send empty character
+     * 5: Unicode AOE redraw expanded to 31/32 characters
      */
     Byte extCode;
     
@@ -77,6 +82,18 @@ struct vKeyHookState {
     std::vector<Uint32> macroKey; //used for macro function; it is a key
     std::vector<Uint32> macroData; //used for macro function; it is keycode data
 };
+
+// originalBackspaceCount is captured before the browser workaround mutates it.
+inline bool vCanSendBackspace(const vKeyHookState& state, const Byte originalBackspaceCount,
+                              const bool insertedEmptyCharacter, const int codeTable) {
+    if (state.backspaceCount > 0 && state.backspaceCount < MAX_BUFF)
+        return true;
+    return codeTable == 0 && state.extCode == vUnicodeFullRedraw &&
+        state.code == vWillProcess &&
+        originalBackspaceCount >= MAX_BUFF - 1 && originalBackspaceCount <= MAX_BUFF &&
+        state.newCharCount == originalBackspaceCount &&
+        state.backspaceCount == originalBackspaceCount + (insertedEmptyCharacter ? 1 : 0);
+}
 
 #ifdef LINUX
 #include "platforms/linux.h"
