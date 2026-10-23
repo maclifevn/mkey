@@ -136,16 +136,18 @@ string convertUtil(const string& sourceString) {
                 target = _codeTable[convertToolToCode][j][k];
                 if ((convertToolToAllCaps || shouldUpperCase) && k % 2 != 0) {
                     target = _codeTable[convertToolToCode][j][k-1];
-                } else if ((convertToolToAllNonCaps || !shouldUpperCase) && k % 2 == 0) {
+                } else if ((convertToolToAllNonCaps ||
+                            ((convertToolToCapsFirstLetter || convertToolToCapsEachWord) && !shouldUpperCase)) && k % 2 == 0) {
                     target = _codeTable[convertToolToCode][j][k+1];
                 }
                 
                 //remove mark/tone
                 if (convertToolRemoveMark) {
                     target = keyCodeToCharacter((Uint8)j);
-                    if (convertToolToAllCaps) {
+                    if (convertToolToAllCaps || shouldUpperCase ||
+                        (!convertToolToAllNonCaps && !convertToolToCapsFirstLetter && !convertToolToCapsEachWord && k % 2 == 0)) {
                         target = towupper(target);
-                    } else if (convertToolToAllNonCaps) {
+                    } else {
                         target = towlower(target);
                     }
                 }
@@ -179,16 +181,18 @@ string convertUtil(const string& sourceString) {
             target = _codeTable[convertToolToCode][j][k];
             if ((convertToolToAllCaps || shouldUpperCase) && k % 2 != 0) {
                 target = _codeTable[convertToolToCode][j][k-1];
-            } else if ((convertToolToAllNonCaps || !shouldUpperCase) && k % 2 == 0) {
+            } else if ((convertToolToAllNonCaps ||
+                        ((convertToolToCapsFirstLetter || convertToolToCapsEachWord) && !shouldUpperCase)) && k % 2 == 0) {
                 target = _codeTable[convertToolToCode][j][k+1];
             }
             
             //remove mark/tone
             if (convertToolRemoveMark) {
                 target = keyCodeToCharacter((Uint8)j);
-                if (convertToolToAllCaps) {
+                if (convertToolToAllCaps || shouldUpperCase ||
+                    (!convertToolToAllNonCaps && !convertToolToCapsFirstLetter && !convertToolToCapsEachWord && k % 2 == 0)) {
                     target = towupper(target);
-                } else if (convertToolToAllNonCaps){
+                } else {
                     target = towlower(target);
                 }
             }
@@ -202,7 +206,8 @@ string convertUtil(const string& sourceString) {
         //if dont find => normal char
         if (convertToolToAllCaps || shouldUpperCase)
             _temp.push_back(towupper(data[i]));
-        else if (convertToolToAllNonCaps || !shouldUpperCase)
+        else if (convertToolToAllNonCaps ||
+                 ((convertToolToCapsFirstLetter || convertToolToCapsEachWord) && !shouldUpperCase))
             _temp.push_back(towlower(data[i]));
         else
             _temp.push_back(data[i]);

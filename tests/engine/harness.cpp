@@ -76,6 +76,39 @@ static void configure(const std::string& options) {
     }
 }
 
+static void convertText(const std::string& options, const std::string& input) {
+    std::istringstream stream(options);
+    for (std::string option; std::getline(stream, option, ',');) {
+        if (option == "convert") continue;
+        if (option.compare(0, 5, "case=") == 0) {
+            const auto mode = option.substr(5);
+            if (mode != "keep" && mode != "upper" && mode != "lower" &&
+                mode != "sentence" && mode != "words")
+                throw std::runtime_error("unknown conversion case: " + mode);
+            convertToolToAllCaps = mode == "upper";
+            convertToolToAllNonCaps = mode == "lower";
+            convertToolToCapsFirstLetter = mode == "sentence";
+            convertToolToCapsEachWord = mode == "words";
+        } else if (option == "remove=0" || option == "remove=1") {
+            convertToolRemoveMark = option.back() == '1';
+        } else if (option.size() == 6 && option.compare(0, 5, "from=") == 0 &&
+                   option.back() >= '0' && option.back() <= '4') {
+            convertToolFromCode = option.back() - '0';
+        } else if (option.size() == 4 && option.compare(0, 3, "to=") == 0 &&
+                   option.back() >= '0' && option.back() <= '4') {
+            convertToolToCode = option.back() - '0';
+        } else {
+            throw std::runtime_error("unknown conversion setting: " + option);
+        }
+    }
+    const auto output = convertUtil(input);
+    // NSString stringWithUTF8String consumes this API's single terminal NUL.
+    // Validate it before printing user-visible text; never hide an interior NUL.
+    if (output.empty() || output.back() != '\0' || output.find('\0') != output.size() - 1)
+        throw std::runtime_error("unexpected conversion NUL contract");
+    std::cout.write(output.data(), output.size() - 1);
+}
+
 class TextField {
     std::u32string text;
     size_t caret = 0;
@@ -267,7 +300,14 @@ int main(int argc, char** argv) {
     try {
         if (argc < 3 || argc > 4) {
             std::cerr << "usage: engine-harness SETTINGS ASCII_KEYS [--trace]\n";
+            std::cerr << "       engine-harness convert,OPTIONS UTF8_TEXT\n";
             return 2;
+        }
+        const std::string options = argv[1];
+        if (options == "convert" || options.compare(0, 8, "convert,") == 0) {
+            if (argc != 3) throw std::runtime_error("conversion does not accept --trace");
+            convertText(options, argv[2]);
+            return 0;
         }
         configure(argv[1]);
         TextField field(argc == 4 && std::string(argv[3]) == "--trace");

@@ -70,7 +70,7 @@ known failure is an error, including an unexpected pass, until reviewed.
 When a targeted upstream fix resolves one, remove its known-failure exemption
 and add focused coverage to `regressions.tsv`; retain the original observation.
 
-`regressions.tsv` holds 580 cases for the eleven applied fixes. These include
+`regressions.tsv` holds 580 cases for the eleven typing fixes. These include
 22 cases for restoration history (13 failed before its guard) and 75 cases for
 case-insensitive TH/Q horn handling (54 failed before the fix). Another 54
 verify tone encoding when undoing circumflex/horn (46 failed before the fix).
@@ -81,9 +81,26 @@ escapes; the report records that decision.
 `screened.tsv` holds
 19 pre-fix passing probes for upstream bugs MKey already avoids, 72 guards for
 the chosen Telex escape policy, and three delivery-contract checks. Default
-runs cover all three tables (1078 cases).
+runs also include `convert.tsv`: 626 independently authored Unicode conversion
+cases (230 failed before the casing fix), for 1704 cases across four tables.
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
+
+The same CLI calls `convertUtil()` directly when settings start with `convert`:
+
+```sh
+./tests/engine/run.sh --probe 'convert,case=keep,remove=1,from=0,to=0' 'ĐƯỜNG NÉT'
+```
+
+Conversion input is literal UTF-8, bypassing physical-key replay. `case` accepts
+`keep`, `upper`, `lower`, `sentence` or `words`; `remove` is 0/1 and code tables
+are 0 through 4. Fixtures use Unicode precomposed/compound (0/3). The driver
+requires exactly one terminal NUL from the API and rejects interior NULs before
+printing user-visible text, matching the NSString wrapper. Expected strings
+come from explicit Vietnamese letters and standard Unicode mappings, not engine
+tables. Mixed-case guards preserve the existing Sentence/Words lower-rest rule.
+Compound-output fixtures end in ASCII to isolate a pre-existing last-character
+representation issue that this casing fix does not address.
 
 To check an engine regression against the saved pre-fix MKey source, set
 `MKEY_ENGINE_SOURCE` to that local snapshot. Do not point it at downloaded
