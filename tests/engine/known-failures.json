@@ -1,22 +1,22 @@
 {
   "english-test": {
     "actual": "tét ",
-    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+    "reason": "Ý định English trùng chuỗi Telex hợp lệ cho tét; chưa đổi quy tắc phân giải Việt/Anh."
   },
   "english-office": {
     "actual": "ofice ",
-    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
   },
   "english-password": {
     "actual": "pasword ",
-    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
   },
   "english-coffee": {
     "actual": "cofee ",
-    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
   },
   "english-messenger": {
     "actual": "Mesenger ",
-    "reason": "Khôi phục từ tiếng Anh: engine bỏ phím lặp hoặc coi kết quả có dấu là âm tiết Việt hợp lệ."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
   }
 }
