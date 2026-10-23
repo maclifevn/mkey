@@ -70,16 +70,18 @@ known failure is an error, including an unexpected pass, until reviewed.
 When a targeted upstream fix resolves one, remove its known-failure exemption
 and add focused coverage to `regressions.tsv`; retain the original observation.
 
-`regressions.tsv` holds 231 cases for the ten applied fixes. These include
+`regressions.tsv` holds 580 cases for the eleven applied fixes. These include
 22 cases for restoration history (13 failed before its guard) and 75 cases for
 case-insensitive TH/Q horn handling (54 failed before the fix). Another 54
-verify tone encoding when undoing circumflex/horn (46 failed before the fix). The five English baseline observations
+verify tone encoding when undoing circumflex/horn (46 failed before the fix).
+349 cases cover missing late-đ patterns, including invalid prefixes and blocked
+tones; 220 failed before the pattern additions. The five English baseline observations
 remain unchanged by the user's explicit choice to preserve current Telex
 escapes; the report records that decision.
 `screened.tsv` holds
 19 pre-fix passing probes for upstream bugs MKey already avoids, 72 guards for
 the chosen Telex escape policy, and three delivery-contract checks. Default
-runs cover all three tables (729 cases).
+runs cover all three tables (1078 cases).
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 

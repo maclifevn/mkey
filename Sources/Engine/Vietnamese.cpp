@@ -296,6 +296,13 @@ static const Uint16 cd_75[] = {KEY_D, KEY_A, KEY_N, KEY_G};
 static const Uint16 cd_76[] = {KEY_D, KEY_A, KEY_G | END_CONSONANT_MASK};
 static const Uint16 cd_77[] = {KEY_D, KEY_A, KEY_M};
 static const Uint16 cd_78[] = {KEY_D};
+static const Uint16 cd_79[] = {KEY_D, KEY_U, KEY_O, KEY_M};
+static const Uint16 cd_80[] = {KEY_D, KEY_U, KEY_O, KEY_T};
+static const Uint16 cd_81[] = {KEY_D, KEY_I, KEY_E, KEY_N, KEY_G};
+static const Uint16 cd_82[] = {KEY_D, KEY_I, KEY_E, KEY_G | END_CONSONANT_MASK};
+static const Uint16 cd_83[] = {KEY_D, KEY_I, KEY_U};
+static const Uint16 cd_84[] = {KEY_D, KEY_O, KEY_A, KEY_I};
+static const Uint16 cd_85[] = {KEY_D, KEY_O, KEY_A, KEY_T};
 
 static const Array16 cd_rows[] = {
     {cd_0, 4}, {cd_1, 3}, {cd_2, 4}, {cd_3, 3}, {cd_4, 4}, {cd_5, 3}, {cd_6, 3},
@@ -309,10 +316,11 @@ static const Array16 cd_rows[] = {
     {cd_56, 3}, {cd_57, 3}, {cd_58, 4}, {cd_59, 3}, {cd_60, 3}, {cd_61, 3}, {cd_62, 2},
     {cd_63, 3}, {cd_64, 3}, {cd_65, 3}, {cd_66, 3}, {cd_67, 3}, {cd_68, 3}, {cd_69, 3},
     {cd_70, 4}, {cd_71, 3}, {cd_72, 3}, {cd_73, 4}, {cd_74, 3}, {cd_75, 4}, {cd_76, 3},
-    {cd_77, 3}, {cd_78, 1}
+    {cd_77, 3}, {cd_78, 1}, {cd_79, 4}, {cd_80, 4}, {cd_81, 5}, {cd_82, 4},
+    {cd_83, 3}, {cd_84, 4}, {cd_85, 4}
 };
 
-const Array2D16 _consonantD = {cd_rows, 79};
+const Array2D16 _consonantD = {cd_rows, 86};
 
 // --- _vowelForMark static definitions ---
 static const Uint16 vfm_A_0[] = {KEY_A, KEY_N, KEY_G};
