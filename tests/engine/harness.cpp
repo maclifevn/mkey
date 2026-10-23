@@ -19,6 +19,7 @@ struct Key {
     Uint16 code;
     Uint8 caps;
     char32_t text;
+    bool otherControl = false;
 };
 
 static Key asciiKey(unsigned char ch, bool capsLock) {
@@ -56,7 +57,7 @@ static void configure(const std::string& options) {
         {"autocaps", &vAutoCapsMacro}, {"language", &vLanguage},
         {"macroEnglish", &vUseMacroInEnglishMode}, {"allowZFWJ", &vAllowConsonantZFWJ},
         {"quickStart", &vQuickStartConsonant}, {"quickEnd", &vQuickEndConsonant},
-        {"upperFirst", &vUpperCaseFirstChar}
+        {"upperFirst", &vUpperCaseFirstChar}, {"recommend", &vFixRecommendBrowser}
     };
     std::istringstream stream(options);
     for (std::string option; std::getline(stream, option, ',');) {
@@ -90,6 +91,8 @@ class TextField {
     }
 
     void originalKey(const Key& key) {
+        // The fake field leaves Command/Control/Option shortcuts to its caller.
+        if (key.otherControl) return;
         if (key.code == KEY_DELETE) backspace();
         else if (key.code == KEY_LEFT) { if (caret > 0) --caret; }
         else if (key.code == KEY_RIGHT) { if (caret < text.size()) ++caret; }
@@ -128,9 +131,9 @@ public:
                 originalKey(key);
                 return;
             }
-            vEnglishMode(KeyDown, key.code, key.caps != 0, false);
+            vEnglishMode(KeyDown, key.code, key.caps != 0, key.otherControl);
         } else {
-            vKeyHandleEvent(Keyboard, KeyDown, key.code, key.caps, false);
+            vKeyHandleEvent(Keyboard, KeyDown, key.code, key.caps, key.otherControl);
         }
         if (trace) {
             std::cerr << "key=" << key.code << " caps=" << int(key.caps)
@@ -151,6 +154,12 @@ public:
             case vRestore:
             case vRestoreAndStartNewSession: {
                 const auto action = state->code;
+                // Normal (non-AX, non-Chromium-special) hook path. Keep the
+                // Byte mutation too: at MAX_BUFF this is not a net-zero trick.
+                if (vFixRecommendBrowser && state->extCode != 4) {
+                    insert(U'\u202f');
+                    ++state->backspaceCount;
+                }
                 // Keep the hook's exact < MAX_BUFF guard, including its boundary.
                 if (state->backspaceCount < MAX_BUFF)
                     for (int i = 0; i < state->backspaceCount; ++i) backspace();
@@ -164,6 +173,10 @@ public:
                 break;
             }
             case vReplaceMaro:
+                if (vFixRecommendBrowser) {
+                    insert(U'\u202f');
+                    ++state->backspaceCount;
+                }
                 for (int i = 0; i < state->backspaceCount; ++i) backspace();
                 // macroData is forward; charData above is reversed.
                 for (const auto data : state->macroData) generatedCharacter(data);
@@ -192,7 +205,7 @@ public:
             }
             if (keys.compare(i, 7, "<MOUSE>") == 0) {
                 // RequestNewSession in MKEngineHook.mm.
-                vKeyHandleEvent(Mouse, MouseDown, 0);
+                if (vLanguage != 0) vKeyHandleEvent(Mouse, MouseDown, 0);
                 i += 7;
                 continue;
             }
@@ -200,7 +213,13 @@ public:
                 {"<BS>", {KEY_DELETE, 0, 0}}, {"<ENTER>", {KEY_RETURN, 0, '\n'}},
                 {"<KPENTER>", {KEY_ENTER, 0, '\n'}}, {"<TAB>", {KEY_TAB, 0, '\t'}},
                 {"<LEFT>", {KEY_LEFT, 0, 0}}, {"<RIGHT>", {KEY_RIGHT, 0, 0}},
-                {"<ESC>", {KEY_ESC, 0, 0}}
+                {"<ESC>", {KEY_ESC, 0, 0}},
+                {"<MOD+ENTER>", {KEY_RETURN, 0, '\n', true}},
+                {"<MOD+SHIFT+ENTER>", {KEY_RETURN, 1, '\n', true}},
+                {"<MOD+DOT>", {KEY_DOT, 0, '.', true}},
+                {"<MOD+SHIFT+DOT>", {KEY_DOT, 1, '>', true}},
+                {"<MOD+SHIFT+COMMA>", {KEY_COMMA, 1, '<', true}},
+                {"<SHIFT+ENTER>", {KEY_RETURN, 1, '\n'}}
             };
             bool found = false;
             if (keys[i] == '<') {

@@ -18,8 +18,9 @@ quick Telex, free marks, uppercase/Shift/Caps Lock, English restoration, macros,
 backspace, punctuation, Enter, Tab, cursor movement, mouse and session boundaries.
 Settings omitted in a row use the values in `MKBridge.mm` (Unicode, spelling on,
 modern orthography on, macros on, restoration/quick Telex/free marks off).
-Fixtures are `btw`, `vn`, `dc`, and `longmacro`; production preferences are never
-read or changed. Input is ASCII physical US ANSI keystrokes, output is UTF-8.
+Fixtures are `btw`, `vn`, `dc`, `longmacro`, `ưds`, `test`, `r`, and `ko`;
+production preferences are never read or changed. Input is ASCII physical US
+ANSI keystrokes, output is UTF-8.
 Special keys: `<BS>`, `<ENTER>`, `<KPENTER>`, `<TAB>`, `<LEFT>`, `<RIGHT>`, `<ESC>`,
 `<CAPS>`, `<MOUSE>`, `<SESSION>`. JSON strings in `expected` preserve trailing
 spaces, tabs and newlines. Normal quotes in TSV are CSV escaping.
@@ -35,15 +36,23 @@ The simulated text field follows `MKEngineHook.mm`'s Unicode delivery contract:
   trigger; the latter then clears the word. Control keys are forwarded too.
 - `vReplaceMaro` inserts **forward** `macroData`, then the original trigger.
 - `PURE_CHARACTER_MASK` / `CHAR_CODE_MASK` use the low 16 bits; other output
-  entries are physical keycodes with `CAPS_MASK`. `extCode` only affects the
-  hook's multicode-table bookkeeping, so Unicode has no extra action for it.
+  entries are physical keycodes with `CAPS_MASK`. `extCode` 1/2/3 changes the
+  hook's multicode-table bookkeeping, so Unicode has no extra action for these.
+- The ordinary event path's autocomplete workaround inserts U+202F, increments
+  the response's Byte backspace count, then applies the hook's deletion guard;
+  `extCode == 4` skips this for character replacement. Macro replacement has no
+  such guard. Set `recommend=0` to disable this modeled workaround. Trace shows
+  the engine response before the hook adjusts it.
 
 This is an engine test, not an event-tap/UI test. It does not model asynchronous
 apps, inline selection, Accessibility replacement, injected event timing,
-non-US layouts, simultaneous Shift+Caps Lock, other encodings, or emoji. The
-empty-character browser workaround has no net text effect in this field;
-its real-app behavior requires manual testing. Macro chunk boundaries likewise
-need manual testing.
+non-US layouts, simultaneous Shift+Caps Lock, other encodings, or emoji. Its
+ordinary event path assumes a non-nice-space app, no autocomplete selection,
+and Chromium's special fix off. Browser selection and the U+200C alternative
+still need manual testing. The MAX_BUFF boundary is retained, including the
+hook's failure to delete if the workaround raises a count of 31 to 32. Macro
+chunk boundaries likewise need manual testing. English mode ignores mouse
+notifications, as the hook returns before Vietnamese mouse handling.
 
 `baseline-results.json` is the immutable **pre-fix** observation at MKey HEAD
 `e8fdc10` on 2026-10-23, with the user's pre-existing working-tree changes left
@@ -53,6 +62,12 @@ accepts only their exact recorded output in `known-failures.json`. A changed
 known failure is an error, including an unexpected pass, until reviewed.
 When a targeted upstream fix resolves one, remove its known-failure exemption
 and add focused coverage to `regressions.tsv`; retain the original observation.
+
+`regressions.tsv` holds 61 cases for the six applied fixes. `screened.tsv` holds
+19 pre-fix passing probes for upstream bugs MKey already avoids, plus three
+delivery-contract checks. Default runs cover all three tables (487 cases).
+Rejected candidates that failed separate research probes are documented in
+`docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 
 To check an engine regression against the saved pre-fix MKey source, set
 `MKEY_ENGINE_SOURCE` to that local snapshot. Do not point it at downloaded
