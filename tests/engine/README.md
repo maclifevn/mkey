@@ -73,7 +73,8 @@ and add focused coverage to `regressions.tsv`; retain the original observation.
 `regressions.tsv` holds 102 cases for the eight applied fixes. The last 22 check
 restoration history after backspace, macros and temporary engine bypass;
 13 failed before the history guard. The five English baseline observations
-remain unchanged, pending the behavior choices described in the report.
+remain unchanged by the user's explicit choice to preserve current Telex
+escapes; the report records that decision.
 `screened.tsv` holds
 19 pre-fix passing probes for upstream bugs MKey already avoids, plus three
 delivery-contract checks. Default runs cover all three tables (528 cases).

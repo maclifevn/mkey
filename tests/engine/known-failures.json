@@ -5,18 +5,18 @@
   },
   "english-office": {
     "actual": "ofice ",
-    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; người dùng đã chọn giữ escape Telex hiện tại, actual cũ giữ nguyên."
   },
   "english-password": {
     "actual": "pasword ",
-    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; người dùng đã chọn giữ escape Telex hiện tại, actual cũ giữ nguyên."
   },
   "english-coffee": {
     "actual": "cofee ",
-    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; người dùng đã chọn giữ escape Telex hiện tại, actual cũ giữ nguyên."
   },
   "english-messenger": {
     "actual": "Mesenger ",
-    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; chờ chọn hành vi, actual cũ giữ nguyên."
+    "reason": "Cùng lỗi mất phím lặp #141. Raw replay đổi cả escape tesst/ass khi restore on; người dùng đã chọn giữ escape Telex hiện tại, actual cũ giữ nguyên."
   }
 }
