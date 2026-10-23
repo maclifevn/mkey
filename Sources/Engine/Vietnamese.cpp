@@ -422,10 +422,13 @@ static const Uint16 vfm_U_15[] = {KEY_U, KEY_N};
 static const Uint16 vfm_U_16[] = {KEY_U, KEY_M};
 static const Uint16 vfm_U_17[] = {KEY_U, KEY_P};
 static const Uint16 vfm_U_18[] = {KEY_U};
+static const Uint16 vfm_U_19[] = {KEY_U, KEY_Y, KEY_C, KEY_H};
+static const Uint16 vfm_U_20[] = {KEY_U, KEY_Y, KEY_K | END_CONSONANT_MASK};
 
 static const Array16 vfm_U_seqs[] = {
     {vfm_U_0, 3}, {vfm_U_1, 2}, {vfm_U_2, 2}, {vfm_U_3, 2}, {vfm_U_4, 2},
-    {vfm_U_5, 3}, {vfm_U_6, 3}, {vfm_U_7, 3}, {vfm_U_8, 4}, {vfm_U_9, 3},
+    {vfm_U_5, 3}, {vfm_U_6, 3}, {vfm_U_7, 3}, {vfm_U_19, 4}, {vfm_U_20, 3},
+    {vfm_U_8, 4}, {vfm_U_9, 3},
     {vfm_U_10, 2}, {vfm_U_11, 2}, {vfm_U_12, 2}, {vfm_U_13, 2}, {vfm_U_14, 2},
     {vfm_U_15, 2}, {vfm_U_16, 2}, {vfm_U_17, 2}, {vfm_U_18, 1}
 };
@@ -441,7 +444,7 @@ const VowelMapEntry _vowelForMarkStatic[6] = {
     { KEY_O, {vfm_O_seqs, 14} },
     { KEY_E, {vfm_E_seqs, 15} },
     { KEY_I, {vfm_I_seqs, 14} },
-    { KEY_U, {vfm_U_seqs, 19} },
+    { KEY_U, {vfm_U_seqs, 21} },
     { KEY_Y, {vfm_Y_seqs, 1} }
 };
 
