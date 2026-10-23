@@ -625,7 +625,7 @@ void checkCorrectVowel(const Array2D16& charset, int& i, int& k, const Uint16& m
     }
     k = _index - 1;
     for (j = (int)charset[i].size() - 1; j >= 0; j--) {
-        if ((charset[i][j] & ~(vQuickEndConsonant ? END_CONSONANT_MASK : 0)) != CHR(k)) {
+        if ((charset[i][j] & ~((vQuickEndConsonant || !vCheckSpelling) ? END_CONSONANT_MASK : 0)) != CHR(k)) {
             isCorect = false;
             return;
         }
