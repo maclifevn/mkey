@@ -40,9 +40,15 @@ struct TypingPage: View {
                 }
             }
 
-            Section("Phím chuyển chế độ") {
+            Section {
                 HotkeyEditor(status: $state.switchKeyStatus)
                 Toggle("Kêu beep khi chuyển chế độ", isOn: beepBinding)
+            } header: {
+                Text("Phím chuyển chế độ")
+            } footer: {
+                Text("Có thể dùng riêng tổ hợp phím chức năng, ví dụ ⌃⇧ (Control+Shift): bấm giữ rồi thả ra để ghi.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Chính tả") {
@@ -66,6 +72,9 @@ struct TypingPage: View {
 
             Section("Tương thích") {
                 Toggle("Sửa lỗi gợi ý của trình duyệt và Excel", isOn: $state.fixRecommendBrowser)
+                Text("Tự bỏ qua trong Adobe/Affinity để không hiện ký tự lỗi (ô vuông ✕).")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 Toggle("Sửa lỗi nhân Chromium (thử nghiệm)", isOn: $state.fixChromiumBrowser)
                     .disabled(!state.fixRecommendBrowser)
                 Toggle("Tạm tắt mkey bằng phím ⌘", isOn: $state.tempOffByCommand)

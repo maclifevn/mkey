@@ -1,136 +1,154 @@
-//
-//  UpdateChecker.swift
-//  mkey
-//
-//  Checks GitHub Releases for a newer version. Self-contained (own UserDefaults,
-//  independent of the engine). Because the app is ad-hoc signed, it cannot
-//  auto-install; it surfaces the new version and opens the release page so the
-//  user downloads and installs manually.
-//
-
 import AppKit
 import Combine
+import Sparkle
 
-struct ReleaseInfo: Equatable {
-    let version: String   // e.g. "1.4.0"
-    let notes: String     // release body
-    let pageURL: URL      // html_url of the release
-}
-
+/// Sparkle is responsible for version comparison, signatures, downloads,
+/// installation and relaunch. Keep one updater for the lifetime of the app.
 @MainActor
-final class UpdateChecker: ObservableObject {
+final class UpdateChecker: NSObject, ObservableObject, SPUUpdaterDelegate {
     static let shared = UpdateChecker()
 
     enum Status: Equatable {
         case idle
         case checking
         case upToDate
-        case available(ReleaseInfo)
+        case available(String)
         case failed(String)
     }
 
     @Published private(set) var status: Status = .idle
+    @Published private(set) var canCheckForUpdates = false
+    @Published private(set) var lastCheckDate: Date?
 
-    private let defaults = UserDefaults.standard
-    private let autoKey = "autoCheckUpdate"
-    private let lastCheckKey = "lastUpdateCheck"
-    private let releaseAPI = URL(string: "https://api.github.com/repos/maclifevn/mkey/releases/latest")!
-    private let minInterval: TimeInterval = 24 * 60 * 60
+    private let policy = UpdateRuntimePolicy.live
+    private var started = false
+    private var subscriptions = Set<AnyCancellable>()
+    private lazy var controller = SPUStandardUpdaterController(
+        startingUpdater: false, updaterDelegate: self, userDriverDelegate: nil
+    )
 
-    var autoCheckEnabled: Bool {
-        get { defaults.object(forKey: autoKey) as? Bool ?? true }
-        set { defaults.set(newValue, forKey: autoKey); objectWillChange.send() }
+    private override init() {
+        super.init()
     }
 
     var currentVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
     }
 
-    private init() {}
-
-    // MARK: Public API
-
-    /// Auto-check at launch: only if enabled and it's been > 24h since last check.
-    func autoCheckIfDue() {
-        guard autoCheckEnabled else { return }
-        if let last = defaults.object(forKey: lastCheckKey) as? Date,
-           Date().timeIntervalSince(last) < minInterval {
-            return
+    var autoCheckEnabled: Bool {
+        get { controller.updater.automaticallyChecksForUpdates }
+        set {
+            objectWillChange.send()
+            controller.updater.automaticallyChecksForUpdates = newValue
         }
-        Task { await check(manual: false) }
     }
 
-    /// Query GitHub for the latest release. `manual` = triggered by the user.
-    func check(manual: Bool) async {
-        status = .checking
-        do {
-            let info = try await fetchLatest()
-            defaults.set(Date(), forKey: lastCheckKey)
-            if isNewer(info.version, than: currentVersion) {
-                status = .available(info)
-                if !manual {
-                    // launch-time discovery: alert is shown by the app delegate
-                    NotificationCenter.default.post(name: .mkUpdateAvailable, object: info)
-                }
-            } else {
-                status = .upToDate
+    var autoDownloadEnabled: Bool {
+        get { controller.updater.automaticallyDownloadsUpdates }
+        set {
+            objectWillChange.send()
+            controller.updater.automaticallyDownloadsUpdates = newValue
+        }
+    }
+
+    var availabilityNotice: String? {
+        if !policy.enabled { return "Cập nhật tự động được tắt trong bản phát triển." }
+        if !installationIsEligible { return "Để cập nhật, hãy chuyển MKey vào Applications và mở lại ứng dụng." }
+        return nil
+    }
+
+    private var installationIsEligible: Bool {
+        let url = Bundle.main.bundleURL
+        return UpdateRuntimePolicy.installationIsEligible(
+            bundleURL: url,
+            isWritable: FileManager.default.isWritableFile(atPath: url.path)
+                && FileManager.default.isWritableFile(atPath: url.deletingLastPathComponent().path)
+        )
+    }
+
+    func start() {
+        guard policy.enabled, !started else { return }
+        let updater = controller.updater
+        let defaults = UserDefaults.standard
+        // Preserve the old checker's opt-out exactly once during migration.
+        if !defaults.bool(forKey: "sparklePreferencesMigrated") {
+            if let previous = defaults.object(forKey: "autoCheckUpdate") as? Bool {
+                updater.automaticallyChecksForUpdates = previous
             }
+            defaults.set(true, forKey: "sparklePreferencesMigrated")
+        }
+        updater.publisher(for: \.canCheckForUpdates)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] value in self?.canCheckForUpdates = value }
+            .store(in: &subscriptions)
+        updater.publisher(for: \.lastUpdateCheckDate)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] value in self?.lastCheckDate = value }
+            .store(in: &subscriptions)
+        updater.publisher(for: \.automaticallyChecksForUpdates)
+            .combineLatest(updater.publisher(for: \.automaticallyDownloadsUpdates))
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &subscriptions)
+        do {
+            try updater.start()
+            started = true
         } catch {
-            status = .failed("Không kiểm tra được cập nhật. Hãy thử lại sau.")
+            subscriptions.removeAll()
+            status = .failed(error.localizedDescription)
         }
     }
 
-    func openReleasePage(_ info: ReleaseInfo) {
-        NSWorkspace.shared.open(info.pageURL)
-    }
-
-    // MARK: Networking
-
-    private func fetchLatest() async throws -> ReleaseInfo {
-        var request = URLRequest(url: releaseAPI)
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("MKey", forHTTPHeaderField: "User-Agent")
-        request.timeoutInterval = 15
-
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-            throw URLError(.badServerResponse)
+    func checkForUpdates() {
+        guard canCheckForUpdates else { return }
+        // A menu action must finish tracking before Sparkle presents its UI.
+        RunLoop.main.perform(inModes: [.default]) { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, self.canCheckForUpdates,
+                      self.controller.updater.canCheckForUpdates else { return }
+                guard self.installationIsEligible else {
+                    self.status = .failed(self.availabilityNotice ?? "Không thể cập nhật tại vị trí này.")
+                    let alert = NSAlert()
+                    alert.messageText = "Chuyển MKey vào Applications"
+                    alert.informativeText = self.availabilityNotice ?? ""
+                    alert.addButton(withTitle: "OK")
+                    NSApp.activate(ignoringOtherApps: true)
+                    alert.runModal()
+                    return
+                }
+                self.status = .checking
+                self.controller.checkForUpdates(nil)
+            }
         }
-        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let tag = json["tag_name"] as? String else {
-            throw URLError(.cannotParseResponse)
+    }
+
+    func updater(_ updater: SPUUpdater, mayPerform updateCheck: SPUUpdateCheck) throws {
+        guard policy.enabled, installationIsEligible else {
+            throw NSError(domain: "vn.mkey.updates", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: availabilityNotice ?? "Không thể cập nhật tại vị trí này."
+            ])
         }
-        let version = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
-        let notes = (json["body"] as? String) ?? ""
-        let pageString = (json["html_url"] as? String) ?? "https://github.com/maclifevn/mkey/releases/latest"
-        let pageURL = URL(string: pageString) ?? releaseAPI
-        return ReleaseInfo(version: version, notes: notes, pageURL: pageURL)
     }
 
-    // MARK: Semver
+    func updater(_ updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {
+        status = .available(item.displayVersionString)
+    }
 
-    /// True when `remote` is a strictly newer version than `local`.
-    /// Parses dot-separated numeric components; on any parse failure returns
-    /// false so we never nag the user with a bogus "update available".
-    private func isNewer(_ remote: String, than local: String) -> Bool {
-        let r = numericComponents(remote)
-        let l = numericComponents(local)
-        guard !r.isEmpty, !l.isEmpty else { return false }
-        for i in 0..<max(r.count, l.count) {
-            let rv = i < r.count ? r[i] : 0
-            let lv = i < l.count ? l[i] : 0
-            if rv != lv { return rv > lv }
+    func updaterDidNotFindUpdate(_ updater: SPUUpdater) {
+        status = .upToDate
+    }
+
+    func updater(_ updater: SPUUpdater, didFinishUpdateCycleFor updateCheck: SPUUpdateCheck, error: Error?) {
+        if let error = error as NSError? {
+            if error.domain == SUSparkleErrorDomain && error.code == SUError.noUpdateError.rawValue {
+                status = .upToDate
+            } else if error.domain == SUSparkleErrorDomain && error.code == SUError.installationCanceledError.rawValue {
+                status = .idle
+            } else {
+                status = .failed(error.localizedDescription)
+            }
+        } else if status == .checking {
+            status = .idle
         }
-        return false
     }
-
-    private func numericComponents(_ version: String) -> [Int] {
-        // keep only the leading "x.y.z" numeric part (drop any -beta suffix)
-        let core = version.split(whereSeparator: { !"0123456789.".contains($0) }).first.map(String.init) ?? version
-        return core.split(separator: ".").map { Int($0) ?? 0 }
-    }
-}
-
-extension Notification.Name {
-    static let mkUpdateAvailable = Notification.Name("MKUpdateAvailable")
 }

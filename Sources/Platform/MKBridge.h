@@ -48,6 +48,12 @@ extern NSNotificationName const MKQuickConvertDidRunNotification;
 + (void)requestNewSession;
 /// Smart switch: the frontmost application changed.
 + (void)activeAppChanged;
+/// Refresh the engine's frontmost-app / exclude state on any app activation
+/// (independent of smart switch), so the hard-bypass flag stays fresh.
++ (void)frontMostAppChanged;
+/// Reload the "don't touch" app list after the UI edited it (menu-bar toggle
+/// or settings), re-evaluating the current app immediately.
++ (void)reloadExcludedApps;
 /// Reload vSwitchKeyStatus & friends after the UI edited them.
 + (void)persistSwitchKeyStatus;
 

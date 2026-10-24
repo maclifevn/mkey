@@ -13,15 +13,18 @@ import AppKit
 enum StatusIcon {
     private static var cache: [Key: NSImage] = [:]
 
-    static func image(vietnamese: Bool, gray: Bool) -> NSImage {
-        let key = Key(vietnamese: vietnamese, gray: gray)
+    static func image(vietnamese: Bool, gray: Bool, excluded: Bool = false) -> NSImage {
+        let key = Key(vietnamese: vietnamese, gray: gray, excluded: excluded)
         if let image = cache[key] {
             return image
         }
 
+        // In an excluded app MKey is fully bypassed — render the glyph faded so
+        // the menu bar visibly signals "inactive here".
+        let alpha: CGFloat = excluded ? 0.35 : 1.0
         let size = NSSize(width: 18, height: 18)
         let image = NSImage(size: size, flipped: false) { rect in
-            let color: NSColor = gray ? .black : NSColor(srgbRed: 0x00 / 255.0, green: 0x66 / 255.0, blue: 0xAB / 255.0, alpha: 1)
+            let color: NSColor = (gray ? NSColor.black : NSColor(srgbRed: 0x00 / 255.0, green: 0x66 / 255.0, blue: 0xAB / 255.0, alpha: 1)).withAlphaComponent(alpha)
 
             // rounded filled rectangle filling most of the icon (matches sibling icons)
             let frameRect = rect.insetBy(dx: 1, dy: 1)
@@ -45,7 +48,7 @@ enum StatusIcon {
                 NSGraphicsContext.restoreGraphicsState()
             } else {
                 // In color mode, draw text using white color for contrast against the blue background fill
-                let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white]
+                let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white.withAlphaComponent(alpha)]
                 text.draw(at: NSPoint(x: x, y: y), withAttributes: attrs)
             }
             return true
@@ -58,5 +61,6 @@ enum StatusIcon {
     private struct Key: Hashable {
         let vietnamese: Bool
         let gray: Bool
+        let excluded: Bool
     }
 }

@@ -10,6 +10,8 @@ hoàn toàn mới bằng SwiftUI, tối ưu cho macOS 26 (Tahoe trở lên, yêu
   hỗ trợ Dark Mode tự nhiên, thay cho storyboard/Objective-C cũ.
 - **MenuBarExtra** thuần SwiftUI với icon VI/EN vẽ runtime (template image,
   tự đổi màu theo menu bar sáng/tối).
+- **Cập nhật trong ứng dụng bằng Sparkle**: tự kiểm tra, tải bản mới, xác thực chữ ký,
+  cài đặt và mở lại MKey; có tùy chọn tự tải/cài khi thoát.
 - **SMAppService** cho "Khởi động cùng macOS" — bỏ hẳn helper app
   `OpenKeyHelper` và API `SMLoginItemSetEnabled` đã deprecated.
 - **Event tap tự hồi phục**: xử lý `kCGEventTapDisabledByTimeout` /
@@ -57,10 +59,14 @@ open build/Build/Products/Release/   # chứa mkey.app
 3. mkey tự phát hiện khi được cấp quyền và bắt đầu hoạt động (không cần mở lại).
 4. Phím chuyển Việt/Anh mặc định: **⌥Z** (đổi được trong Bảng điều khiển → Bộ gõ).
 
-> **Lưu ý về chữ ký ad-hoc**: bản tự build được ký ad-hoc, nên **mỗi lần build
-> lại** macOS coi là app mới — bạn phải xoá mkey khỏi danh sách Accessibility
-> và cấp quyền lại. Nếu có Apple Developer ID, hãy đặt `DEVELOPMENT_TEAM`
-> trong `project.yml` để tránh điều này.
+> **Chữ ký ứng dụng**: Debug ký ad-hoc; Release dùng Developer ID của nhóm phát hành.
+> Nếu tự build mà không có chứng chỉ này, dùng Debug hoặc cấu hình chứng chỉ của bạn
+> trong `project.yml`. Khi thay đổi định danh ký, macOS có thể yêu cầu cấp lại quyền Trợ năng.
+
+## Auto update và phát hành
+
+Xem [hướng dẫn cập nhật](docs/UPDATES.md) để tạo gói và feed Sparkle đã ký,
+notarize, kiểm thử và phát hành. Bản cũ chưa có Sparkle cần cài bản hỗ trợ lần đầu.
 
 ## Giấy phép
 

@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct AboutPage: View {
+    @ObservedObject private var updater = UpdateChecker.shared
     private var versionShort: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     }
@@ -42,10 +43,10 @@ struct AboutPage: View {
                     .padding(.top, 10)
 
                     Button("Kiểm tra cập nhật") {
-                        AppState.shared.selectedPage = .system
-                        Task { await UpdateChecker.shared.check(manual: true) }
+                        updater.checkForUpdates()
                     }
                     .buttonStyle(.bordered)
+                    .disabled(!updater.canCheckForUpdates)
                     .controlSize(.small)
                     .padding(.top, 8)
 

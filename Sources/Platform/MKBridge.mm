@@ -49,6 +49,8 @@ extern "C" {
     CGEventRef MKEngineCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon);
     void RequestNewSession(void);
     void OnActiveAppChanged(void);
+    void MKFrontMostAppChanged(void);
+    void MKReloadExcludedApps(void);
     void OnTableCodeChange(void);
     void OnInputMethodChanged(void);
     void OnSpellCheckingChanged(void);
@@ -174,6 +176,14 @@ static void postStateChanged(void) {
 
 + (void)activeAppChanged {
     OnActiveAppChanged();
+}
+
++ (void)frontMostAppChanged {
+    MKFrontMostAppChanged();
+}
+
++ (void)reloadExcludedApps {
+    MKReloadExcludedApps();
 }
 
 + (void)persistSwitchKeyStatus {

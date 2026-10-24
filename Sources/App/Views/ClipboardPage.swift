@@ -31,7 +31,7 @@ struct ClipboardPage: View {
 
             if manager.enabled {
                 Section {
-                    HotkeyEditor(status: $manager.hotKey)
+                    HotkeyEditor(status: $manager.hotKey, allowsModifierOnly: false)
                 } header: {
                     Text("Phím tắt")
                 } footer: {

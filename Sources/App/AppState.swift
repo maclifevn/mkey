@@ -110,6 +110,23 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Apps where MKey is fully bypassed ("loại trừ"): the engine passes every
+    /// keystroke through untouched. Distinct from smart-switch (soft, per-app
+    /// remembered mode) — this is a hard, deterministic off.
+    @Published var excludedApps: [String] {
+        didSet {
+            defaults.set(excludedApps, forKey: "axExcludeApps")
+            MKBridge.reloadExcludedApps()
+            recomputeCurrentAppExcluded()
+        }
+    }
+
+    /// The frontmost non-MKey app right now — drives the menu-bar "exclude this
+    /// app" item and the icon's excluded state. Transient (not persisted).
+    @Published private(set) var frontAppBundleID: String?
+    @Published private(set) var frontAppName: String?
+    @Published private(set) var currentAppExcluded: Bool = false
+
     // MARK: Macro options
 
     @Published var useMacro: Bool { didSet { set("UseMacro", &vUseMacro, useMacro) } }
@@ -203,6 +220,7 @@ final class AppState: ObservableObject {
         fixSpotlight = defaults.integer(forKey: "vFixSpotlight") != 0
         useAXReplacement = defaults.integer(forKey: "vUseAXReplacement") != 0
         axIncludeApps = defaults.stringArray(forKey: "axIncludeApps") ?? []
+        excludedApps = defaults.stringArray(forKey: "axExcludeApps") ?? []
 
         useMacro = defaults.integer(forKey: "UseMacro") != 0
         useMacroInEnglishMode = defaults.integer(forKey: "UseMacroInEnglishMode") != 0
@@ -328,6 +346,7 @@ final class AppState: ObservableObject {
         fixSpotlight = true
         useAXReplacement = true
         axIncludeApps = []
+        excludedApps = []
         useMacro = true
         useMacroInEnglishMode = false
         autoCapsMacro = false
@@ -351,6 +370,36 @@ final class AppState: ObservableObject {
         vUseSmartSwitchKey = 1; vRememberCode = 1; vSendKeyStepByStep = 0; vPerformLayoutCompat = 0
         MKBridge.spellCheckingChanged()
         NSApp.setActivationPolicy(.accessory)
+    }
+
+    // MARK: App exclusion ("loại trừ")
+
+    /// Whether `bundleID` is bypassed — exact match or bundle-id prefix, mirroring
+    /// the engine's AXAppIsExcluded so the icon/menu reflect real behaviour.
+    func isExcluded(_ bundleID: String) -> Bool {
+        excludedApps.contains { bundleID == $0 || bundleID.hasPrefix($0) }
+    }
+
+    /// Called from the workspace observer when the frontmost (non-MKey) app
+    /// changes — updates the menu label target and the icon's excluded state.
+    func updateFrontApp(bundleID: String?, name: String?) {
+        frontAppBundleID = bundleID
+        frontAppName = name
+        recomputeCurrentAppExcluded()
+    }
+
+    private func recomputeCurrentAppExcluded() {
+        let excluded = frontAppBundleID.map { isExcluded($0) } ?? false
+        if currentAppExcluded != excluded { currentAppExcluded = excluded }
+    }
+
+    /// Toggle exclusion for a specific app (menu-bar "Tắt mkey cho …").
+    func toggleExcluded(bundleID: String) {
+        if excludedApps.contains(bundleID) {
+            excludedApps.removeAll { $0 == bundleID }
+        } else {
+            excludedApps.append(bundleID)
+        }
     }
 
     // MARK: Hotkey helpers

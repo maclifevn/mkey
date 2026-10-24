@@ -122,7 +122,6 @@ struct WelcomePage: View {
                     window.isMovableByWindowBackground = true
                     window.isOpaque = false
                     window.backgroundColor = .clear
-                    window.makeKeyAndOrderFront(nil)
                 }
             }
         }
@@ -134,7 +133,6 @@ struct WelcomePage: View {
                 }
                 // open settings window
                 NotificationCenter.default.post(name: .mkOpenSettingsWindow, object: nil)
-                NSApp.activate(ignoringOtherApps: true)
             }
         }
     }
