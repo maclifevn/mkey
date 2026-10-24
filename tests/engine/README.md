@@ -97,6 +97,17 @@ Telex escapes and 31/32/33-character unknown words. Before the guard, 45 text
 cases failed and three oversized packets were rejected by the harness; all 119
 pass afterwards. The user's chosen priority keeps fan→phan and fun→phun when
 the complete expansion is in the Vietnamese dictionary.
+`quick-telex.tsv` adds 721 cases for dictionary-backed double-consonant typing.
+459 fail before this guard; all 721 pass afterwards. It checks App/Apple and
+all seven quick pairs, valid Vietnamese onsets/codas, later tone/shape input,
+case, spelling/free-mark/restore settings, combined quick-start/end options,
+word breaks, macros/history, bypass, escapes and long-word boundaries.
+The guard previews the complete candidate (including an enabled quick onset)
+and checks its base-letter prefix against 1555 forms derived from the same
+6678 syllables. This preserves pp before a later vowel and bach before a later
+tone. It does not defer or replay input at the word boundary. A valid Vietnamese
+prefix still takes priority in ambiguous English sequences. Non-Unicode output
+keeps the previous Quick Telex path.
 `free-mark.tsv` adds 622 cases for late circumflex/horn handling with free marks
 enabled. Its independently written words cover 32 families and include Telex,
 VNI, spelling/restoration, both tone styles, case, macros, word breaks, editing,
@@ -120,7 +131,7 @@ are unchanged. Intermediate gisu, unknown words, standalone W/brackets,
 ordinary vowels, and invalid raw-history ownership stay outside the new path.
 48 state guards cover engine bypass and edited prefixes; this prevents the
 prototype's gisu<ENGINEOFF>q<ENGINEON>p redraw from corrupting the field.
-Default runs total 3395 cases across eight tables (3390 pass, five exact known
+Default runs total 4116 cases across nine tables (4111 pass, five exact known
 baseline failures). They also execute `hook-contract.cpp`: 46 explicit packet
 policy fixtures and 16 real-engine packet lifetime/non-Unicode checks.
 Restore packets keep the legacy boundary; redraw expansion is WillProcess-only
@@ -128,7 +139,8 @@ to preserve Telex replay and avoid widening an unverified macro/history path.
 Rejected candidates that failed separate research probes are documented in
 `docs/upstream-fixes-report.md`; they are not silently accepted as new XFAILs.
 
-`dictionary-contract.cpp` checks 22 independent raw-cell membership fixtures,
+`dictionary-contract.cpp` checks 22 independent raw-cell membership fixtures
+and 27 prefix fixtures (including flags, late marks, null and length guards),
 including both tone styles, letter shapes, uppercase, unsupported flags and
 tone positions. `run.sh` also verifies the pinned dictionary input hashes and
 reproduces the generated 6678-entry table; it does not fetch data or run any

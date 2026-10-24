@@ -42,5 +42,47 @@ int checkDictionaryContract() {
         }
     }
     std::cout << sizeof(cases) / sizeof(cases[0]) << " dictionary membership cases: " << failures << " FAIL\n";
+
+    const Case prefixes[] = {
+        {"ph", {KEY_P, KEY_H}, true},
+        {"ch", {KEY_C, KEY_H}, true},
+        {"gi", {KEY_G, KEY_I}, true},
+        {"kh", {KEY_K, KEY_H}, true},
+        {"ng", {KEY_N, KEY_G}, true},
+        {"qu", {KEY_Q, KEY_U}, true},
+        {"th", {KEY_T, KEY_H}, true},
+        {"upper-ph", {KEY_P | CAPS_MASK, KEY_H | CAPS_MASK}, true},
+        {"aph", {KEY_A, KEY_P, KEY_H}, false},
+        {"haph", {KEY_H, KEY_A, KEY_P, KEY_H}, false},
+        {"literal-pp", {KEY_P, KEY_P}, false},
+        {"late-tone-bach", {KEY_B, KEY_A, KEY_C, KEY_H}, true},
+        {"late-shape-chuong", {KEY_C, KEY_H, KEY_U, KEY_O, KEY_N, KEY_G}, true},
+        {"tone-before-gi-coda", {KEY_G, KEY_I | MARK1_MASK, KEY_U, KEY_P}, true},
+        {"dak", {KEY_D | TONE_MASK, KEY_A | TONEW_MASK | MARK1_MASK, KEY_K}, true},
+        {"encoded-not-raw", {'a' | CHAR_CODE_MASK}, false},
+        {"pure-not-raw", {'a' | PURE_CHARACTER_MASK}, false},
+        {"unknown-flags", {KEY_P | 0x80000000u, KEY_H}, false},
+        {"number", {KEY_1}, false},
+        {"double-shape", {KEY_A | TONE_MASK | TONEW_MASK}, false},
+        {"shape-on-consonant", {KEY_P | TONE_MASK, KEY_H}, false},
+        {"double-tone", {KEY_A | MARK1_MASK | MARK2_MASK}, false},
+        {"tone-on-consonant", {KEY_P | MARK1_MASK, KEY_H}, false},
+        {"empty", {}, false},
+        {"beyond-syllable", std::vector<Uint32>(8, KEY_A), false},
+        {"long-window", std::vector<Uint32>(MAX_BUFF, KEY_A), false},
+    };
+    int prefixFailures = 0;
+    for (const auto& test : prefixes) {
+        if (vIsVietnamesePrefix(test.cells.data(), test.cells.size()) != test.known) {
+            std::cerr << "FAIL dictionary prefix: " << test.name << '\n';
+            ++prefixFailures;
+        }
+    }
+    if (vIsVietnamesePrefix(nullptr, 2)) {
+        std::cerr << "FAIL dictionary prefix: null\n";
+        ++prefixFailures;
+    }
+    std::cout << sizeof(prefixes) / sizeof(prefixes[0]) + 1 << " dictionary prefix cases: " << prefixFailures << " FAIL\n";
+    failures += prefixFailures;
     return failures ? 1 : 0;
 }

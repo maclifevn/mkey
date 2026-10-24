@@ -1375,6 +1375,30 @@ void handleMainKey(const Uint16& data, const bool& isCaps) {
     }
 }
 
+static bool canHandleQuickTelex(const Uint16& data) {
+    if (vCodeTable != 0)
+        return true;
+    if (_index >= MAX_BUFF || _longWordHelper.size() > 0)
+        return false;
+
+    Uint32 candidate[MAX_BUFF];
+    std::copy(TypingWord, TypingWord + _index, candidate);
+    int count = _index;
+    candidate[count++] = _quickTelex[data][1];
+    const Uint16 first = (Uint16)candidate[0];
+    if (vQuickStartConsonant && _quickStartConsonant.find(first) != _quickStartConsonant.end()) {
+        // Preview the quick onset that will be expanded at the word boundary.
+        if (count >= MAX_BUFF)
+            return false;
+        for (int index = count; index > 1; index--)
+            candidate[index] = candidate[index - 1];
+        candidate[1] = _quickStartConsonant[first][1];
+        candidate[0] = _quickStartConsonant[first][0] | (candidate[0] & ~CHAR_MASK);
+        count++;
+    }
+    return vIsVietnamesePrefix(candidate, count);
+}
+
 void handleQuickTelex(const Uint16& data, const bool& isCaps) {
     hCode = vWillProcess;
     hBPC = 1;
@@ -1762,7 +1786,7 @@ void vKeyHandleEvent(const vKeyEvent& event,
         insertState(data, _isCaps); //save state
         
         if (!IS_SPECIALKEY(data) || tempDisableKey) { //do nothing
-            if (vQuickTelex && IS_QUICK_TELEX_KEY(data)) {
+            if (vQuickTelex && IS_QUICK_TELEX_KEY(data) && canHandleQuickTelex(data)) {
                 handleQuickTelex(data, _isCaps);
                 return;
             } else {

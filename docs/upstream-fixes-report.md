@@ -4,15 +4,15 @@ Ngày khảo sát: **2026-10-23**, cập nhật đến **2026-10-24** (redraw v�
 
 ## Kết quả và phạm vi
 
-Trong các đợt khảo sát engine, áp dụng **16 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước, phụ âm đầu theo từ điển ở mục 11, dấu mũ/móc nhập muộn ở mục 12 và GI có phụ âm cuối khi bật Free Mark ở mục 13. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; các đợt này không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Việc đồng bộ 1.6.1 và chuẩn bị phát hành theo yêu cầu sau đó được ghi riêng ở mục 14. Ba bản vá từ điển không sửa hook. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng chọn giữ luật Telex và chốt thêm **`gisups`→`giups` như từ gõ chuẩn**, thay cho hai dấu cũ.
+Trong các đợt khảo sát engine, áp dụng **17 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước, phụ âm đầu theo từ điển ở mục 11, dấu mũ/móc nhập muộn ở mục 12, GI có phụ âm cuối khi bật Free Mark ở mục 13 và Quick Telex theo từ điển ở mục 15. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; các bản vá engine không sửa UI, giá trị mặc định hoặc metadata phiên bản. Việc đồng bộ 1.6.1 và chuẩn bị phát hành theo yêu cầu sau đó được ghi riêng ở mục 14. Bốn bản vá từ điển không sửa hook. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng chọn giữ luật Telex và chốt thêm **`gisups`→`giups` như từ gõ chuẩn**, thay cho hai dấu cũ.
 
 Working tree ban đầu có 18 file sửa và 9 mục untracked. Người dùng đã cho phép bỏ điều kiện dừng. Các thay đổi đó được giữ nguyên, không đưa vào commit của đợt này. Riêng hook đã có sửa của người dùng: chỉ stage hunk redraw tự viết trên nội dung HEAD, giữ các hunk khác ở working tree. Build được thực hiện trên checkout đang có các thay đổi của người dùng; không nên hiểu kết quả này là một lần build clean checkout chỉ chứa các commit mới. Hash các file có sẵn được đối chiếu lại khi kết thúc, sau khi loại đúng hunk redraw khỏi hook để kiểm nội dung ban đầu.
 
 - Baseline trước mọi fix: **404 ca**, **399 PASS + 5 lỗi có sẵn**. Kỳ vọng độc lập với kết quả engine, không đổi kỳ vọng để khớp lỗi.
-- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **3.395 ca, 3.390 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape, 626 ca ConvertTool, 411 ca redraw, 119 ca phụ âm đầu, 622 ca Free Mark và 539 ca GI. Thêm 46 ca kiểm chính sách xoá, 16 ca packet trực tiếp, 22 ca tra từ điển và 24 ca GI packet/macro/escape, đều PASS.
-- Cả 16 bản vá đều có test tái hiện FAIL trước sửa, PASS sau sửa và build Debug thành công. Đợt trước: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**; redraw có **379 FAIL → PASS**; phụ âm đầu có **48 FAIL/ERROR → PASS**; Free Mark có **509 FAIL → PASS**; GI thêm **256 FAIL → PASS**, cùng 24 contract FAIL → PASS. Không có trường hợp chỉ suy đoán rồi sửa.
+- Sau đợt đầu: 506 ca, 501 PASS + 5 lỗi có sẵn; sau bản vá lịch sử: 528 ca, 523 PASS + 5 known. Hiện tại: **4.116 ca, 4.111 PASS + đúng 5 sai lệch có sẵn, 0 lỗi mới**; gồm 404 baseline, 580 regression, 94 ca đối chiếu/giao thức/escape, 626 ca ConvertTool, 411 ca redraw, 119 ca phụ âm đầu, 622 ca Free Mark, 539 ca GI và 721 ca Quick Telex. Thêm 46 ca kiểm chính sách xoá, 16 ca packet trực tiếp, 22 ca tra từ điển, 27 ca prefix và 24 ca GI packet/macro/escape, đều PASS.
+- Cả 17 bản vá đều có test tái hiện FAIL trước sửa, PASS sau sửa. Đợt trước: **54 ca caps, 46 ca undo tone, 220 ca đ muộn, 230 ca ConvertTool FAIL → PASS**; redraw có **379 FAIL → PASS**; phụ âm đầu có **48 FAIL/ERROR → PASS**; Free Mark có **509 FAIL → PASS**; GI thêm **256 FAIL → PASS**, cùng 24 contract FAIL → PASS; Quick Telex có **459 FAIL → PASS**. Không có trường hợp chỉ suy đoán rồi sửa. Build từng commit được ghi trong log kiểm tra sau commit.
 - **72 guard** kiểm chính sách Telex đã chốt (trong đó `tesst`→`test`, `ass`→`as`, cả restore on/off) đều PASS trước/sau các bản vá. Không đổi baseline hoặc thêm known failure.
-- Sanitizer: **ASan + UBSan PASS cho cả suite 3.395 ca và 108 kiểm tra packet/policy/dictionary/GI** (3.390 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
+- Sanitizer: **ASan + UBSan PASS cho cả suite 4.116 ca và 135 kiểm tra packet/policy/dictionary/GI** (4.111 PASS, 5 known text failures; **0 sanitizer error**), với `-fno-sanitize-recover=all`.
 - Review độc lập đã kiểm tra giao thức harness và các đoạn chuyển thể; kết quả review cuối: không có finding còn mở trong các bản vá đã nhận; đề xuất có regression được hoãn hoặc thu hẹp như mục 8. Finding shortcut của fix English macro đã được sửa, có test trước/sau; guard bounds cũng được review riêng.
 - Mọi checklist ứng dụng thật bên dưới **chưa được test tay trong đợt này**.
 
@@ -453,6 +453,28 @@ Bản Release universal 1.6.1/build 13 có Sparkle 2.9.6 đã được notarize,
 Người dùng sau đó báo đã thử gõ và thấy “khá ok”. Đây là xác nhận sử dụng chung; chưa có kết quả riêng cho toàn bộ app và từng mục của checklist test tay nên không đánh dấu chúng đã hoàn tất.
 
 Yêu cầu mới cho phép commit và push mã nguồn. Chuẩn bị phiên bản kế tiếp **1.6.2/build 14**, giữ các commit sửa lỗi riêng, với release note tại `docs/releases/1.6.2.md`. Gói Release và feed ký chỉ được chuẩn bị cục bộ; nhánh nguồn được push riêng. **Chỉ xuất bản GitHub Release và cập nhật kênh Sparkle sau khi người dùng duyệt release note.**
+
+## 15. Quick Telex: kiểm tra tiền tố bằng từ điển
+
+Người dùng báo bật Gõ nhanh Telex làm `App` thành `Aph`, rồi yêu cầu sửa tổng quát bằng từ điển nhưng giữ `ppoor`→`phổ` và escape Telex. Quy tắc cũ đổi cả bảy cặp `cc/gg/kk/nn/qq/pp/tt` ở mọi vị trí. Đối chiếu bản MKey 1.6.1 và bản đang chuẩn bị phát hành tái hiện giống nhau; đây là xử lý có sẵn, không phải regression của ba bản vá từ điển trước. Chưa có issue/PR upstream được xác minh cùng bản vá này; không gán một fix nguồn giả. Preimage MKey: [Engine.cpp tại v1.6.1](https://github.com/maclifevn/mkey/blob/v1.6.1/Sources/Engine/Engine.cpp).
+
+Bản vá tự viết tái sử dụng danh sách GPL đã pin ở mục 11: [hunspell-vi 39cc647](https://github.com/1ec5/hunspell-vi/commit/39cc647f0cf3bdfc579980a2c3aac3f6f4203fe6). Generator giữ nguyên 6.678 âm tiết và bảng membership, sinh thêm **1.555 dạng chữ cái cơ sở** đã sắp xếp, tương ứng 1.720 tiền tố không rỗng. Prefix lookup không cấp phát heap, không tải dữ liệu lúc chạy; bỏ dấu thanh và hình dạng nguyên âm khi so khớp để còn gõ dấu muộn (`baccs`→`bách`). Cờ lạ, chữ đã mã hoá, dấu mâu thuẫn, từ quá dài và cửa sổ đã trượt bị từ chối.
+
+Chỉ trước khi đổi một cặp Quick Telex ở **Unicode dựng sẵn**, engine xem trước toàn bộ từ cùng phụ âm mới. Khi bật Phụ âm đầu nhanh, preview cả F/J/W để giữ các tổ hợp `fann`→`phang`, `jann`→`giang`, VNI/Simple Telex `wann`→`quang`. `ph` là tiền tố hợp lệ nên `ppoor` vẫn thành `phổ`; `aph` không có trong từ điển nên phím P thứ hai đi qua đường nhập thường. Hàm gửi packet và early return cũ của các cặp được nhận giữ nguyên; không đổi hook, escape, replay lịch sử, cài đặt mặc định hoặc version/build.
+
+| Xác minh | Trước sửa | Sau sửa |
+|---|---|---|
+| 721 ca `quick-telex.tsv`, gồm App/Apple, bảy cặp, phụ âm cuối CC/NN, cấu hình, chữ hoa, macro/history/bypass và biên 31–32 | 262 PASS, **459 FAIL**; App hiện Aph | **721 PASS**, giữ nguyên toàn bộ expected |
+| 27 contract prefix từ điển | API mới | **27 PASS**, cùng 22 membership cũ |
+| Đối chiếu độc lập từ nguồn `.dic` bằng NFD: membership prefix, mask/case, 65.536 keycode, giới hạn | Oracle độc lập | **593.281/593.281 PASS**, ASan/UBSan sạch |
+| 2.714 cặp gõ chuẩn / Quick Telex thuộc đúng 6.678 âm tiết | Đã tương đương | Giữ nguyên cả văn bản lẫn toàn bộ packet từng phím |
+| Full suite | 3.390 PASS + 5 known ở bộ cũ | **4.111 PASS + đúng 5 known**, 135 contract PASS |
+
+Một bản thăm dò rộng ban đầu dùng cả dữ liệu thô ngoài 6.678 âm tiết (GIF, palăng, PNG); oracle và kết quả này được giữ riêng, không đổi expected để đưa vào bộ nhận. Những ca Hanna/Hannah/Accept/Accent đòi khôi phục sau một prefix vốn hợp lệ cũng được giữ ngoài bộ nhận, không thêm XFAIL. Bản vá này kiểm prefix lúc gõ, không nhận diện toàn bộ từ tiếng Anh: ví dụ `Ann` vẫn có thể thành `Ang`, `account` vẫn có thể thành `achount` theo quy tắc ưu tiên tiếng Việt. Không sửa riêng lỗi viết hoa hỗn hợp ở Quick Telex hoặc Free Mark trên từ khác.
+
+**Cần test tay:** TextEdit, VS Code và ô soạn thảo trình duyệt; Telex + Unicode dựng sẵn, Quick Telex bật, macro/restore tắt. Gõ `App Apple ppoor baccs `→`App Apple phổ bách `; kiểm ngay sau P thứ hai của App. Bật/tắt chính tả, Free Mark; thử Enter/dấu phẩy. Bật thêm Phụ âm đầu nhanh: `fann jann `→`phang giang `. `tesst `→`test `, `ass `→`as ` và Free Mark `gisups`→`giups` vẫn giữ nguyên. Không dán chuỗi để thay cho gõ từng phím.
+
+Snapshot, oracle trước/sau, full suite, review packet và sanitizer nằm ngoài repo tại `/Users/maclife/mkey-research/2026-10-24-quick-telex-dictionary-5psqulrf/`. Gói 1.6.2 cũ từ `36f6026` đã được đánh dấu superseded; chỉ được tạo lại từ commit chứa bản vá này. Việc xuất bản lên Sparkle vẫn chờ người dùng duyệt release note mới.
 
 ## Phụ lục A — Repo tìm thêm qua code search
 

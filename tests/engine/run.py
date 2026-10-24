@@ -13,7 +13,7 @@ parser.add_argument('binary')
 parser.add_argument('--suite', type=pathlib.Path, action='append')
 parser.add_argument('--record', type=pathlib.Path)
 args = parser.parse_args()
-suites = args.suite or [ROOT/'baseline.tsv', ROOT/'regressions.tsv', ROOT/'screened.tsv', ROOT/'convert.tsv', ROOT/'redraw.tsv', ROOT/'quick-start.tsv', ROOT/'free-mark.tsv', ROOT/'free-mark-gi.tsv']
+suites = args.suite or [ROOT/'baseline.tsv', ROOT/'regressions.tsv', ROOT/'screened.tsv', ROOT/'convert.tsv', ROOT/'redraw.tsv', ROOT/'quick-start.tsv', ROOT/'free-mark.tsv', ROOT/'free-mark-gi.tsv', ROOT/'quick-telex.tsv']
 known_path = ROOT/'known-failures.json'
 known = json.loads(known_path.read_text()) if known_path.exists() else {}
 results = []
