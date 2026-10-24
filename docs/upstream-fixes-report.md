@@ -4,7 +4,7 @@ Ngày khảo sát: **2026-10-23**, cập nhật đến **2026-10-24** (redraw v�
 
 ## Kết quả và phạm vi
 
-Áp dụng **16 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước, phụ âm đầu theo từ điển ở mục 11, dấu mũ/móc nhập muộn ở mục 12 và GI có phụ âm cuối khi bật Free Mark ở mục 13. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Ba bản vá từ điển không sửa hook. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng chọn giữ luật Telex và chốt thêm **`gisups`→`giups` như từ gõ chuẩn**, thay cho hai dấu cũ.
+Trong các đợt khảo sát engine, áp dụng **16 lỗi**, mỗi lỗi một commit: 13 lỗi từ các đợt trước, phụ âm đầu theo từ điển ở mục 11, dấu mũ/móc nhập muộn ở mục 12 và GI có phụ âm cuối khi bật Free Mark ở mục 13. Thay đổi sản phẩm ở engine C++ và một hunk giới hạn xoá của `MKEngineHook.mm`; các đợt này không sửa UI, giá trị mặc định hoặc version, không push, merge hay mở PR. Việc đồng bộ 1.6.1 và chuẩn bị phát hành theo yêu cầu sau đó được ghi riêng ở mục 14. Ba bản vá từ điển không sửa hook. **Cả 5 sai lệch English vẫn giữ nguyên**; người dùng chọn giữ luật Telex và chốt thêm **`gisups`→`giups` như từ gõ chuẩn**, thay cho hai dấu cũ.
 
 Working tree ban đầu có 18 file sửa và 9 mục untracked. Người dùng đã cho phép bỏ điều kiện dừng. Các thay đổi đó được giữ nguyên, không đưa vào commit của đợt này. Riêng hook đã có sửa của người dùng: chỉ stage hunk redraw tự viết trên nội dung HEAD, giữ các hunk khác ở working tree. Build được thực hiện trên checkout đang có các thay đổi của người dùng; không nên hiểu kết quả này là một lần build clean checkout chỉ chứa các commit mới. Hash các file có sẵn được đối chiếu lại khi kết thúc, sau khi loại đúng hunk redraw khỏi hook để kiểm nội dung ban đầu.
 
@@ -443,6 +443,16 @@ Review độc lập kiểm rule/canonical và packet ở nhánh fresh-word; phá
 | TextEdit, Chrome | Thêm macro thử `giúp`→`help`, bật macro | `gisup ` | `help `, không còn chữ/dấu cũ hoặc lặp P |
 
 **Giới hạn:** chỉ Unicode dựng sẵn và GI có coda trong composition còn đáng tin; không mở normalization sau mọi nguyên âm, nhiều dấu hoặc từ không xác định. Sau macro/quick rewrite ở dấu câu/Enter, raw validity có thể vẫn false ở từ mới cho tới Space/session reset, nên nhánh GI mới cũng thận trọng bỏ qua; không nới ownership trong bản vá này. Kiểm raw validity chỉ bảo đảm các transition engine quan sát được; chưa xác minh toàn bộ focus/suspend/layout, timing, AX hoặc lựa chọn tự động trong browser. Bản vá không đổi hook, UI, version/default, nguồn dữ liệu hay giấy phép. 29 file có sẵn của người dùng được kiểm SHA256 so với đầu đợt; build vẫn trên checkout có các thay đổi của người dùng.
+
+## 14. Đồng bộ bản phát hành và chuẩn bị 1.6.2
+
+Theo yêu cầu tiếp theo của người dùng, commit `bc85c3f` đồng bộ đầy đủ tag `v1.6.1` (`b3c6f61`) vào nhánh `fix/upstream-issues`, giữ cả lịch sử của 16 bản vá engine. Mọi file engine và hook giữ nguyên byte so với checkout trước đồng bộ. Các thay đổi chưa commit đã trùng với tag được ghi nhận từ lịch sử phát hành; chỉ bổ sung metadata 1.6.1/build 13, ghi chú phát hành và mục loại trừ `dist/`.
+
+Bản Release universal 1.6.1/build 13 có Sparkle 2.9.6 đã được notarize, staple và cài tại `/Applications/mkey.app`. Toàn bộ 3.395 ca văn bản có 3.390 PASS và đúng 5 sai lệch English đã biết; 108 contract, ASan/UBSan, 14 kiểm tra chính sách updater và 4 tình huống Sparkle đều PASS. Debug và Release build thành công. Giao diện xác nhận đúng version/build, nút kiểm tra cập nhật được bật và trạng thái Trợ năng là “Đã sẵn sàng”.
+
+Người dùng sau đó báo đã thử gõ và thấy “khá ok”. Đây là xác nhận sử dụng chung; chưa có kết quả riêng cho toàn bộ app và từng mục của checklist test tay nên không đánh dấu chúng đã hoàn tất.
+
+Yêu cầu mới cho phép commit và push mã nguồn. Chuẩn bị phiên bản kế tiếp **1.6.2/build 14**, giữ các commit sửa lỗi riêng, với release note tại `docs/releases/1.6.2.md`. Gói Release và feed ký chỉ được chuẩn bị cục bộ; nhánh nguồn được push riêng. **Chỉ xuất bản GitHub Release và cập nhật kênh Sparkle sau khi người dùng duyệt release note.**
 
 ## Phụ lục A — Repo tìm thêm qua code search
 
