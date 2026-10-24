@@ -13,7 +13,8 @@ else
 fi
 clang++ "${compiler_flags[@]}" -I "$engine_source" \
     "$repo_root/tests/engine/harness.cpp" "$repo_root/tests/engine/hook-contract.cpp" \
-    "$repo_root/tests/engine/dictionary-contract.cpp" "$engine_source"/*.cpp \
+    "$repo_root/tests/engine/dictionary-contract.cpp" "$repo_root/tests/engine/free-mark-gi-contract.cpp" \
+    "$engine_source"/*.cpp \
     -o "$test_build/engine-harness"
 if [[ "${1:-}" == --probe ]]; then
     shift

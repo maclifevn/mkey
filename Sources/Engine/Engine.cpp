@@ -1491,11 +1491,18 @@ bool checkQuickConsonant() {
 }
 /*==========================================================================================================*/
 
-static void normalizeFreeMarkAfterShape() {
+static void normalizeFreeMarkTone(const bool appendedConsonant = false) {
     if (!vFreeMark || vCodeTable != 0 || _index < 2 || _index >= MAX_BUFF ||
-        tempDisableKey || _longWordHelper.size() > 0 || hCode != vWillProcess ||
-        hBPC == 0 || hBPC > _index || hBPC != hNCC)
+        tempDisableKey || _longWordHelper.size() > 0)
         return;
+    if (appendedConsonant) {
+        // GI's I can keep an early tone until a final consonant completes the word.
+        if (!_keyStatesValid || hCode != vDoNothing || hBPC != 0 || hNCC != 0 || _index < 4 ||
+            CHR(0) != KEY_G || CHR(1) != KEY_I || !(TypingWord[1] & MARK_MASK))
+            return;
+    } else if (hCode != vWillProcess || hBPC == 0 || hBPC > _index || hBPC != hNCC) {
+        return;
+    }
 
     Uint32 tone = 0;
     int toneIndex = -1;
@@ -1532,9 +1539,12 @@ static void normalizeFreeMarkAfterShape() {
 
     TypingWord[toneIndex] &= ~MARK_MASK;
     TypingWord[acceptedIndex] |= tone;
-    // Include the shape replacement that has not reached the text field yet.
-    const int first = std::min((int)_index - hBPC, std::min(toneIndex, acceptedIndex));
-    hBPC = hNCC = _index - first;
+    // Include pending shape output; an appended consonant is not in the field yet.
+    const int first = appendedConsonant ? std::min(toneIndex, acceptedIndex) :
+        std::min((int)_index - hBPC, std::min(toneIndex, acceptedIndex));
+    hNCC = _index - first;
+    hBPC = hNCC - (appendedConsonant ? 1 : 0);
+    hCode = vWillProcess;
     for (int index = _index - 1; index >= first; index--)
         hData[_index - 1 - index] = GET(TypingWord[index]);
     hExt = 4;
@@ -1777,7 +1787,9 @@ void vKeyHandleEvent(const vKeyEvent& event,
             }
         } else if (vFreeMark && (IS_KEY_DOUBLE(data) || IS_KEY_W(data))) {
             // A late circumflex/horn can move the tone's vowel; do not touch escapes.
-            normalizeFreeMarkAfterShape();
+            normalizeFreeMarkTone();
+        } else if (vFreeMark && !IS_SPECIALKEY(data) && IS_CONSONANT(data)) {
+            normalizeFreeMarkTone(true);
         }
         
         if (hCode == vRestore) {

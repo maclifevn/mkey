@@ -105,9 +105,22 @@ and tone/shape cancellation after correction. Before this fix, 509 failed and
 exactly one whole syllable in the dictionary matches. It preserves every other
 cell bit and skips already valid words, ordinary letter appends, Restore,
 standalone characters, multiple tones, overflow and non-Unicode output.
-GI append guards deliberately retain existing gisu/gisup/gisups behavior;
-normalizing those on every key remains outside this fix's scope.
-Default runs total 2856 cases across seven tables (2851 pass, five exact known
+The original shape-only change kept GI append behavior. The later GI fix below
+updates ten explicit GISUP expectations after the user's canonical-escape
+decision; their original values remain in Git at e3f343f.
+
+`free-mark-gi.tsv` adds 539 cases for a GI word completed by an ordinary final
+consonant. Before the fix, 256 failed and 283 passed; all 539 pass afterwards.
+The dictionary moves the early tone on GI's I only when exactly one complete
+syllable matches, retaining every letter/shape/case bit. Escape is compared with
+the existing canonical input: gisups→giups like giupss, and gisupf→giùp like
+giuspf. The ten changed GISUP expectations in `free-mark.tsv` are deliberate
+corrections authorized by the user; baseline/known failures/72 escape guards
+are unchanged. Intermediate gisu, unknown words, standalone W/brackets,
+ordinary vowels, and invalid raw-history ownership stay outside the new path.
+48 state guards cover engine bypass and edited prefixes; this prevents the
+prototype's gisu<ENGINEOFF>q<ENGINEON>p redraw from corrupting the field.
+Default runs total 3395 cases across eight tables (3390 pass, five exact known
 baseline failures). They also execute `hook-contract.cpp`: 46 explicit packet
 policy fixtures and 16 real-engine packet lifetime/non-Unicode checks.
 Restore packets keep the legacy boundary; redraw expansion is WillProcess-only
@@ -121,6 +134,12 @@ tone positions. `run.sh` also verifies the pinned dictionary input hashes and
 reproduces the generated 6678-entry table; it does not fetch data or run any
 upstream scripts. Data provenance and GPL notices are in
 `third_party/hunspell-vi/` and `Sources/Engine/VietnameseDictionary-NOTICE.txt`.
+
+`free-mark-gi-contract.cpp` adds 24 packet/macro/escape checks (all failed before
+the GI fix). They verify Telex/VNI, case and spelling: the host's pending coda
+needs BPC=2/NCC=3/ext4, macroKey must contain corrected giúp/GIÚP, repeated tone
+uses Restore, and both explicit macro fixtures expand. Total contract checks:
+108. No macro fixture is added to the normal text-case processes or the app.
 
 The same CLI calls `convertUtil()` directly when settings start with `convert`:
 
