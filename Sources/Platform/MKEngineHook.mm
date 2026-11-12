@@ -1187,7 +1187,17 @@ extern "C" {
                     if (vFixChromiumBrowser && _frontMostNeedsChromiumFix) {
                         if (pData->backspaceCount > 0) {
                             SendShiftAndLeftArrow();
-                            if (pData->backspaceCount == 1)
+                            //Never type straight over the Shift+Left selection:
+                            //Lexical editors (Facebook story reply, Messenger…)
+                            //only learn about the new selection from the async
+                            //`selectionchange`, and their sync keydown handler
+                            //restores the stale collapsed caret first — so the
+                            //new char lands *after* the selected one ("vow" ->
+                            //"voơ", "với" -> "voới"). A Backspace deletes the
+                            //live DOM selection reliably, so always send it.
+                            //VNI/Unicode Compound keep the old behaviour: their
+                            //_syncKey bookkeeping is popped by both calls.
+                            if (pData->backspaceCount == 1 && IS_DOUBLE_CODE(vCodeTable))
                                 pData->backspaceCount--;
                         }
                     } else {
