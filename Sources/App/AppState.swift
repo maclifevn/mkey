@@ -272,9 +272,16 @@ final class AppState: ObservableObject {
         MacroCloudSync.shared.start()
     }
 
-    /// Defaults for a fresh install — mirrors OpenKey's loadDefaultConfig.
+    /// Register defaults and apply one-time compatibility migrations.
     static func registerDefaultSettings() {
-        UserDefaults.standard.register(defaults: [
+        let defaults = UserDefaults.standard
+        // Enable compatible key delivery once for all users upgrading to 1.6.3.
+        // Keep the marker across resets so later opt-outs survive future launches.
+        if !defaults.bool(forKey: "mkSendKeyStepByStepDefaultMigrated") {
+            defaults.set(1, forKey: "SendKeyStepByStep")
+            defaults.set(true, forKey: "mkSendKeyStepByStepDefaultMigrated")
+        }
+        defaults.register(defaults: [
             "InputMethod": 1,
             "InputType": 0,
             "CodeTable": 0,
@@ -284,6 +291,8 @@ final class AppState: ObservableObject {
             "UseMacro": 1,
             "UseSmartSwitchKey": 1,
             "vRememberCode": 1,
+            // Registration supplies a fallback without overriding a saved opt-out.
+            "SendKeyStepByStep": 1,
             "vOtherLanguage": 1,
             "GrayIcon": 1,
             "SwitchKeyStatus": Int(MKEY_DEFAULT_SWITCH_STATUS),
@@ -352,7 +361,7 @@ final class AppState: ObservableObject {
         autoCapsMacro = false
         useSmartSwitchKey = true
         rememberCode = true
-        sendKeyStepByStep = false
+        sendKeyStepByStep = true
         performLayoutCompat = false
         grayIcon = true
         showIconOnDock = false
@@ -367,7 +376,7 @@ final class AppState: ObservableObject {
         vUpperCaseFirstChar = 0; vTempOffSpelling = 0; vAllowConsonantZFWJ = 0
         vQuickStartConsonant = 0; vQuickEndConsonant = 0; vTempOffOpenKey = 0
         vOtherLanguage = 1; vFixSpotlight = 1; vUseAXReplacement = 1; vUseMacro = 1; vUseMacroInEnglishMode = 0; vAutoCapsMacro = 0
-        vUseSmartSwitchKey = 1; vRememberCode = 1; vSendKeyStepByStep = 0; vPerformLayoutCompat = 0
+        vUseSmartSwitchKey = 1; vRememberCode = 1; vSendKeyStepByStep = 1; vPerformLayoutCompat = 0
         MKBridge.spellCheckingChanged()
         NSApp.setActivationPolicy(.accessory)
     }
