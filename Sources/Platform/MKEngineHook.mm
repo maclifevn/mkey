@@ -514,6 +514,15 @@ extern "C" {
         }
     }
 
+    void MKResetAfterInputInterruption() {
+        RequestNewSession();
+        _lastFlag = 0;
+        _flag = 0;
+        _hasJustUsedHotKey = false;
+        _lastKeystrokeTime = 0;
+        MKUpdateInputSourceCache();
+    }
+
     BOOL containUnicodeCompoundApp(NSString* topApp) {
         if (topApp == nil) return false;
         for (_j = 0; _j < [_unicodeCompoundApp count]; _j++) {

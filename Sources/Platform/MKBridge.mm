@@ -7,6 +7,7 @@
 //
 
 #import "MKBridge.h"
+#import <Carbon/Carbon.h>
 #include "Engine.h"
 
 using namespace std;
@@ -56,14 +57,15 @@ extern "C" {
     void OnSpellCheckingChanged(void);
     NSString* ConvertUtil(NSString* str);
     void MKSetEngineSuspended(bool suspended);
+    void MKResetAfterInputInterruption(void);
 }
 
 static CFMachPortRef      _eventTap = NULL;
 static CFRunLoopSourceRef _runLoopSource = NULL;
-static BOOL               _tapRunning = NO;
+static BOOL _engineInitialized = NO;
 
 extern "C" void MKReEnableEventTap(void) {
-    if (_eventTap) {
+    if (_eventTap && CFMachPortIsValid(_eventTap) && !IsSecureEventInputEnabled()) {
         CGEventTapEnable(_eventTap, true);
     }
 }
@@ -85,11 +87,22 @@ static void postStateChanged(void) {
 
 #pragma mark - Engine lifecycle
 
-+ (BOOL)startEventTap {
-    if (_tapRunning)
-        return YES;
++ (void)prepareEngine {
+    if (!_engineInitialized) {
+        MKEngineInit();
+        _engineInitialized = YES;
+    }
+}
 
-    MKEngineInit();
++ (BOOL)startEventTap {
+    [self prepareEngine];
+    if ([self isSecureInputEnabled])
+        return NO;
+    if (_eventTap && CFMachPortIsValid(_eventTap) &&
+        _runLoopSource && CFRunLoopSourceIsValid(_runLoopSource))
+        return [self recoverEventTap];
+
+    [self stopEventTap];
 
     CGEventMask eventMask = ((1 << kCGEventKeyDown) |
                              (1 << kCGEventKeyUp) |
@@ -110,30 +123,57 @@ static void postStateChanged(void) {
     }
 
     _runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, _eventTap, 0);
+    if (!_runLoopSource) {
+        [self stopEventTap];
+        return NO;
+    }
     CFRunLoopAddSource(CFRunLoopGetMain(), _runLoopSource, kCFRunLoopCommonModes);
+    MKResetAfterInputInterruption();
+    MKFrontMostAppChanged();
+    if (vUseSmartSwitchKey)
+        OnActiveAppChanged();
     CGEventTapEnable(_eventTap, true);
 
-    _tapRunning = YES;
-    return YES;
+    return [self isEventTapRunning];
 }
 
 + (BOOL)stopEventTap {
-    if (_tapRunning) {
+    if (_runLoopSource) {
         CFRunLoopRemoveSource(CFRunLoopGetMain(), _runLoopSource, kCFRunLoopCommonModes);
         CFRelease(_runLoopSource);
         _runLoopSource = NULL;
-
+    }
+    if (_eventTap) {
         CFMachPortInvalidate(_eventTap);
         CFRelease(_eventTap);
         _eventTap = NULL;
-
-        _tapRunning = NO;
     }
     return YES;
 }
 
 + (BOOL)isEventTapRunning {
-    return _tapRunning;
+    return _eventTap && CFMachPortIsValid(_eventTap) &&
+        _runLoopSource && CFRunLoopSourceIsValid(_runLoopSource) &&
+        CGEventTapIsEnabled(_eventTap);
+}
+
++ (BOOL)isSecureInputEnabled {
+    return IsSecureEventInputEnabled();
+}
+
++ (BOOL)recoverEventTap {
+    if ([self isSecureInputEnabled])
+        return NO;
+    if (!_eventTap || !CFMachPortIsValid(_eventTap) ||
+        !_runLoopSource || !CFRunLoopSourceIsValid(_runLoopSource))
+        return [self startEventTap];
+
+    MKResetAfterInputInterruption();
+    MKFrontMostAppChanged();
+    if (vUseSmartSwitchKey)
+        OnActiveAppChanged();
+    CGEventTapEnable(_eventTap, true);
+    return [self isEventTapRunning];
 }
 
 #pragma mark - State changes driven by the UI

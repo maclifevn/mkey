@@ -14,6 +14,20 @@ struct SystemPage: View {
 
     var body: some View {
         Form {
+            Section("Trạng thái bộ gõ") {
+                HStack {
+                    Label(state.inputMonitoringStatus.title, systemImage: state.inputMonitoringStatus.symbol)
+                        .foregroundStyle(state.inputMonitoringStatus == .ready ? Color.primary : Color.orange)
+                    Spacer()
+                    Button("Kiểm tra lại") {
+                        NotificationCenter.default.post(name: .mkRefreshInputHealth, object: nil)
+                    }
+                }
+                Text(state.inputMonitoringStatus.detail)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Khởi động") {
                 Toggle("Khởi động cùng macOS", isOn: $state.runOnStartup)
                 Toggle("Hiện bảng điều khiển khi khởi động", isOn: $state.showUIOnStartup)

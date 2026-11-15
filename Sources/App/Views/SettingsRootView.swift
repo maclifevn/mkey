@@ -11,13 +11,19 @@ import SwiftUI
 
 struct SettingsRootView: View {
     @EnvironmentObject private var state: AppState
-    @State private var headerHeight: CGFloat = 80
 
     var body: some View {
         HStack(spacing: 0) {
             sidebar
 
-            ZStack(alignment: .top) {
+            VStack(spacing: 0) {
+                PageHeader(page: state.selectedPage)
+                if state.inputMonitoringStatus == .secureInput || state.inputMonitoringStatus == .recovering {
+                    InputStatusBanner(status: state.inputMonitoringStatus)
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 8)
+                }
+
                 Group {
                     switch state.selectedPage {
                     case .typing: TypingPage()
@@ -29,27 +35,7 @@ struct SettingsRootView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .safeAreaPadding(.top, headerHeight + 32)
-                .mask(
-                    VStack(spacing: 0) {
-                        Color.black.opacity(0.35)
-                            .frame(height: headerHeight)
-                        LinearGradient(
-                            colors: [Color.black.opacity(0.35), .black],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .frame(height: 32)
-                        Color.black
-                    }
-                )
-
-                VStack(spacing: 0) {
-                    PageHeader(page: state.selectedPage)
-                }
-                .readSize { size in
-                    self.headerHeight = size.height
-                }
+                .clipped()
             }
             .background(Color(nsColor: .windowBackgroundColor).opacity(0.55))
             .background(VisualEffectBlur(material: .sidebar))
@@ -105,7 +91,7 @@ struct SettingsRootView: View {
 
             Spacer()
 
-            StatusBadge(isReady: state.accessibilityGranted)
+            StatusBadge(status: state.inputMonitoringStatus)
         }
         .padding(14)
         .frame(width: 192)
@@ -134,17 +120,17 @@ private struct PageHeader: View {
 }
 
 private struct StatusBadge: View {
-    let isReady: Bool
+    let status: InputMonitoringStatus
 
     var body: some View {
         HStack(spacing: 8) {
             Circle()
-                .fill(isReady ? Color.green : Color.orange)
+                .fill(status == .ready ? Color.green : Color.orange)
                 .frame(width: 7, height: 7)
-            Text(isReady ? "Đã sẵn sàng" : "Cần quyền Trợ năng")
+            Text(shortTitle)
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
-                .lineLimit(1)
+                .lineLimit(2)
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 10)
@@ -154,6 +140,40 @@ private struct StatusBadge: View {
             RoundedRectangle(cornerRadius: AppStyle.controlCornerRadius)
                 .stroke(.quaternary.opacity(0.48), lineWidth: 1)
         )
+    }
+
+    private var shortTitle: String {
+        switch status {
+        case .ready: return "Đã sẵn sàng"
+        case .secureInput: return "Secure Input đang bật"
+        case .needsAccessibility: return "Cần quyền Trợ năng"
+        case .recovering: return "Đang khôi phục"
+        }
+    }
+}
+
+private struct InputStatusBanner: View {
+    let status: InputMonitoringStatus
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: status.symbol)
+                .foregroundStyle(.orange)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(status.title).font(.footnote.weight(.semibold))
+                Text(status == .secureInput
+                     ? "Hãy rời ô mật khẩu hoặc đóng cửa sổ đăng nhập. MKey sẽ tự hoạt động lại khi Secure Input tắt."
+                     : status.detail)
+                    .font(.footnote).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: AppStyle.controlCornerRadius))
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -221,25 +241,6 @@ struct PermissionBanner: View {
         .padding(.top, 36)
         .padding(.bottom, 10)
         .background(Color.orange.opacity(0.12))
-    }
-}
-
-private struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
-}
-
-extension View {
-    fileprivate func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-        background(
-            GeometryReader { geometry in
-                Color.clear
-                    .preference(key: SizePreferenceKey.self, value: geometry.size)
-            }
-        )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
 }
 

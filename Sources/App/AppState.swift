@@ -51,6 +51,7 @@ final class AppState: ObservableObject {
 
     @Published var selectedPage: SettingsPage = .typing
     @Published var accessibilityGranted = true
+    @Published var inputMonitoringStatus: InputMonitoringStatus = .recovering
 
     // MARK: Core state
 

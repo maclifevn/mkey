@@ -30,11 +30,17 @@ extern NSNotificationName const MKQuickConvertDidRunNotification;
 
 #pragma mark - Engine lifecycle
 
-/// Create the event tap and initialise the engine. Returns NO when the
-/// Accessibility permission is missing.
+/// Load configuration and macros once, even when Secure Input blocks tap creation.
++ (void)prepareEngine;
+/// Create the event tap and initialise the engine. Returns NO if macOS blocks it.
 + (BOOL)startEventTap;
 + (BOOL)stopEventTap;
+/// Actual port/source validity and enabled state, rather than a cached flag.
 + (BOOL)isEventTapRunning;
+/// Read the system-wide state on the main thread; never changes Secure Input.
++ (BOOL)isSecureInputEnabled;
+/// Reset composition and re-enable/recreate the tap after input becomes available.
++ (BOOL)recoverEventTap;
 
 #pragma mark - State changes driven by the UI
 

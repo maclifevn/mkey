@@ -50,7 +50,15 @@ struct MenuBarLabel: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        Image(nsImage: StatusIcon.image(vietnamese: state.isVietnamese, gray: state.grayIcon, excluded: state.currentAppExcluded))
+        HStack(spacing: 3) {
+            Image(nsImage: StatusIcon.image(vietnamese: state.isVietnamese, gray: state.grayIcon, excluded: state.currentAppExcluded))
+            if state.inputMonitoringStatus == .secureInput {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 10))
+            }
+        }
+            .help(state.inputMonitoringStatus.title)
+            .accessibilityLabel(state.inputMonitoringStatus.title)
             .onReceive(NotificationCenter.default.publisher(for: .mkOpenSettingsWindow)) { _ in
                 AppWindowPresenter.shared.open("settings", using: openWindow)
             }
@@ -67,6 +75,11 @@ struct MenuContent: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
+        if state.inputMonitoringStatus == .secureInput {
+            Label("Secure Input đang chặn bộ gõ", systemImage: "lock.fill")
+            Button("Xem cách khôi phục…") { open(.system) }
+            Divider()
+        }
         if !state.accessibilityGranted {
             Button("Cấp quyền Trợ năng…") {
                 openWelcomeWindow()
@@ -160,7 +173,7 @@ struct MenuContent: View {
 
 @MainActor
 final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
-    private var permissionTimer: Timer?
+    private var inputHealthMonitor: InputHealthMonitor?
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         AppState.registerDefaultSettings()
@@ -194,10 +207,8 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        if AXIsProcessTrusted() {
-            startEngine()
-        } else {
-            state.accessibilityGranted = false
+        startInputHealthMonitor()
+        if !state.accessibilityGranted {
             askForAccessibility()
         }
 
@@ -216,30 +227,36 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: Engine
 
-    private func startEngine() {
-        AppState.shared.accessibilityGranted = true
-        if !MKBridge.startEventTap() {
-            // tap creation failed although AX is granted (e.g. permission revoked mid-flight)
-            AppState.shared.accessibilityGranted = false
-            askForAccessibility()
+    private func startInputHealthMonitor() {
+        let state = AppState.shared
+        MKBridge.prepareEngine()
+        inputHealthMonitor = InputHealthMonitor(
+            secureInputEnabled: { MKBridge.isSecureInputEnabled() },
+            accessibilityGranted: { AXIsProcessTrusted() },
+            eventTapRunning: { MKBridge.isEventTapRunning() },
+            recoverEventTap: { MKBridge.recoverEventTap() }
+        ) { snapshot in
+            if state.accessibilityGranted != snapshot.accessibilityGranted {
+                state.accessibilityGranted = snapshot.accessibilityGranted
+            }
+            if state.inputMonitoringStatus != snapshot.status {
+                state.inputMonitoringStatus = snapshot.status
+            }
+        }
+        inputHealthMonitor?.start()
+
+        NotificationCenter.default.addObserver(forName: .mkRefreshInputHealth,
+                                               object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.inputHealthMonitor?.check() }
         }
     }
 
     private func askForAccessibility() {
-        // show the system prompt, then poll until granted
+        // The health monitor detects permission grants without a relaunch.
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         AXIsProcessTrustedWithOptions(options)
 
-        permissionTimer?.invalidate()
-        // .common mode so the poll keeps firing while a modal sheet / menu tracking is up.
-        let timer = Timer(timeInterval: 1.5, repeats: true) { [weak self] timer in
-            if AXIsProcessTrusted() {
-                timer.invalidate()
-                Task { @MainActor in self?.startEngine() }
-            }
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        permissionTimer = timer
+        inputHealthMonitor?.check()
     }
 
     // MARK: Notifications
@@ -269,10 +286,11 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func receiveWake(_ note: Notification) {
-        _ = MKBridge.startEventTap()
+        inputHealthMonitor?.start()
     }
 
     @objc private func receiveSleep(_ note: Notification) {
+        inputHealthMonitor?.stop()
         _ = MKBridge.stopEventTap()
     }
 
@@ -281,6 +299,7 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func activeAppChanged(_ note: Notification) {
+        inputHealthMonitor?.check()
         let tapRunning = MKBridge.isEventTapRunning()
         // Track the frontmost non-MKey app so the menu-bar "exclude this app"
         // item and the icon's excluded state stay current. Refresh the engine's
@@ -293,6 +312,11 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
         if vUseSmartSwitchKey != 0 && tapRunning {
             MKBridge.activeAppChanged()
         }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        inputHealthMonitor?.stop()
+        MKBridge.stopEventTap()
     }
 
     // MARK: Window
@@ -317,6 +341,7 @@ extension Notification.Name {
     static let mkOpenSettingsWindow = Notification.Name("MKOpenSettingsWindow")
     static let mkOpenWelcomeWindow = Notification.Name("MKOpenWelcomeWindow")
     static let mkRequestAccessibility = Notification.Name("MKRequestAccessibility")
+    static let mkRefreshInputHealth = Notification.Name("MKRefreshInputHealth")
 }
 
 extension View {
