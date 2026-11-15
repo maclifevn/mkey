@@ -105,6 +105,42 @@ struct InputHealthMonitorTests {
         boot.check()
         check(bootStatus == .ready && bootRecoveries == 1, "blocked startup recovers without relaunch")
 
+        var ownerSecure = false
+        var ownerQueries = 0
+        var ownerRecoveries = 0
+        var owner: SecureInputOwner? = SecureInputOwner(processIdentifier: 123, name: "First app", isApplication: true, isLoginWindow: false)
+        var ownerSnapshots: [InputHealthMonitor.Snapshot] = []
+        let ownerMonitor = InputHealthMonitor(
+            secureInputEnabled: { ownerSecure },
+            accessibilityGranted: { true },
+            eventTapRunning: { true },
+            recoverEventTap: { ownerRecoveries += 1; return false },
+            secureInputOwner: { ownerQueries += 1; return owner },
+            publish: { ownerSnapshots.append($0) }
+        )
+        ownerMonitor.check()
+        check(ownerQueries == 0 && ownerSnapshots.last?.secureInputOwner == nil, "never queries owner during normal typing")
+        ownerSecure = true
+        ownerMonitor.check()
+        check(ownerSnapshots.last?.secureInputOwner == owner, "publishes detected owner")
+        ownerMonitor.check()
+        check(ownerSnapshots.count == 2, "unchanged owner does not redraw UI")
+        owner = SecureInputOwner(processIdentifier: 456, name: "Second app", isApplication: true, isLoginWindow: false)
+        ownerMonitor.check()
+        check(ownerSnapshots.count == 3 && ownerSnapshots.last?.secureInputOwner == owner && ownerRecoveries == 0,
+              "owner handoff updates the UI while input stays blocked")
+        owner = nil
+        ownerMonitor.check()
+        check(ownerSnapshots.last?.status == .secureInput && ownerSnapshots.last?.secureInputOwner == nil,
+              "lookup failure clears the old name without inventing recovery")
+        owner = SecureInputOwner(processIdentifier: 789, name: "Third app", isApplication: true, isLoginWindow: false)
+        ownerMonitor.check()
+        ownerSecure = false
+        let queriesBeforeRelease = ownerQueries
+        ownerMonitor.check()
+        check(ownerSnapshots.last?.status == .recovering && ownerSnapshots.last?.secureInputOwner == nil && ownerQueries == queriesBeforeRelease,
+              "release clears the owner even when tap recovery fails")
+
         print("PASS: \(checks) input health checks")
     }
 }

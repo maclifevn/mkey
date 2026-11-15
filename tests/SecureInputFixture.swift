@@ -7,6 +7,7 @@ import Carbon
 final class SecureInputFixture: NSObject, NSApplicationDelegate {
     private var window: NSWindow!
     private var ownsSecureInput = false
+    private var enableWhenActive = false
     private var expiry: Timer?
     private let status = NSTextField(labelWithString: "Secure Input: OFF")
 
@@ -32,14 +33,24 @@ final class SecureInputFixture: NSObject, NSApplicationDelegate {
 
     @objc private func enableInput() {
         guard !ownsSecureInput else { return }
+        // AX presses can invoke this button while the fixture is backgrounded.
+        // Activate before requesting Secure Input so macOS attributes it to us.
+        guard NSApp.isActive else {
+            enableWhenActive = true
+            status.stringValue = "Waiting for fixture activation…"
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate()
+            return
+        }
         ownsSecureInput = EnableSecureEventInput() == noErr
-        status.stringValue = ownsSecureInput ? "Secure Input: ON (auto release in 30s)" : "Enable failed"
+        status.stringValue = ownsSecureInput ? "Secure Input: ON (PID \(getpid()), auto release in 30s)" : "Enable failed"
         expiry = Timer.scheduledTimer(withTimeInterval: 30, repeats: false) { [weak self] _ in
             MainActor.assumeIsolated { self?.releaseInput() }
         }
     }
 
     @objc private func releaseInput() {
+        enableWhenActive = false
         expiry?.invalidate()
         expiry = nil
         if ownsSecureInput {
@@ -47,6 +58,13 @@ final class SecureInputFixture: NSObject, NSApplicationDelegate {
             ownsSecureInput = false
         }
         status.stringValue = "Secure Input: OFF"
+    }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        if enableWhenActive {
+            enableWhenActive = false
+            enableInput()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) { releaseInput() }

@@ -19,7 +19,7 @@ struct SettingsRootView: View {
             VStack(spacing: 0) {
                 PageHeader(page: state.selectedPage)
                 if state.inputMonitoringStatus == .secureInput || state.inputMonitoringStatus == .recovering {
-                    InputStatusBanner(status: state.inputMonitoringStatus)
+                    InputStatusBanner(status: state.inputMonitoringStatus, owner: state.secureInputOwner)
                         .padding(.horizontal, 24)
                         .padding(.bottom, 8)
                 }
@@ -154,6 +154,7 @@ private struct StatusBadge: View {
 
 private struct InputStatusBanner: View {
     let status: InputMonitoringStatus
+    let owner: SecureInputOwner?
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
@@ -161,10 +162,9 @@ private struct InputStatusBanner: View {
                 .foregroundStyle(.orange)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
-                Text(status.title).font(.footnote.weight(.semibold))
-                Text(status == .secureInput
-                     ? "Hãy rời ô mật khẩu hoặc đóng cửa sổ đăng nhập. MKey sẽ tự hoạt động lại khi Secure Input tắt."
-                     : status.detail)
+                Text(status.title(owner: owner)).font(.footnote.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(status.bannerDetail(owner: owner))
                     .font(.footnote).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }

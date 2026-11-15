@@ -78,5 +78,6 @@ targets:
       - package: Sparkle
         product: Sparkle
       - sdk: Carbon.framework
+      - sdk: IOKit.framework
       - sdk: Cocoa.framework
       - sdk: ServiceManagement.framework

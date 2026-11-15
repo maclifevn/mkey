@@ -13,6 +13,14 @@ setting. Ready-state polling must never clear an in-progress composition.
 The real hook reset is also checked against a partially composed word and held
 modifier flags; it must preserve clipboard suspension and typing settings.
 
+Owner checks cover missing/malformed PID data, other users, background sessions,
+ambiguous sessions, owner changes while blocked, and clearing stale names on
+release or lookup failure. The owner query runs only while Secure Input is on.
+MKey never requests Secure Input, so a registry entry pointing to MKey itself is
+treated as unknown. AX button presses can invoke the fixture while backgrounded;
+the fixture now waits for activation before enabling Secure Input so the OS can
+attribute the request to the intended process.
+
 For UI QA, compile `tests/SecureInputFixture.swift` as a separate AppKit test app:
 
 ```sh
@@ -27,7 +35,9 @@ exit. The fixture is excluded from the shipping app.
 
 1. Run MKey and the fixture. Click **Enable for 30 seconds**.
 2. Confirm MKey shows a lock in the menu bar, a Secure Input message in its menu
-   and settings, and guidance for closing the password/login window.
+   and settings naming **MKey Secure Input Test**, and guidance for closing its
+   password/login window. If the diagnostic registry does not expose an owner,
+   MKey must show the generic guidance rather than guess the foreground app.
 3. Click **Release Secure Input**. Confirm MKey returns to **Bộ gõ đã sẵn sàng**
    without relaunching and the lock/banner disappear.
 4. Repeat with the fixture active before starting MKey. Saved macros and typing

@@ -57,8 +57,8 @@ struct MenuBarLabel: View {
                     .font(.system(size: 10))
             }
         }
-            .help(state.inputMonitoringStatus.title)
-            .accessibilityLabel(state.inputMonitoringStatus.title)
+            .help(state.inputMonitoringStatus.title(owner: state.secureInputOwner))
+            .accessibilityLabel(state.inputMonitoringStatus.title(owner: state.secureInputOwner))
             .onReceive(NotificationCenter.default.publisher(for: .mkOpenSettingsWindow)) { _ in
                 AppWindowPresenter.shared.open("settings", using: openWindow)
             }
@@ -76,7 +76,7 @@ struct MenuContent: View {
 
     var body: some View {
         if state.inputMonitoringStatus == .secureInput {
-            Label("Secure Input đang chặn bộ gõ", systemImage: "lock.fill")
+            Label(state.inputMonitoringStatus.title(owner: state.secureInputOwner), systemImage: "lock.fill")
             Button("Xem cách khôi phục…") { open(.system) }
             Divider()
         }
@@ -234,13 +234,17 @@ final class MkeyAppDelegate: NSObject, NSApplicationDelegate {
             secureInputEnabled: { MKBridge.isSecureInputEnabled() },
             accessibilityGranted: { AXIsProcessTrusted() },
             eventTapRunning: { MKBridge.isEventTapRunning() },
-            recoverEventTap: { MKBridge.recoverEventTap() }
+            recoverEventTap: { MKBridge.recoverEventTap() },
+            secureInputOwner: { SecureInputOwnerResolver.currentOwner() }
         ) { snapshot in
             if state.accessibilityGranted != snapshot.accessibilityGranted {
                 state.accessibilityGranted = snapshot.accessibilityGranted
             }
             if state.inputMonitoringStatus != snapshot.status {
                 state.inputMonitoringStatus = snapshot.status
+            }
+            if state.secureInputOwner != snapshot.secureInputOwner {
+                state.secureInputOwner = snapshot.secureInputOwner
             }
         }
         inputHealthMonitor?.start()

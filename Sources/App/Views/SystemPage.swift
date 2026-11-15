@@ -16,14 +16,14 @@ struct SystemPage: View {
         Form {
             Section("Trạng thái bộ gõ") {
                 HStack {
-                    Label(state.inputMonitoringStatus.title, systemImage: state.inputMonitoringStatus.symbol)
+                    Label(state.inputMonitoringStatus.title(owner: state.secureInputOwner), systemImage: state.inputMonitoringStatus.symbol)
                         .foregroundStyle(state.inputMonitoringStatus == .ready ? Color.primary : Color.orange)
                     Spacer()
                     Button("Kiểm tra lại") {
                         NotificationCenter.default.post(name: .mkRefreshInputHealth, object: nil)
                     }
                 }
-                Text(state.inputMonitoringStatus.detail)
+                Text(state.inputMonitoringStatus.detail(owner: state.secureInputOwner))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

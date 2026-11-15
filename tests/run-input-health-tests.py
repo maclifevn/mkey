@@ -11,9 +11,12 @@ def run(*args):
 
 with tempfile.TemporaryDirectory(prefix='mkey-input-health-') as temporary:
     work = Path(temporary)
-    run('xcrun', 'swiftc', 'Sources/App/InputHealthMonitor.swift',
+    run('xcrun', 'swiftc', 'Sources/App/SecureInputOwner.swift', 'Sources/App/InputHealthMonitor.swift',
         'tests/InputHealthMonitorTests.swift', '-o', work / 'monitor-tests')
     run(work / 'monitor-tests')
+    run('xcrun', 'swiftc', 'Sources/App/SecureInputOwner.swift', 'Sources/App/InputHealthMonitor.swift',
+        'tests/SecureInputOwnerTests.swift', '-o', work / 'owner-tests')
+    run(work / 'owner-tests')
     common = ['-std=c++17', '-I', root / 'Sources/Engine', '-I', root / 'Sources/Platform']
     run('xcrun', 'clang++', *common, '-fobjc-arc',
         '-DCGEventTapCreate=TestTapCreate', '-DCGEventTapIsEnabled=TestTapIsEnabled',
